@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cn.ucai.superwechat"
+    package="com.easemob.chatuidemo"
     android:versionCode="25"
     android:versionName="2.2.5" >
 
@@ -33,9 +33,9 @@
 
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
-    <permission android:name="cn.ucai.superwechat.permission.C2D_MESSAGE"
+    <permission android:name="com.easemob.chatuidemo.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
-    <uses-permission android:name="cn.ucai.superwechat.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.easemob.chatuidemo.permission.C2D_MESSAGE" />
     
     
     <application
@@ -284,13 +284,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide"
             android:windowSoftInputMode="stateAlwaysHidden"
-           /> >
+            ></activity>
         <!-- user profile -->
 		<activity 
 		    android:name="cn.ucai.superwechat.activity.UserProfileActivity"
 		    android:screenOrientation="portrait"
 		    android:theme="@style/horizontal_slide"
-		    />
+		    ></activity>
 
         <!-- 开机自启动服务 -->
         <receiver android:name="com.easemob.chat.StartServiceReceiver" >
@@ -309,7 +309,7 @@
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="cn.ucai.superwechat" />
+                <category android:name="com.easemob.chatuidemo" />
             </intent-filter>
         </receiver>
 
@@ -322,7 +322,7 @@
             android:exported="false">
             <intent-filter >
                 <action android:name="com.easemob.sdk.push"/>
-                <category android:name="cn.ucai.superwechat"/>
+                <category android:name="com.easemob.chatuidemo"/>
             </intent-filter>
         </receiver>
         <!-- gcm end -->

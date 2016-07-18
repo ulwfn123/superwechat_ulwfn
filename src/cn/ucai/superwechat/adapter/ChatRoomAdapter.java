@@ -29,7 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.easemob.chat.EMChatRoom;
-import cn.ucai.superwechat.R;
+import com.easemob.chatuidemo.R;
 
 public class ChatRoomAdapter extends ArrayAdapter<EMChatRoom> {
 

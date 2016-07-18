@@ -35,7 +35,7 @@ import cn.ucai.applib.controller.HXSDKHelper;
 
 import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMGroupManager;
-import cn.ucai.superwechat.R;
+import com.easemob.chatuidemo.R;
 import cn.ucai.superwechat.adapter.GroupAdapter;
 
 import com.easemob.util.EMLog;

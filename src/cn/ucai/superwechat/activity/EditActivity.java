@@ -1,6 +1,6 @@
 package cn.ucai.superwechat.activity;
 
-import cn.ucai.superwechat.R;
+import com.easemob.chatuidemo.R;
 
 import android.content.Intent;
 import android.os.Bundle;

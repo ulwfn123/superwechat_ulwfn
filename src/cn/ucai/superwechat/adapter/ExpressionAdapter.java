@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
-import cn.ucai.superwechat.R;
+import com.easemob.chatuidemo.R;
 
 public class ExpressionAdapter extends ArrayAdapter<String>{
 

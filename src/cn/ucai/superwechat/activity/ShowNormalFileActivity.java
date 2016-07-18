@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.easemob.EMCallBack;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.FileMessageBody;
-import cn.ucai.superwechat.R;
+import com.easemob.chatuidemo.R;
 import com.easemob.util.FileUtils;
 
 public class ShowNormalFileActivity extends BaseActivity {

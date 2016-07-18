@@ -26,7 +26,7 @@ import com.easemob.EMValueCallBack;
 import cn.ucai.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
 import cn.ucai.superwechat.DemoHXSDKHelper;
-import cn.ucai.superwechat.R;
+import com.easemob.chatuidemo.R;
 import cn.ucai.superwechat.domain.User;
 import cn.ucai.superwechat.utils.UserUtils;
 import com.squareup.picasso.Picasso;

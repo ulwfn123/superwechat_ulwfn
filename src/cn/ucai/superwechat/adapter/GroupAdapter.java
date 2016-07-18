@@ -29,7 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.easemob.chat.EMGroup;
-import cn.ucai.superwechat.R;
+import com.easemob.chatuidemo.R;
 
 public class GroupAdapter extends ArrayAdapter<EMGroup> {
 

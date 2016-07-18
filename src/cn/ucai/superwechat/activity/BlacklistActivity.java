@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.easemob.chat.EMContactManager;
-import cn.ucai.superwechat.R;
+import com.easemob.chatuidemo.R;
 import com.easemob.exceptions.EaseMobException;
 
 /**

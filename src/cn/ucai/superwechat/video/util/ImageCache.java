@@ -39,7 +39,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 
-import cn.ucai.superwechat.BuildConfig;
+import com.easemob.chatuidemo.BuildConfig;
 
 /**
  * This class memory caching of bitmaps in conjunction with the
