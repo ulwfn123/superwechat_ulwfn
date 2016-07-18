@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.ucai.applib.model;
+package cn.ucai.superwechat.applib.model;
 
 /**
  * UI Demo HX Model implementation
@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.ucai.applib.utils.HXPreferenceUtils;
+import cn.ucai.superwechat.applib.utils.HXPreferenceUtils;
 import cn.ucai.superwechat.db.UserDao;
 
 import android.content.Context;

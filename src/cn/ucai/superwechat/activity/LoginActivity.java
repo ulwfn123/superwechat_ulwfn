@@ -32,7 +32,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.easemob.EMCallBack;
-import cn.ucai.applib.controller.HXSDKHelper;
+import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMGroupManager;
 import cn.ucai.superwechat.Constant;
@@ -228,7 +228,7 @@ public class LoginActivity extends BaseActivity {
 		userlist.put(Constant.CHAT_ROBOT, robotUser);
 		
 		// 存入内存
-		((DemoHXSDKHelper)HXSDKHelper.getInstance()).setContactList(userlist);
+		((DemoHXSDKHelper) HXSDKHelper.getInstance()).setContactList(userlist);
 		// 存入db
 		UserDao dao = new UserDao(LoginActivity.this);
 		List<User> users = new ArrayList<User>(userlist.values());

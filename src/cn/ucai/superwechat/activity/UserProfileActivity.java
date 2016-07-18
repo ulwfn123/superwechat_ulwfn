@@ -2,7 +2,6 @@ package cn.ucai.superwechat.activity;
 
 import java.io.ByteArrayOutputStream;
 
-import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -23,7 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.easemob.EMValueCallBack;
-import cn.ucai.applib.controller.HXSDKHelper;
+import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
 import cn.ucai.superwechat.DemoHXSDKHelper;
 import com.easemob.chatuidemo.R;
@@ -99,7 +98,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 			break;
 		case R.id.rl_nickname:
 			final EditText editText = new EditText(this);
-			new AlertDialog.Builder(this).setTitle(R.string.setting_nickname).setIcon(android.R.drawable.ic_dialog_info).setView(editText)
+			new Builder(this).setTitle(R.string.setting_nickname).setIcon(android.R.drawable.ic_dialog_info).setView(editText)
 					.setPositiveButton(R.string.dl_ok, new DialogInterface.OnClickListener() {
 
 						@Override
@@ -120,7 +119,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 	}
 	
 	public void asyncFetchUserInfo(String username){
-		((DemoHXSDKHelper) HXSDKHelper.getInstance()).getUserProfileManager().asyncGetUserInfo(username, new EMValueCallBack<User>() {
+		((DemoHXSDKHelper)HXSDKHelper.getInstance()).getUserProfileManager().asyncGetUserInfo(username, new EMValueCallBack<User>() {
 			
 			@Override
 			public void onSuccess(User user) {
@@ -144,7 +143,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 	
 	
 	private void uploadHeadPhoto() {
-		AlertDialog.Builder builder = new Builder(this);
+		Builder builder = new Builder(this);
 		builder.setTitle(R.string.dl_title_upload_photo);
 		builder.setItems(new String[] { getString(R.string.dl_msg_take_photo), getString(R.string.dl_msg_local_upload) },
 				new DialogInterface.OnClickListener() {

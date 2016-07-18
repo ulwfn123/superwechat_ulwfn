@@ -1,6 +1,6 @@
 package cn.ucai.superwechat.receiver;
 
-import cn.ucai.applib.controller.HXSDKHelper;
+import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 
 import android.app.Notification;
 import android.app.NotificationManager;

@@ -32,18 +32,17 @@ import com.easemob.EMCallBack;
 import com.easemob.EMChatRoomChangeListener;
 import com.easemob.EMEventListener;
 import com.easemob.EMNotifierEvent;
-import cn.ucai.applib.controller.HXSDKHelper;
-import cn.ucai.applib.model.HXNotifier;
-import cn.ucai.applib.model.HXNotifier.HXNotificationInfoProvider;
-import cn.ucai.applib.model.HXSDKModel;
+import com.easemob.chatuidemo.R;
+
+import cn.ucai.superwechat.applib.controller.HXSDKHelper;
+import cn.ucai.superwechat.applib.model.HXNotifier;
+import cn.ucai.superwechat.applib.model.HXSDKModel;
 import com.easemob.chat.CmdMessageBody;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatOptions;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
 import com.easemob.chat.EMMessage.Type;
-import com.easemob.chatuidemo.R;
-
 import cn.ucai.superwechat.activity.ChatActivity;
 import cn.ucai.superwechat.activity.MainActivity;
 import cn.ucai.superwechat.activity.VideoCallActivity;
@@ -281,9 +280,9 @@ public class DemoHXSDKHelper extends HXSDKHelper {
      * @return
      */
     @Override
-    protected HXNotificationInfoProvider getNotificationListener() {
+    protected HXNotifier.HXNotificationInfoProvider getNotificationListener() {
         //可以覆盖默认的设置
-        return new HXNotificationInfoProvider() {
+        return new HXNotifier.HXNotificationInfoProvider() {
             
             @Override
             public String getTitle(EMMessage message) {

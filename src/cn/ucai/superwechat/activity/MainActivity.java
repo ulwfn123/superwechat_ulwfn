@@ -44,7 +44,7 @@ import com.easemob.EMEventListener;
 import com.easemob.EMGroupChangeListener;
 import com.easemob.EMNotifierEvent;
 import com.easemob.EMValueCallBack;
-import cn.ucai.applib.controller.HXSDKHelper;
+import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMContactListener;
 import com.easemob.chat.EMContactManager;
@@ -62,6 +62,7 @@ import com.easemob.chatuidemo.R;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.domain.InviteMessage;
+import cn.ucai.superwechat.domain.InviteMessage.InviteMesageStatus;
 import cn.ucai.superwechat.domain.User;
 import cn.ucai.superwechat.utils.CommonUtils;
 import com.easemob.util.EMLog;
@@ -148,7 +149,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 		
 		init();
 		//异步获取当前用户的昵称和头像
-		((DemoHXSDKHelper) HXSDKHelper.getInstance()).getUserProfileManager().asyncGetCurrentUserInfo();
+		((DemoHXSDKHelper)HXSDKHelper.getInstance()).getUserProfileManager().asyncGetCurrentUserInfo();
 	}
 
 	private void init() {     
@@ -578,7 +579,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 			msg.setReason(reason);
 			Log.d(TAG, username + "请求加你为好友,reason: " + reason);
 			// 设置相应status
-			msg.setStatus(InviteMessage.InviteMesageStatus.BEINVITEED);
+			msg.setStatus(InviteMesageStatus.BEINVITEED);
 			notifyNewIviteMessage(msg);
 
 		}
@@ -596,7 +597,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 			msg.setFrom(username);
 			msg.setTime(System.currentTimeMillis());
 			Log.d(TAG, username + "同意了你的好友请求");
-			msg.setStatus(InviteMessage.InviteMesageStatus.BEAGREED);
+			msg.setStatus(InviteMesageStatus.BEAGREED);
 			notifyNewIviteMessage(msg);
 
 		}
@@ -787,7 +788,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 			msg.setGroupName(groupName);
 			msg.setReason(reason);
 			Log.d(TAG, applyer + " 申请加入群聊：" + groupName);
-			msg.setStatus(InviteMessage.InviteMesageStatus.BEAPPLYED);
+			msg.setStatus(InviteMesageStatus.BEAPPLYED);
 			notifyNewIviteMessage(msg);
 		}
 

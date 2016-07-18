@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.ucai.applib.model;
+package cn.ucai.superwechat.applib.model;
 
 /**
  * HX SDK app model which will manage the user data and preferences

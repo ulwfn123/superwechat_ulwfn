@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.ucai.applib.controller;
+package cn.ucai.superwechat.applib.controller;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -26,10 +26,9 @@ import com.easemob.EMCallBack;
 import com.easemob.EMConnectionListener;
 import com.easemob.EMError;
 import com.easemob.EMValueCallBack;
-import cn.ucai.applib.model.DefaultHXSDKModel;
-import cn.ucai.applib.model.HXNotifier;
-import cn.ucai.applib.model.HXNotifier.HXNotificationInfoProvider;
-import cn.ucai.applib.model.HXSDKModel;
+import cn.ucai.superwechat.applib.model.DefaultHXSDKModel;
+import cn.ucai.superwechat.applib.model.HXNotifier;
+import cn.ucai.superwechat.applib.model.HXSDKModel;
 import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatConfig.EMEnvMode;
 import com.easemob.chat.EMChatManager;
@@ -345,7 +344,7 @@ public abstract class HXSDKHelper {
        return EMChat.getInstance().isLoggedIn();
     }
     
-    protected HXNotificationInfoProvider getNotificationListener(){
+    protected HXNotifier.HXNotificationInfoProvider getNotificationListener(){
         return null;
     }
 

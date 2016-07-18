@@ -8,7 +8,6 @@ import android.text.TextUtils;
 
 import com.easemob.EMValueCallBack;
 import com.easemob.chat.EMChatManager;
-
 import cn.ucai.superwechat.domain.User;
 import cn.ucai.superwechat.utils.UserUtils;
 import com.easemob.util.EMLog;

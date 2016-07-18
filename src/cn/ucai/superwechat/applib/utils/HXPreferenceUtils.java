@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.ucai.applib.utils;
+package cn.ucai.superwechat.applib.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

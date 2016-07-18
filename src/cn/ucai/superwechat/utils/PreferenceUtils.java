@@ -13,7 +13,7 @@
  */
 package cn.ucai.superwechat.utils;
 
-import cn.ucai.applib.utils.HXPreferenceUtils;
+import cn.ucai.superwechat.applib.utils.HXPreferenceUtils;
 
 import android.content.Context;
 

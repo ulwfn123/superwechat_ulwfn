@@ -37,10 +37,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.easemob.EMValueCallBack;
-import cn.ucai.applib.controller.HXSDKHelper;
+import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMContact;
-
 import cn.ucai.superwechat.DemoHXSDKHelper;
 import com.easemob.chatuidemo.R;
 import cn.ucai.superwechat.db.UserDao;

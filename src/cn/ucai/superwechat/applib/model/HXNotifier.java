@@ -9,7 +9,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from EaseMob Technologies.
  */
-package cn.ucai.applib.model;
+package cn.ucai.superwechat.applib.model;
 
 import java.util.HashSet;
 import java.util.List;
@@ -29,7 +29,7 @@ import android.os.Build;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 
-import cn.ucai.applib.controller.HXSDKHelper;
+import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.util.EMLog;

@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -69,8 +70,8 @@ import com.easemob.EMError;
 import com.easemob.EMEventListener;
 import com.easemob.EMNotifierEvent;
 import com.easemob.EMValueCallBack;
-import cn.ucai.applib.controller.HXSDKHelper;
-import cn.ucai.applib.model.GroupRemoveListener;
+import cn.ucai.superwechat.applib.controller.HXSDKHelper;
+import cn.ucai.superwechat.applib.model.GroupRemoveListener;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatRoom;
 import com.easemob.chat.EMContactManager;
@@ -370,10 +371,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		iv_emoticons_normal.setOnClickListener(this);
 		iv_emoticons_checked.setOnClickListener(this);
 		// position = getIntent().getIntExtra("position", -1);
-		clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-		manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+		clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+		manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		wakeLock = ((PowerManager) getSystemService(POWER_SERVICE)).newWakeLock(
+		wakeLock = ((PowerManager) getSystemService(Context.POWER_SERVICE)).newWakeLock(
 				PowerManager.SCREEN_DIM_WAKE_LOCK, "demo");
 		// 判断单聊还是群聊
 		chatType = getIntent().getIntExtra("chatType", CHATTYPE_SINGLE);
@@ -874,7 +875,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			intent.addCategory(Intent.CATEGORY_OPENABLE);
 
 		} else {
-			intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+			intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		}
 		startActivityForResult(intent, REQUEST_CODE_SELECT_FILE);
 	}
@@ -889,7 +890,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			intent.setType("image/*");
 
 		} else {
-			intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+			intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		}
 		startActivityForResult(intent, REQUEST_CODE_LOCAL);
 	}
@@ -1301,7 +1302,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	 * 按住说话listener
 	 * 
 	 */
-	class PressToSpeakListen implements View.OnTouchListener {
+	class PressToSpeakListen implements OnTouchListener {
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
 			switch (event.getAction()) {
@@ -1698,7 +1699,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			break;
 		}
 		
-		if(forward_msg.getChatType() == EMMessage.ChatType.ChatRoom){
+		if(forward_msg.getChatType() == ChatType.ChatRoom){
 			EMChatManager.getInstance().leaveChatRoom(forward_msg.getTo());
 		}
 	}

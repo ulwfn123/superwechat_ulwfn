@@ -30,7 +30,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
-import cn.ucai.applib.controller.HXSDKHelper;
+import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatRoom;
 import com.easemob.chat.EMConversation;
@@ -114,7 +114,7 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 			} else if (username.equals(Constant.NEW_FRIENDS_USERNAME)) {
 				holder.name.setText("申请与通知");
 			}
-			Map<String,RobotUser> robotMap=((DemoHXSDKHelper) HXSDKHelper.getInstance()).getRobotList();
+			Map<String,RobotUser> robotMap=((DemoHXSDKHelper)HXSDKHelper.getInstance()).getRobotList();
 			if(robotMap!=null&&robotMap.containsKey(username)){
 				String nick = robotMap.get(username).getNick();
 				if(!TextUtils.isEmpty(nick)){

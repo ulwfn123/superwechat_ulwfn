@@ -5,9 +5,8 @@ import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import cn.ucai.applib.controller.HXSDKHelper;
+import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import cn.ucai.superwechat.DemoHXSDKHelper;
-
 import com.easemob.chatuidemo.R;
 import cn.ucai.superwechat.domain.User;
 import com.squareup.picasso.Picasso;
@@ -19,7 +18,7 @@ public class UserUtils {
      * @return
      */
     public static User getUserInfo(String username){
-        User user = ((DemoHXSDKHelper) HXSDKHelper.getInstance()).getContactList().get(username);
+        User user = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList().get(username);
         if(user == null){
             user = new User(username);
         }

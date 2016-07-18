@@ -49,8 +49,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import cn.ucai.applib.controller.HXSDKHelper;
-
+import cn.ucai.superwechat.applib.controller.HXSDKHelper;
+import cn.ucai.superwechat.applib.controller.HXSDKHelper.HXSyncListener;
 import com.easemob.chat.EMContactManager;
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.DemoHXSDKHelper;
@@ -86,7 +86,7 @@ public class ContactlistFragment extends Fragment {
     private User toBeProcessUser;
     private String toBeProcessUsername;
 
-	class HXContactSyncListener implements HXSDKHelper.HXSyncListener {
+	class HXContactSyncListener implements HXSyncListener {
 		@Override
 		public void onSyncSucess(final boolean success) {
 			EMLog.d(TAG, "on contact list sync success:" + success);
@@ -112,7 +112,7 @@ public class ContactlistFragment extends Fragment {
 		}
 	}
 	
-	class HXBlackListSyncListener implements HXSDKHelper.HXSyncListener {
+	class HXBlackListSyncListener implements HXSyncListener{
 
         @Override
         public void onSyncSucess(boolean success) {
@@ -129,7 +129,7 @@ public class ContactlistFragment extends Fragment {
 	    
 	};
 	
-	class HXContactInfoSyncListener implements HXSDKHelper.HXSyncListener{
+	class HXContactInfoSyncListener implements HXSyncListener{
 
 		@Override
 		public void onSyncSucess(final boolean success) {

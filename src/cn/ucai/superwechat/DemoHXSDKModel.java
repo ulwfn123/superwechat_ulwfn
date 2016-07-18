@@ -18,13 +18,13 @@ import java.util.Map;
 
 import android.content.Context;
 
-import cn.ucai.applib.model.DefaultHXSDKModel;
+import cn.ucai.superwechat.applib.model.DefaultHXSDKModel;
 import cn.ucai.superwechat.db.DemoDBManager;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.domain.RobotUser;
 import cn.ucai.superwechat.domain.User;
 
-public class DemoHXSDKModel extends DefaultHXSDKModel{
+public class DemoHXSDKModel extends DefaultHXSDKModel {
 
     public DemoHXSDKModel(Context ctx) {
         super(ctx);

@@ -19,7 +19,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 
-import cn.ucai.applib.controller.HXSDKHelper;
+import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.DemoHXSDKHelper;
 import com.easemob.chatuidemo.R;
@@ -43,9 +43,9 @@ public class NewFriendsMsgActivity extends BaseActivity {
 		InviteMessgeDao dao = new InviteMessgeDao(this);
 		List<InviteMessage> msgs = dao.getMessagesList();
 		//设置adapter
-		NewFriendsMsgAdapter adapter = new NewFriendsMsgAdapter(this, 1, msgs);
+		NewFriendsMsgAdapter adapter = new NewFriendsMsgAdapter(this, 1, msgs); 
 		listView.setAdapter(adapter);
-		((DemoHXSDKHelper) HXSDKHelper.getInstance()).getContactList().get(Constant.NEW_FRIENDS_USERNAME).setUnreadMsgCount(0);
+		((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList().get(Constant.NEW_FRIENDS_USERNAME).setUnreadMsgCount(0);
 		
 	}
 

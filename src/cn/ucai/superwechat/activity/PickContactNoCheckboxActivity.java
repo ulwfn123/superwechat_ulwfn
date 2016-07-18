@@ -28,7 +28,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import cn.ucai.applib.controller.HXSDKHelper;
+import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.DemoHXSDKHelper;
 import com.easemob.chatuidemo.R;
@@ -80,7 +80,7 @@ public class PickContactNoCheckboxActivity extends BaseActivity {
 
 	private void getContactList() {
 		contactList.clear();
-		Map<String, User> users = ((DemoHXSDKHelper) HXSDKHelper.getInstance()).getContactList();
+		Map<String, User> users = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList();
 		Iterator<Entry<String, User>> iterator = users.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, User> entry = iterator.next();
