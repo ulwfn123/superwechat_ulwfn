@@ -10,7 +10,7 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
 import cn.ucai.superwechat.Constant;
-import com.easemob.chatuidemo.R;
+import cn.ucai.superwechat.R;
 
 public class CallActivity extends BaseActivity {
 
