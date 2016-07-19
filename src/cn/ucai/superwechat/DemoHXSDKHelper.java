@@ -32,7 +32,7 @@ import com.easemob.EMCallBack;
 import com.easemob.EMChatRoomChangeListener;
 import com.easemob.EMEventListener;
 import com.easemob.EMNotifierEvent;
-import com.easemob.chatuidemo.R;
+import cn.ucai.superwechat.R;
 
 import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import cn.ucai.superwechat.applib.model.HXNotifier;
