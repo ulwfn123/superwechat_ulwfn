@@ -39,7 +39,10 @@ public class ExitGroupDialog extends BaseActivity{
         	text.setText(toast);
         exitBtn.setText(R.string.exit_group);
     }
-    
+
+
+
+
     public void logout(View view){
     	setResult(RESULT_OK);
         finish();
