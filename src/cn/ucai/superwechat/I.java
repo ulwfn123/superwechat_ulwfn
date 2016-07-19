@@ -8,8 +8,8 @@ public interface I {
 		String PASSWORD 							= 		"m_user_password";				//用户密码
 		String NICK 								= 		"m_user_nick";					//用户昵称
 	}
-	
-	static interface Contact {
+
+static interface Contact {
 		String TABLE_NAME 							= 		"t_superwechat_contact";
 		String CONTACT_ID 							= 		"m_contact_id";					//主键
 		String USER_NAME 							= 		"m_contact_user_name";			//用户账号
@@ -79,6 +79,7 @@ public interface I {
 	String AVATAR_TYPE_GROUP_PATH 					=		"group_icon";					//群组头像保存目录
 	String AVATAR_SUFFIX_PNG						=		".png";							//PNG图片后缀名
 	String AVATAR_SUFFIX_JPG						=		".jpg";							//JPG图片后缀名
+	String QUESTION 								= 		"?";							//问号
 	int LOCATION_IS_SEARCH_ALLOW					=		1;								//可以被搜索到地理位置
 	int LOCATION_IS_SEARCH_INHIBIT					=		0;								//禁止被搜索到地理位置
 	int MSG_SUCCESS						            =  		0;							    //默认成功

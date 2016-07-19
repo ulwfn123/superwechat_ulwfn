@@ -68,7 +68,7 @@ public class RegisterActivity extends BaseActivity {
 				register();
 			}
 		});
-		layoutAvatar.setOnClickListener(new View.OnClickListener() {
+		findViewById(R.id.layout_register_avatar).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				mOnSetAvatarListener = new OnSetAvatarListener(RegisterActivity.this,
@@ -179,7 +179,6 @@ public class RegisterActivity extends BaseActivity {
 					}
 				}
 			}).start();
-
 		}
 	}
 
