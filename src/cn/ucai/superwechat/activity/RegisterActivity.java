@@ -14,6 +14,7 @@
 package cn.ucai.superwechat.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -25,7 +26,10 @@ import android.widget.Toast;
 import com.easemob.EMError;
 import com.easemob.chat.EMChatManager;
 import cn.ucai.superwechat.DemoApplication;
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.listener.OnSetAvatarListener;
+
 import com.easemob.exceptions.EaseMobException;
 
 /**
@@ -39,6 +43,10 @@ public class RegisterActivity extends BaseActivity {
 	private EditText confirmPwdEditText;
 	private RelativeLayout layoutAvatar;
 	private ImageView imAvatar;
+	String avatarName;
+
+	private OnSetAvatarListener mOnSetAvatarListener;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,6 +68,29 @@ public class RegisterActivity extends BaseActivity {
 				register();
 			}
 		});
+		layoutAvatar.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				mOnSetAvatarListener = new OnSetAvatarListener(RegisterActivity.this,
+						R.id.layout_register, getAvatarname(), I.AVATAR_TYPE_USER_PATH);
+			}
+		});
+	}
+	// 头像返回时调用的方法
+	@Override                     //请求码          判断码              数据
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode != RESULT_OK) {
+			return;
+		}
+
+		mOnSetAvatarListener.setAvatar(requestCode,data,imAvatar);
+	}
+	// 设置 图片的名称,利用 电脑的时间
+	private String getAvatarname() {
+		avatarName = String.valueOf(System.currentTimeMillis());
+		return avatarName;
+
 	}
 
 	private void initView() {
@@ -85,11 +116,11 @@ public class RegisterActivity extends BaseActivity {
 			Toast.makeText(this, getResources().getString(R.string.User_name_cannot_be_empty), Toast.LENGTH_SHORT).show();
 			userNameEditText.requestFocus();
 			return;
-		}else if (!username.matches("[\\w][\\w\\d_]+")) {
+		}else if (!username.matches("[\\w][\\w\\d_]+")) {  //这里注意正则表达式为“反”
 			Toast.makeText(this, getResources().getString(R.string.illegal_user_name), Toast.LENGTH_SHORT).show();
 			passwordEditText.requestFocus();
 			return;
-		} else if (TextUtils.isEmpty(nick)) {
+		} else if (TextUtils.isEmpty(nick)) {   //  判断 昵称是否为空
 			Toast.makeText(this, getResources().getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT).show();
 			passwordEditText.requestFocus();
 			return;
