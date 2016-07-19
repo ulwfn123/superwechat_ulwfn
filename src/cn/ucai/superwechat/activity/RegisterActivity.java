@@ -18,6 +18,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.easemob.EMError;
@@ -32,32 +34,66 @@ import com.easemob.exceptions.EaseMobException;
  */
 public class RegisterActivity extends BaseActivity {
 	private EditText userNameEditText;
+	private EditText userNickEditText;
 	private EditText passwordEditText;
 	private EditText confirmPwdEditText;
-
+	private RelativeLayout layoutAvatar;
+	private ImageView imAvatar;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
+		initView();
+		setLitener();
+	}
+	//登录和注册的监听
+	private void setLitener() {
+		findViewById(R.id.btn_login).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				finish();
+			}
+		});
+		findViewById(R.id.btn_register).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				register();
+			}
+		});
+	}
+
+	private void initView() {
 		userNameEditText = (EditText) findViewById(R.id.username);
 		passwordEditText = (EditText) findViewById(R.id.password);
 		confirmPwdEditText = (EditText) findViewById(R.id.confirm_password);
+		userNickEditText = (EditText) findViewById(R.id.Nick);
+		layoutAvatar = (RelativeLayout) findViewById(R.id.layout_register_avatar);
+		imAvatar = (ImageView) findViewById(R.id.iv_avatar);
 	}
 
 	/**
 	 * 注册
 	 * 
-	 * @param view
+	 * @param
 	 */
-	public void register(View view) {
+	private void register() {
 		final String username = userNameEditText.getText().toString().trim();
+		final String nick = userNickEditText.getText().toString().trim();
 		final String pwd = passwordEditText.getText().toString().trim();
 		String confirm_pwd = confirmPwdEditText.getText().toString().trim();
 		if (TextUtils.isEmpty(username)) {
 			Toast.makeText(this, getResources().getString(R.string.User_name_cannot_be_empty), Toast.LENGTH_SHORT).show();
 			userNameEditText.requestFocus();
 			return;
-		} else if (TextUtils.isEmpty(pwd)) {
+		}else if (!username.matches("[\\w][\\w\\d_]+")) {
+			Toast.makeText(this, getResources().getString(R.string.illegal_user_name), Toast.LENGTH_SHORT).show();
+			passwordEditText.requestFocus();
+			return;
+		} else if (TextUtils.isEmpty(nick)) {
+			Toast.makeText(this, getResources().getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT).show();
+			passwordEditText.requestFocus();
+			return;
+		}else if (TextUtils.isEmpty(pwd)) {
 			Toast.makeText(this, getResources().getString(R.string.Password_cannot_be_empty), Toast.LENGTH_SHORT).show();
 			passwordEditText.requestFocus();
 			return;
@@ -86,7 +122,7 @@ public class RegisterActivity extends BaseActivity {
 									pd.dismiss();
 								// 保存用户名
 								DemoApplication.getInstance().setUserName(username);
-								Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registered_successfully), 0).show();
+								Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registered_successfully), Toast.LENGTH_SHORT).show();
 								finish();
 							}
 						});
