@@ -122,7 +122,7 @@ static interface Contact {
 	int MSG_LOCATION_GET_FAIL						=		501;							// 获取附近的人失败
 	int MSG_UNKNOW									=		999;							//未知错误
 	int MSG_ILLEGAL_REQUEST							=		-1;							//非法请求
-	String SERVER_ROOT								=		"http://localhost:8888/SuperWeChatServer/Server";
+	String SERVER_ROOT								=		"http://10.0.2.2:8888/SuperWeChatServer/Server";
 	String KEY_REQUEST 								= 		"request";
 	/** 上传图片的类型：user_avatar或group_icon */
 	String AVATAR_TYPE 								= 		"avatarType";
