@@ -207,6 +207,7 @@ public class RegisterActivity extends BaseActivity {
 						}
 					});
 				} catch (final EaseMobException e) {
+					unRegisterAppSevert(); //注册失败，删除本地库中文件
 					runOnUiThread(new Runnable() {
 						public void run() {
 							if (!RegisterActivity.this.isFinishing())
@@ -228,6 +229,24 @@ public class RegisterActivity extends BaseActivity {
 				}
 			}
 		}).start();
+	}
+	//注册失败，删除本地库中文件
+	private void unRegisterAppSevert() {
+		OkHttpUtils2<Result> utils2 = new OkHttpUtils2<Result>();
+		utils2.setRequestUrl(I.REQUEST_UNREGISTER)
+				.addParam(I.User.USER_NAME,username)
+				.targetClass(Result.class)
+				.execute(new OkHttpUtils2.OnCompleteListener<Result>() {
+					@Override
+					public void onSuccess(Result result) {
+						Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registration_failed), Toast.LENGTH_SHORT).show();
+					}
+
+					@Override
+					public void onError(String error) {
+						Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registration_failed), Toast.LENGTH_SHORT).show();
+					}
+				});
 	}
 
 	public void back(View view) {

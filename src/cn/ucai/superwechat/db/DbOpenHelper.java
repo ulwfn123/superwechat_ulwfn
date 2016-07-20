@@ -53,7 +53,7 @@ public class DbOpenHelper extends SQLiteOpenHelper{
             + UserDao.COLUMN_NAME_DISABLED_IDS + " TEXT);";
 
 
-
+	//在数据库中创建一个 账户信息的“表”
 	private static final String SUPERWECHAT_USER_TABLE_CREATE = "CREATE TABLE "
 			+ UserDao.USER_TABLE_NAME + " ("
 			+ UserDao.USER_COLUMN_NAME + " TEXT PRIMARY KEY , "
