@@ -17,6 +17,7 @@ import cn.ucai.superwechat.utils.Utils;
  * Created by Administrator on 2016/7/20.
  */
 public class DownloadContactListTask {
+    //   在 当前activity 中 显示TAG
     private final static String TAG = DownloadContactListTask.class.getSimpleName();
     String username;
     Context context;
@@ -29,6 +30,7 @@ public class DownloadContactListTask {
     public DownloadContactListTask(String username) {
         this.username = username;
     }
+    // 使用用户名 下载用户好友信息
     public void excute(String username) {
         OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
         utils.setRequestUrl(I.REQUEST_DOWNLOAD_CONTACT_ALL_LIST)

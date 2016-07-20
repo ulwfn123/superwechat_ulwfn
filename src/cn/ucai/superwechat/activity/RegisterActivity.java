@@ -156,7 +156,7 @@ public class RegisterActivity extends BaseActivity {
 
 		}
 	}
-	//获取文件地址上传头像
+	//获取被上传头像的地址
 	private void registerAppSever() {
 		File file = new File(OnSetAvatarListener.getAvatarPath(RegisterActivity.this, I.AVATAR_TYPE_USER_PATH),
 				avatarName + I.AVATAR_SUFFIX_JPG);
@@ -175,7 +175,7 @@ public class RegisterActivity extends BaseActivity {
 						} else {
 							// 注册失败
 							Log.e(TAG, "register fail ..." + result.getRetCode());
-							pd.dismiss();
+							pd.dismiss();  // 退出请求
 							Toast.makeText(getApplicationContext(),getResources().getString(R.string.Registration_failed),Toast.LENGTH_SHORT).show();
 						}
 					}
@@ -188,7 +188,7 @@ public class RegisterActivity extends BaseActivity {
 					}
 				});
 	}
-
+	//注册账户
 	private void registerEMServer() {
 		//新建线程
 		new Thread(new Runnable() {

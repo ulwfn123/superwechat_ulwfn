@@ -111,6 +111,7 @@ public class DemoApplication extends Application {
 		// 先调用sdk logout，在清理app中自己的数据
 	    hxSDKHelper.logout(isGCM,emCallBack);
 	}
+	//  为下载用户好友信息  定义属性
 	private   UserAvatar user;
 	private List<UserAvatar> list;
 	public UserAvatar getUser() {
