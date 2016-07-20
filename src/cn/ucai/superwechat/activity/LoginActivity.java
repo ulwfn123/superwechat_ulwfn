@@ -43,6 +43,7 @@ import cn.ucai.superwechat.DemoApplication;
 import cn.ucai.superwechat.DemoHXSDKHelper;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.bean.Result;
+import cn.ucai.superwechat.bean.UserAvatar;
 import cn.ucai.superwechat.data.OkHttpUtils2;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.domain.User;
@@ -196,8 +197,12 @@ public class LoginActivity extends BaseActivity {
 					@Override
 					public void onSuccess(Result result) {
 						if (result != null && result.isRetMsg()) {
-							seveUserAvatar(result);//  把用户数据添加到数据库
-							loginSuccess();
+							String string = result.getRetData().toString();
+							Result result1 = Utils.getResultFromJson(string, UserAvatar.class);
+							if (result1 != null) {
+								seveUserAvatar(result1);//  把用户数据添加到数据库
+								loginSuccess(result1);
+							}
 						} else {
 							pd.dismiss();
 							Toast.makeText(getApplicationContext(), R.string.Login_failed+ Utils.getResourceString(LoginActivity.this,
@@ -221,7 +226,7 @@ public class LoginActivity extends BaseActivity {
 	}
 
 
-	private void loginSuccess() {
+	private void loginSuccess(Result result) {
 		// 登陆成功，保存用户名密码
 		DemoApplication.getInstance().setUserName(currentUsername);
 		DemoApplication.getInstance().setPassword(currentPassword);

@@ -347,8 +347,9 @@ public class DemoDBManager {
 		return users;
 	}
     //向数据库添加用户
-    synchronized public void saveUserAcatar(UserAvatar user) {
+    synchronized public void saveUserAcatar(Result result) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+        UserAvatar user = (UserAvatar) result.getRetData();
         ContentValues values = new ContentValues();
         values.put(UserDao.USER_COLUMN_NAME, user.getMUserName());
         values.put(UserDao.USER_COLUMN_NICK, user.getMUserNick());

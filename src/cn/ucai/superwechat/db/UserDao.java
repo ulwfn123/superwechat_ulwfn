@@ -112,7 +112,6 @@ public class UserDao {
     }
 	public void saveUserAcatar(Result result) {
 		// 把返回的数据 转换为一个 “UserAvatar”对象
-		UserAvatar user = (UserAvatar) result.getRetData();
-		DemoDBManager.getInstance().saveUserAcatar(user);
+		DemoDBManager.getInstance().saveUserAcatar(result);
 	}
 }
