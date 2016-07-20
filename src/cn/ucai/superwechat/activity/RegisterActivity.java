@@ -170,7 +170,6 @@ public class RegisterActivity extends BaseActivity {
 				.execute(new OkHttpUtils2.OnCompleteListener<Result>() {
 					@Override
 					public void onSuccess(Result result) {
-//						Log.e(TAG, "result=" + result);
 						if (result.isRetMsg()) {
 							registerEMServer();
 						} else {
@@ -183,6 +182,7 @@ public class RegisterActivity extends BaseActivity {
 
 					@Override
 					public void onError(String error) {
+						//输出异常
 						Log.e(TAG, "register fail ..." + error.toString());
 						pd.dismiss();
 					}
@@ -190,6 +190,7 @@ public class RegisterActivity extends BaseActivity {
 	}
 
 	private void registerEMServer() {
+		//新建线程
 		new Thread(new Runnable() {
 			public void run() {
 				try {
