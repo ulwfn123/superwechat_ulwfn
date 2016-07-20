@@ -19,6 +19,8 @@ import java.util.Map;
 import android.content.Context;
 
 
+import cn.ucai.superwechat.bean.Result;
+import cn.ucai.superwechat.bean.UserAvatar;
 import cn.ucai.superwechat.domain.RobotUser;
 import cn.ucai.superwechat.domain.User;
 
@@ -108,4 +110,9 @@ public class UserDao {
     public void saveRobotUser(List<RobotUser> robotList){
     	DemoDBManager.getInstance().saveRobotList(robotList);
     }
+	public void saveUserAcatar(Result result) {
+		// 把返回的数据 转换为一个 “UserAvatar”对象
+		UserAvatar user = (UserAvatar) result.getRetData();
+		DemoDBManager.getInstance().saveUserAcatar(user);
+	}
 }

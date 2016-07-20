@@ -22,6 +22,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -46,6 +47,7 @@ import cn.ucai.superwechat.data.OkHttpUtils2;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.domain.User;
 import cn.ucai.superwechat.utils.CommonUtils;
+import cn.ucai.superwechat.utils.Utils;
 
 /**
  * 登陆页面
@@ -193,8 +195,14 @@ public class LoginActivity extends BaseActivity {
 				.execute(new OkHttpUtils2.OnCompleteListener<Result>() {
 					@Override
 					public void onSuccess(Result result) {
-//						Log.i(TAG, "result=" + result.toString());
-						loginSuccess();
+						if (result != null && result.isRetMsg()) {
+							seveUserAvatar(result);//  把用户数据添加到数据库
+							loginSuccess();
+						} else {
+							pd.dismiss();
+							Toast.makeText(getApplicationContext(), R.string.Login_failed+ Utils.getResourceString(LoginActivity.this,
+									result.getRetCode()), Toast.LENGTH_LONG).show();
+						}
 					}
 
 					@Override
@@ -205,6 +213,11 @@ public class LoginActivity extends BaseActivity {
 						Toast.makeText(getApplicationContext(), R.string.login_failure_failed, Toast.LENGTH_LONG).show();
 					}
 				});
+	}
+	//  把用户数据添加到数据库
+	private void seveUserAvatar(Result result) {
+		UserDao dao = new UserDao(LoginActivity.this);
+		dao.saveUserAcatar(result);
 	}
 
 

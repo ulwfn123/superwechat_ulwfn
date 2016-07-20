@@ -12,6 +12,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
 import cn.ucai.superwechat.Constant;
+import cn.ucai.superwechat.bean.Result;
+import cn.ucai.superwechat.bean.UserAvatar;
 import cn.ucai.superwechat.domain.InviteMessage;
 import cn.ucai.superwechat.domain.RobotUser;
 import cn.ucai.superwechat.domain.User;
@@ -344,6 +346,20 @@ public class DemoDBManager {
 		}
 		return users;
 	}
+    //向数据库添加用户
+    synchronized public void saveUserAcatar(UserAvatar user) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(UserDao.USER_COLUMN_NAME, user.getMUserName());
+        values.put(UserDao.USER_COLUMN_NICK, user.getMUserNick());
+        values.put(UserDao.USER_COLUMN_AVATAR_ID, user.getMAvatarId());
+        values.put(UserDao.USER_COLUMN_NAME_PATH, user.getMAvatarPath());
+        values.put(UserDao.USER_COLUMN_NAME_TYPE, user.getMAvatarType());
+        values.put(UserDao.USER_COLUMN_NAME_TIME, user.getMAvatarLastUpdateTime());
+        if (db.isOpen()) {
+            db.replace(UserDao.USER_TABLE_NAME, null, values);
+        }
+    }
     
     
     
