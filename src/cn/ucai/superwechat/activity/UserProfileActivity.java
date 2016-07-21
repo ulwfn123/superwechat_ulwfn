@@ -84,9 +84,9 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 			UserUtils.setCurrentUserAvatar(this, headAvatar);
 		} else {
 			tvUsername.setText(username);
-			UserUtils.setUserNick(username, tvNickName);
-			UserUtils.setUserAvatar(this, username, headAvatar);
-			asyncFetchUserInfo(username);
+			UserUtils.setAppUserNick(username, tvNickName);  //  直接调用自写方方 ,显示 搜索的用户昵称
+			UserUtils.setAppUserAvatar(this, username, headAvatar);//  直接调用自写方方 ,显示 搜索的用户头像
+//			asyncFetchUserInfo(username);
 		}
 	}
 
