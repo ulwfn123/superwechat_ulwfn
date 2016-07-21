@@ -361,7 +361,23 @@ public class DemoDBManager {
             db.replace(UserDao.USER_TABLE_NAME, null, values);
         }
     }
-    
-    
-    
+
+    //  获取闪屏时的用户数据
+    synchronized public UserAvatar getUserAvatar(String userName) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor cursor = db.rawQuery("select * from " + UserDao.USER_TABLE_NAME
+                + " where " + UserDao.USER_COLUMN_NAME + "=?", new String[]{userName});
+        UserAvatar user = null;
+        if (cursor.moveToNext()) {
+            user = new UserAvatar();
+            user.setMUserName(cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_NAME)));
+            user.setMUserNick(cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_NICK)));
+            user.setMAvatarId(cursor.getInt(cursor.getColumnIndex(UserDao.USER_COLUMN_AVATAR_ID)));
+            user.setMAvatarPath(cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_NAME_PATH)));
+            user.setMAvatarType(cursor.getInt(cursor.getColumnIndex(UserDao.USER_COLUMN_NAME_TYPE)));
+            user.setMAvatarLastUpdateTime(cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_NAME_TIME)));
+            return user;
+        }
+        return user;
+    }
 }

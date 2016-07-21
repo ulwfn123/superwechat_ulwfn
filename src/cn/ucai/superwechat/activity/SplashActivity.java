@@ -5,20 +5,26 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.animation.AlphaAnimation;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMGroupManager;
+
+import cn.ucai.superwechat.DemoApplication;
 import cn.ucai.superwechat.DemoHXSDKHelper;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.bean.UserAvatar;
+import cn.ucai.superwechat.db.UserDao;
 
 /**
  * 开屏页
  *
  */
 public class SplashActivity extends BaseActivity {
+	private static final String TAG = SplashActivity.class.getSimpleName();
 	private RelativeLayout rootLayout;
 	private TextView versionText;
 	
@@ -51,6 +57,14 @@ public class SplashActivity extends BaseActivity {
 					long start = System.currentTimeMillis();
 					EMGroupManager.getInstance().loadAllGroups();
 					EMChatManager.getInstance().loadAllConversations();
+					// 获取闪屏时用户信息
+					String userName = DemoApplication.getInstance().getUserName();
+					UserDao userDao = new UserDao(SplashActivity.this);
+					UserAvatar user = userDao.getUserAvatar(userName);
+					Log.i(TAG, "user = " + user);
+					DemoApplication.getInstance().setUser(user);
+					DemoApplication.currentUserNick=user.getMUserNick();
+
 					long costTime = System.currentTimeMillis() - start;
 					//等待sleeptime时长
 					if (sleepTime - costTime > 0) {
