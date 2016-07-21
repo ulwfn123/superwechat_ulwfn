@@ -37,6 +37,7 @@ import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.bean.Result;
 import cn.ucai.superwechat.bean.UserAvatar;
 import cn.ucai.superwechat.data.OkHttpUtils2;
+import cn.ucai.superwechat.utils.UserUtils;
 import cn.ucai.superwechat.utils.Utils;
 
 public class AddContactActivity extends BaseActivity{
@@ -95,6 +96,13 @@ public class AddContactActivity extends BaseActivity{
 				startActivity(new Intent(this, AlertDialog.class).putExtra("msg", str));
 				return;
 			}
+			// 如果 好友存在  ，执行下列操作
+			UserAvatar userAvatar = DemoApplication.getInstance().getUserMap().get(toAddUsername);
+			if (userAvatar != null) {
+				startActivity(new Intent(AddContactActivity.this,
+						UserProfileActivity.class).putExtra("username",toAddUsername));
+				return;
+			}
 			//查找用户的  自写方法
 			final OkHttpUtils2<String> utils2 = new OkHttpUtils2<String>();
 			utils2.setRequestUrl(I.REQUEST_FIND_USER)
@@ -111,7 +119,8 @@ public class AddContactActivity extends BaseActivity{
 								if (user != null) {
 									//服务器在此显示用户，  显示此用户 和添加按钮
 									searchedUserLayout.setVisibility(View.VISIBLE);
-									nameText.setText(toAddUsername);
+									UserUtils.setAppUserAvatar(AddContactActivity.this, toAddUsername, avatar);
+									nameText.setText(user.getMUserNick());
 									tvNothing.setVisibility(View.GONE);
 								}
 							} else {

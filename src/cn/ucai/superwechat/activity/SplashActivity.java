@@ -63,11 +63,11 @@ public class SplashActivity extends BaseActivity {
 					UserDao userDao = new UserDao(SplashActivity.this);
 					UserAvatar user = userDao.getUserData(userName);
 					Log.e("main", "user = " + user);
-					DemoApplication.getInstance().setUser(user);
-					DemoApplication.currentUserNick=user.getMUserNick();
-
+					if (user != null) {
+						DemoApplication.getInstance().setUser(user);
+						DemoApplication.currentUserNick=user.getMUserNick();
+					}
 					new DownloadContactListTask(SplashActivity.this,userName).excute();
-
 					long costTime = System.currentTimeMillis() - start;
 					//等待sleeptime时长
 					if (sleepTime - costTime > 0) {
