@@ -18,7 +18,10 @@ import android.content.Context;
 
 import com.easemob.EMCallBack;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.ucai.superwechat.bean.UserAvatar;
 
@@ -28,7 +31,7 @@ public class DemoApplication extends Application {
 	private static DemoApplication instance;
 	// login user name
 	public final String PREF_USERNAME = "username";
-	
+
 	/**
 	 * 当前用户nickname,为了苹果推送不是userid而是昵称
 	 */
@@ -38,34 +41,34 @@ public class DemoApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-        applicationContext = this;
-        instance = this;
+		applicationContext = this;
+		instance = this;
 
-        /**
-         * this function will initialize the HuanXin SDK
-         * 
-         * @return boolean true if caller can continue to call HuanXin related APIs after calling onInit, otherwise false.
-         * 
-         * 环信初始化SDK帮助函数
-         * 返回true如果正确初始化，否则false，如果返回为false，请在后续的调用中不要调用任何和环信相关的代码
-         * 
-         * for example:
-         * 例子：
-         * 
-         * public class DemoHXSDKHelper extends HXSDKHelper
-         * 
-         * HXHelper = new DemoHXSDKHelper();
-         * if(HXHelper.onInit(context)){
-         *     // do HuanXin related work
-         * }
-         */
-        hxSDKHelper.onInit(applicationContext);
+		/**
+		 * this function will initialize the HuanXin SDK
+		 *
+		 * @return boolean true if caller can continue to call HuanXin related APIs after calling onInit, otherwise false.
+		 *
+		 * 环信初始化SDK帮助函数
+		 * 返回true如果正确初始化，否则false，如果返回为false，请在后续的调用中不要调用任何和环信相关的代码
+		 *
+		 * for example:
+		 * 例子：
+		 *
+		 * public class DemoHXSDKHelper extends HXSDKHelper
+		 *
+		 * HXHelper = new DemoHXSDKHelper();
+		 * if(HXHelper.onInit(context)){
+		 *     // do HuanXin related work
+		 * }
+		 */
+		hxSDKHelper.onInit(applicationContext);
 	}
 
 	public static DemoApplication getInstance() {
 		return instance;
 	}
- 
+
 
 	/**
 	 * 获取当前登陆用户名
@@ -73,7 +76,7 @@ public class DemoApplication extends Application {
 	 * @return
 	 */
 	public String getUserName() {
-	    return hxSDKHelper.getHXId();
+		return hxSDKHelper.getHXId();
 	}
 
 	/**
@@ -91,7 +94,7 @@ public class DemoApplication extends Application {
 	 * @param
 	 */
 	public void setUserName(String username) {
-	    hxSDKHelper.setHXId(username);
+		hxSDKHelper.setHXId(username);
 	}
 
 	/**
@@ -101,19 +104,25 @@ public class DemoApplication extends Application {
 	 * @param pwd
 	 */
 	public void setPassword(String pwd) {
-	    hxSDKHelper.setPassword(pwd);
+		hxSDKHelper.setPassword(pwd);
 	}
 
 	/**
 	 * 退出登录,清空数据
 	 */
-	public void logout(final boolean isGCM,final EMCallBack emCallBack) {
+	public void logout(final boolean isGCM, final EMCallBack emCallBack) {
 		// 先调用sdk logout，在清理app中自己的数据
-	    hxSDKHelper.logout(isGCM,emCallBack);
+		hxSDKHelper.logout(isGCM, emCallBack);
 	}
-	//  为下载用户好友信息  定义属性
-	private   UserAvatar user;
-	private List<UserAvatar> list;
+
+	//  为下载全局当前用户好 定义属性
+	private UserAvatar user;
+	//全局的当前 登录用户的好友集合
+	private List<UserAvatar> userlist = new ArrayList<UserAvatar>();
+	//获取昵称的  定义属性
+	private Map<String, UserAvatar> userMap = new HashMap<String, UserAvatar>();
+
+
 	public UserAvatar getUser() {
 		return user;
 	}
@@ -122,11 +131,19 @@ public class DemoApplication extends Application {
 		this.user = user;
 	}
 
-	public List<UserAvatar> getList() {
-		return list;
+	public List<UserAvatar> getUserlist() {
+		return userlist;
 	}
 
-	public void setList(List<UserAvatar> list) {
-		this.list = list;
+	public void setUserlist(List<UserAvatar> userlist) {
+		this.userlist = userlist;
+	}
+
+	public Map<String, UserAvatar> getUserMap() {
+		return userMap;
+	}
+
+	public void setUserMap(Map<String, UserAvatar> userMap) {
+		this.userMap = userMap;
 	}
 }

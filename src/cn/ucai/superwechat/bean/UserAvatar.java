@@ -31,6 +31,10 @@ public class UserAvatar implements Serializable {
 		this.mavatarType = mavatarType;
 		this.mavatarLastUpdateTime = mavatarLastUpdateTime;
 	}
+	// 实现用户好友 没有昵称的方法
+	public UserAvatar(String username) {
+		this.muserName = username;
+	}
 
 	public String getMUserName() {
 		return muserName;

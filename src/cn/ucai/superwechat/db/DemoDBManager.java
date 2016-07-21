@@ -10,9 +10,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+import android.util.Log;
 
 import cn.ucai.superwechat.Constant;
-import cn.ucai.superwechat.bean.Result;
 import cn.ucai.superwechat.bean.UserAvatar;
 import cn.ucai.superwechat.domain.InviteMessage;
 import cn.ucai.superwechat.domain.RobotUser;
@@ -20,6 +20,7 @@ import cn.ucai.superwechat.domain.User;
 import com.easemob.util.HanziToPinyin;
 
 public class DemoDBManager {
+    private static final String TAG = DemoDBManager.class.getSimpleName();
     static private DemoDBManager dbMgr = new DemoDBManager();
     private DbOpenHelper dbHelper;
     
@@ -346,36 +347,37 @@ public class DemoDBManager {
 		}
 		return users;
 	}
-    //向数据库添加用户
-    synchronized public void saveUserAcatar(Result result) {
+    //保存当前登录用户
+    synchronized public void saveUserAcatar(UserAvatar user) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        UserAvatar user = (UserAvatar) result.getRetData();
         ContentValues values = new ContentValues();
-        values.put(UserDao.USER_COLUMN_NAME, user.getMUserName());
-        values.put(UserDao.USER_COLUMN_NICK, user.getMUserNick());
+        values.put(UserDao.USER_COLUMN_USER_NAME, user.getMUserName());
+        values.put(UserDao.USER_COLUMN_USER_NICK, user.getMUserNick());
         values.put(UserDao.USER_COLUMN_AVATAR_ID, user.getMAvatarId());
-        values.put(UserDao.USER_COLUMN_NAME_PATH, user.getMAvatarPath());
-        values.put(UserDao.USER_COLUMN_NAME_TYPE, user.getMAvatarType());
-        values.put(UserDao.USER_COLUMN_NAME_TIME, user.getMAvatarLastUpdateTime());
+        values.put(UserDao.USER_COLUMN_AVATAR_PATH, user.getMAvatarPath());
+        values.put(UserDao.USER_COLUMN_AVATAR_TYPE, user.getMAvatarType());
+        values.put(UserDao.USER_COLUMN_AVATAR_UPDATE_TIME, user.getMAvatarLastUpdateTime());
         if (db.isOpen()) {
             db.replace(UserDao.USER_TABLE_NAME, null, values);
         }
     }
 
-    //  获取闪屏时的用户数据
-    synchronized public UserAvatar getUserAvatar(String userName) {
+    //  获取闪屏时的用户数据下载好友信息
+    synchronized public UserAvatar getUserData(String username) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Log.e(TAG, "username =  " + username);
         Cursor cursor = db.rawQuery("select * from " + UserDao.USER_TABLE_NAME
-                + " where " + UserDao.USER_COLUMN_NAME + "=?", new String[]{userName});
+                + " where " + UserDao.USER_COLUMN_USER_NAME + " =?", new String[]{username});
+        Log.e(TAG, "cursor = = " + cursor);
         UserAvatar user = null;
         if (cursor.moveToNext()) {
             user = new UserAvatar();
-            user.setMUserName(cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_NAME)));
-            user.setMUserNick(cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_NICK)));
+            user.setMUserName(username);
+            user.setMUserNick(cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_USER_NICK)));
             user.setMAvatarId(cursor.getInt(cursor.getColumnIndex(UserDao.USER_COLUMN_AVATAR_ID)));
-            user.setMAvatarPath(cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_NAME_PATH)));
-            user.setMAvatarType(cursor.getInt(cursor.getColumnIndex(UserDao.USER_COLUMN_NAME_TYPE)));
-            user.setMAvatarLastUpdateTime(cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_NAME_TIME)));
+            user.setMAvatarPath(cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_AVATAR_PATH)));
+            user.setMAvatarType(cursor.getInt(cursor.getColumnIndex(UserDao.USER_COLUMN_AVATAR_TYPE)));
+            user.setMAvatarLastUpdateTime(cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_AVATAR_UPDATE_TIME)));
             return user;
         }
         return user;

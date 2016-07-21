@@ -41,12 +41,12 @@ public class UserDao {
 
 
 	public static final String USER_TABLE_NAME = "t_superwechat_user";
-	public static final String USER_COLUMN_NAME= "muserName";
-	public static final String USER_COLUMN_NICK = "muserNick";
+	public static final String USER_COLUMN_USER_NAME = "muserName";
+	public static final String USER_COLUMN_USER_NICK = "muserNick";
 	public static final String USER_COLUMN_AVATAR_ID = "mavatarId";
-	public static final String USER_COLUMN_NAME_TYPE = "mavatarType";
-	public static final String USER_COLUMN_NAME_PATH = "mavatarPath";
-	public static final String USER_COLUMN_NAME_TIME = "mavatarLastUpdateTime";
+	public static final String USER_COLUMN_AVATAR_TYPE = "mavatarType";
+	public static final String USER_COLUMN_AVATAR_PATH = "mavatarPath";
+	public static final String USER_COLUMN_AVATAR_UPDATE_TIME = "mavatarLastUpdateTime";
 
 	public UserDao(Context context) {
 	    DemoDBManager.getInstance().onInit(context);
@@ -54,7 +54,7 @@ public class UserDao {
 
 	/**
 	 * 保存好友list
-	 * 
+	 *
 	 * @param contactList
 	 */
 	public void saveContactList(List<User> contactList) {
@@ -110,13 +110,13 @@ public class UserDao {
     public void saveRobotUser(List<RobotUser> robotList){
     	DemoDBManager.getInstance().saveRobotList(robotList);
     }
-	public void saveUserAcatar(Result result) {
+	public void saveUserAcatar(UserAvatar user) {
 		// 把返回的数据 转换为一个 “UserAvatar”对象
-		DemoDBManager.getInstance().saveUserAcatar(result);
+		DemoDBManager.getInstance().saveUserAcatar(user);
 	}
 
-	//   下载闪屏时用户信息
-	public UserAvatar getUserAvatar(String userName) {
-		return DemoDBManager.getInstance().getUserAvatar(userName);
+	//   获取闪屏时用户信息
+	public UserAvatar getUserData(String username) {
+		return DemoDBManager.getInstance().getUserData(username);
 	}
 }

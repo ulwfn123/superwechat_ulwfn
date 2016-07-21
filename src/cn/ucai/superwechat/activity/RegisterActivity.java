@@ -32,6 +32,7 @@ import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.bean.Result;
 import cn.ucai.superwechat.data.OkHttpUtils2;
 import cn.ucai.superwechat.listener.OnSetAvatarListener;
+import cn.ucai.superwechat.utils.Utils;
 
 import com.easemob.exceptions.EaseMobException;
 
@@ -176,7 +177,8 @@ public class RegisterActivity extends BaseActivity {
 							// 注册失败
 							Log.e(TAG, "register fail ..." + result.getRetCode());
 							pd.dismiss();  // 退出请求
-							Toast.makeText(getApplicationContext(),getResources().getString(R.string.Registration_failed),Toast.LENGTH_SHORT).show();
+							Toast.makeText(getApplicationContext(),R.string.Registration_failed
+									+ Utils.getResourceString(RegisterActivity.this,result.getRetCode()),Toast.LENGTH_SHORT).show();
 						}
 					}
 
@@ -185,6 +187,7 @@ public class RegisterActivity extends BaseActivity {
 						//输出异常
 						Log.e(TAG, "register fail ..." + error.toString());
 						pd.dismiss();
+
 					}
 				});
 	}

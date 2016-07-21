@@ -56,12 +56,12 @@ public class DbOpenHelper extends SQLiteOpenHelper{
 	//在数据库中创建一个 账户信息的“表”
 	private static final String SUPERWECHAT_USER_TABLE_CREATE = "CREATE TABLE "
 			+ UserDao.USER_TABLE_NAME + " ("
-			+ UserDao.USER_COLUMN_NAME + " TEXT PRIMARY KEY , "
-			+ UserDao.USER_COLUMN_NICK + " TEXT, "
+			+ UserDao.USER_COLUMN_USER_NAME + " TEXT PRIMARY KEY , "
+			+ UserDao.USER_COLUMN_USER_NICK + " TEXT, "
 			+ UserDao.USER_COLUMN_AVATAR_ID + " INTEGER, "
-			+ UserDao.USER_COLUMN_NAME_TYPE + " INTEGER, "
-			+ UserDao.USER_COLUMN_NAME_PATH + " TEXT, "
-			+ UserDao.USER_COLUMN_NAME_TIME + " TEXT); ";
+			+ UserDao.USER_COLUMN_AVATAR_TYPE + " INTEGER, "
+			+ UserDao.USER_COLUMN_AVATAR_PATH + " TEXT, "
+			+ UserDao.USER_COLUMN_AVATAR_UPDATE_TIME + " TEXT); ";
 
 
 	private DbOpenHelper(Context context) {

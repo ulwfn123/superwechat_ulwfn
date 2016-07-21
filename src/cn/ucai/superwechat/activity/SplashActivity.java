@@ -18,6 +18,7 @@ import cn.ucai.superwechat.DemoHXSDKHelper;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.bean.UserAvatar;
 import cn.ucai.superwechat.db.UserDao;
+import cn.ucai.superwechat.task.DownloadContactListTask;
 
 /**
  * 开屏页
@@ -40,7 +41,7 @@ public class SplashActivity extends BaseActivity {
 
 		versionText.setText(getVersion());
 		AlphaAnimation animation = new AlphaAnimation(0.3f, 1.0f);
-		animation.setDuration(1500);
+		animation.setDuration(1000);
 		rootLayout.startAnimation(animation);
 	}
 
@@ -60,10 +61,12 @@ public class SplashActivity extends BaseActivity {
 					// 获取闪屏时用户信息
 					String userName = DemoApplication.getInstance().getUserName();
 					UserDao userDao = new UserDao(SplashActivity.this);
-					UserAvatar user = userDao.getUserAvatar(userName);
-					Log.i(TAG, "user = " + user);
+					UserAvatar user = userDao.getUserData(userName);
+					Log.e("main", "user = " + user);
 					DemoApplication.getInstance().setUser(user);
 					DemoApplication.currentUserNick=user.getMUserNick();
+
+					new DownloadContactListTask(SplashActivity.this,userName).excute();
 
 					long costTime = System.currentTimeMillis() - start;
 					//等待sleeptime时长

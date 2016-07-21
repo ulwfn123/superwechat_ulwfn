@@ -1,5 +1,7 @@
 package cn.ucai.superwechat;
 
+import javax.xml.transform.sax.SAXResult;
+
 public interface I {
 
 	static interface User {
@@ -81,7 +83,8 @@ static interface Contact {
 	String AVATAR_SUFFIX_JPG						=		".jpg";							//JPG图片后缀名
 	String QUESTION 								= 		"?";							//问号
 	String EQU										=		"=";
-	String MSG_PREFIX_MSG							=		"ms_";
+	String AND									=		"&";								//
+	String MSG_PREFIX_MSG							=		"msg_";							//消息码前缀
 	int LOCATION_IS_SEARCH_ALLOW					=		1;								//可以被搜索到地理位置
 	int LOCATION_IS_SEARCH_INHIBIT					=		0;								//禁止被搜索到地理位置
 	int MSG_SUCCESS						            =  		0;							    //默认成功

@@ -188,21 +188,23 @@ public class LoginActivity extends BaseActivity {
 			}
 		});
 	}
+
 	private void loginAppSever() {
-		OkHttpUtils2<Result> utils2 = new OkHttpUtils2<Result>();
+		OkHttpUtils2<String> utils2 = new OkHttpUtils2<String>();
 		utils2.setRequestUrl(I.REQUEST_LOGIN)
 				.addParam(I.User.USER_NAME,currentUsername)
 				.addParam(I.User.PASSWORD,currentPassword)
-				.targetClass(Result.class)
-				.execute(new OkHttpUtils2.OnCompleteListener<Result>() {
+				.targetClass(String.class)
+				.execute(new OkHttpUtils2.OnCompleteListener<String>() {
 					@Override
-					public void onSuccess(Result result) {
+					public void onSuccess(String s) {
+						Result result = Utils.getResultFromJson(s, UserAvatar.class);
 						if (result != null && result.isRetMsg()) {
-							String string = result.getRetData().toString();
-							Result result1 = Utils.getResultFromJson(string, UserAvatar.class);
-							if (result1 != null) {
-								seveUserAvatar(result1);//  把用户数据添加到数据库
-								loginSuccess(result1);
+							Log.e(TAG, "result == " + result);
+							UserAvatar user = (UserAvatar) result.getRetData();
+							if (user != null) {
+								seveUserAvatar(user);//  把用户数据添加到数据库
+								loginSuccess(user);
 							}
 						} else {
 							pd.dismiss();
@@ -215,23 +217,28 @@ public class LoginActivity extends BaseActivity {
 					public void onError(String error) {
 						Log.i(TAG, "error=" + error.toString());
 						pd.dismiss();
-						DemoHXSDKHelper.getInstance().logout(true,null);
-						Toast.makeText(getApplicationContext(), R.string.login_failure_failed, Toast.LENGTH_LONG).show();
+						Toast.makeText(getApplicationContext(),
+								R.string.Login_failed, Toast.LENGTH_LONG).show();
 					}
 				});
 	}
 	//  把用户数据添加到数据库
-	private void seveUserAvatar(Result result) {
-		UserDao dao = new UserDao(LoginActivity.this);
-		dao.saveUserAcatar(result);
+	private void seveUserAvatar(UserAvatar user) {
+		if (user !=null) {
+			UserDao dao = new UserDao(LoginActivity.this);
+			dao.saveUserAcatar(user);
+		}
 	}
-
-
-	private void loginSuccess(Result result) {
+	private void loginSuccess(UserAvatar user) {
 		// 登陆成功，保存用户名密码
+//		UserAvatar user = (UserAvatar) result.getRetData();
 		DemoApplication.getInstance().setUserName(currentUsername);
 		DemoApplication.getInstance().setPassword(currentPassword);
-		new DownloadContactListTask(LoginActivity.this,currentUsername).excute(currentUsername);
+
+		DemoApplication.getInstance().setUser(user);
+		DemoApplication.currentUserNick = user.getMUserNick();
+		Log.e("main", "登录用户名 ===" + user);
+		new DownloadContactListTask(LoginActivity.this,currentUsername).excute();
 
 		try {
 			// ** 第一次登录或者之前logout后再登录，加载所有本地群和回话
