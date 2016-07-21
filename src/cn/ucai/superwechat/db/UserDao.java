@@ -114,4 +114,9 @@ public class UserDao {
 		// 把返回的数据 转换为一个 “UserAvatar”对象
 		DemoDBManager.getInstance().saveUserAcatar(result);
 	}
+
+	//   下载闪屏时用户信息
+	public UserAvatar getUserAvatar(String userName) {
+		return DemoDBManager.getInstance().getUserAvatar(userName);
+	}
 }
