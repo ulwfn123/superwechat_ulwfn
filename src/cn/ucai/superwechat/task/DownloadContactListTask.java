@@ -37,11 +37,12 @@ public class DownloadContactListTask {
         utils.setRequestUrl(I.REQUEST_DOWNLOAD_CONTACT_ALL_LIST)
                 .addParam(I.Contact.USER_NAME, username)
                 .targetClass(String.class)
-                .execute(new OkHttpUtils2.OnCompleteListener<String>() {
+                .execute(new OkHttpUtils2.OnCompleteListener<String>() {  ///????
                     @Override
                     public void onSuccess(String s) {
                         Log.e(TAG, "s  = " + s);
-                        Result result =  Utils.getResultFromJson(s, UserAvatar.class);
+                        Result result =  Utils.getListResultFromJson(s, UserAvatar.class);
+
                         List<UserAvatar> list = (List<UserAvatar>) result.getRetData();
                         if (list != null && list.size() >= 0) {
                             Log.e(TAG, "list.size = " + list.size());

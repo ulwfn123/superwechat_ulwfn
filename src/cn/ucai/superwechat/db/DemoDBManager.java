@@ -43,13 +43,7 @@ public class DemoDBManager {
         if (db.isOpen()) {
             db.delete(UserDao.TABLE_NAME, null, null);
             for (User user : contactList) {
-                ContentValues values = new ContentValues();
-                values.put(UserDao.COLUMN_NAME_ID, user.getUsername());
-                if (user.getNick() != null)
-                    values.put(UserDao.COLUMN_NAME_NICK, user.getNick());
-                if (user.getAvatar() != null)
-                    values.put(UserDao.COLUMN_NAME_AVATAR, user.getAvatar());
-                db.replace(UserDao.TABLE_NAME, null, values);
+
             }
         }
     }
@@ -362,15 +356,15 @@ public class DemoDBManager {
         values.put(UserDao.USER_COLUMN_USER_NAME, user.getMUserName());
         values.put(UserDao.USER_COLUMN_USER_NICK, user.getMUserNick());
         values.put(UserDao.USER_COLUMN_AVATAR_ID, user.getMAvatarId());
-        values.put(UserDao.USER_COLUMN_AVATAR_PATH, user.getMAvatarPath());
         values.put(UserDao.USER_COLUMN_AVATAR_TYPE, user.getMAvatarType());
+        values.put(UserDao.USER_COLUMN_AVATAR_PATH, user.getMAvatarPath());
         values.put(UserDao.USER_COLUMN_AVATAR_UPDATE_TIME, user.getMAvatarLastUpdateTime());
         if (db.isOpen()) {
             db.replace(UserDao.USER_TABLE_NAME, null, values);
         }
     }
 
-    //  获取闪屏时的用户数据下载好友信息
+    //  利用闪屏时的用户名称 下载用户好友信息
     synchronized public UserAvatar getUserData(String username) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         Log.e(TAG, "username =  " + username);
@@ -383,8 +377,8 @@ public class DemoDBManager {
             user.setMUserName(username);
             user.setMUserNick(cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_USER_NICK)));
             user.setMAvatarId(cursor.getInt(cursor.getColumnIndex(UserDao.USER_COLUMN_AVATAR_ID)));
-            user.setMAvatarPath(cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_AVATAR_PATH)));
             user.setMAvatarType(cursor.getInt(cursor.getColumnIndex(UserDao.USER_COLUMN_AVATAR_TYPE)));
+            user.setMAvatarPath(cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_AVATAR_PATH)));
             user.setMAvatarLastUpdateTime(cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_AVATAR_UPDATE_TIME)));
             return user;
         }

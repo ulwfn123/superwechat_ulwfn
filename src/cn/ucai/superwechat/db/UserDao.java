@@ -111,11 +111,11 @@ public class UserDao {
     	DemoDBManager.getInstance().saveRobotList(robotList);
     }
 	public void saveUserAcatar(UserAvatar user) {
-		// 把返回的数据 转换为一个 “UserAvatar”对象
+		// 保存登录账户的信息
 		DemoDBManager.getInstance().saveUserAcatar(user);
 	}
 
-	//   获取闪屏时用户信息
+	//   利用闪屏时用户信息下载好友信息
 	public UserAvatar getUserData(String username) {
 		return DemoDBManager.getInstance().getUserData(username);
 	}

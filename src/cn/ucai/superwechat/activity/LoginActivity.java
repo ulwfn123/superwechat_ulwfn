@@ -85,6 +85,7 @@ public class LoginActivity extends BaseActivity {
 		usernameEditText = (EditText) findViewById(R.id.username);
 		passwordEditText = (EditText) findViewById(R.id.password);
 
+//		setListener();
 		// 如果用户名改变，清空密码
 		usernameEditText.addTextChangedListener(new TextWatcher() {
 			@Override
@@ -113,7 +114,7 @@ public class LoginActivity extends BaseActivity {
 	 * @param view
 	 */
 	public void login(View view) {
-		if (!CommonUtils.isNetWorkConnected(this)) {
+		if (!CommonUtils.isNetWorkConnected(this)) {  //检查网络
 			Toast.makeText(this, R.string.network_isnot_available, Toast.LENGTH_SHORT).show();
 			return;
 		}
@@ -152,21 +153,21 @@ public class LoginActivity extends BaseActivity {
 					return;
 				}
 				loginAppSever();
-				// 更新当前用户的nickname 此方法的作用是在ios离线推送时能够显示用户nick
-				boolean updatenick = EMChatManager.getInstance().updateCurrentUserNick(
-						DemoApplication.currentUserNick.trim());
-				if (!updatenick) {
-					Log.e("LoginActivity", "update current user nick fail");
-				}
-				if (!LoginActivity.this.isFinishing() && pd.isShowing()) {
-					pd.dismiss();
-				}
-				// 进入主页面
-				Intent intent = new Intent(LoginActivity.this,
-						MainActivity.class);
-				startActivity(intent);
-				
-				finish();
+//				// 更新当前用户的nickname 此方法的作用是在ios离线推送时能够显示用户nick
+//				boolean updatenick = EMChatManager.getInstance().updateCurrentUserNick(
+//						DemoApplication.currentUserNick.trim());
+//				if (!updatenick) {
+//					Log.e("LoginActivity", "update current user nick fail");
+//				}
+//				if (!LoginActivity.this.isFinishing() && pd.isShowing()) {
+//					pd.dismiss();
+//				}
+//				// 进入主页面
+//				Intent intent = new Intent(LoginActivity.this,
+//						MainActivity.class);
+//				startActivity(intent);
+//
+//				finish();
 			}
 
 			@Override
@@ -190,7 +191,7 @@ public class LoginActivity extends BaseActivity {
 	}
 
 	private void loginAppSever() {
-		OkHttpUtils2<String> utils2 = new OkHttpUtils2<String>();
+		final OkHttpUtils2<String> utils2 = new OkHttpUtils2<String>();
 		utils2.setRequestUrl(I.REQUEST_LOGIN)
 				.addParam(I.User.USER_NAME,currentUsername)
 				.addParam(I.User.PASSWORD,currentPassword)
@@ -198,16 +199,17 @@ public class LoginActivity extends BaseActivity {
 				.execute(new OkHttpUtils2.OnCompleteListener<String>() {
 					@Override
 					public void onSuccess(String s) {
+						Log.e(TAG, "s == " + s);
 						Result result = Utils.getResultFromJson(s, UserAvatar.class);
 						if (result != null && result.isRetMsg()) {
-							Log.e(TAG, "result == " + result);
 							UserAvatar user = (UserAvatar) result.getRetData();
 							if (user != null) {
-								seveUserAvatar(user);//  把用户数据添加到数据库
+								seveUserAvatar(user);//  把用户数据添加到新建的表
 								loginSuccess(user);
 							}
 						} else {
 							pd.dismiss();
+							DemoHXSDKHelper.getInstance().logout(true,null);
 							Toast.makeText(getApplicationContext(), R.string.Login_failed+ Utils.getResourceString(LoginActivity.this,
 									result.getRetCode()), Toast.LENGTH_LONG).show();
 						}
@@ -224,14 +226,13 @@ public class LoginActivity extends BaseActivity {
 	}
 	//  把用户数据添加到数据库
 	private void seveUserAvatar(UserAvatar user) {
-		if (user !=null) {
+//		if (user !=null) {
 			UserDao dao = new UserDao(LoginActivity.this);
 			dao.saveUserAcatar(user);
-		}
+//		}
 	}
-	private void loginSuccess(UserAvatar user) {
+	private void  loginSuccess(UserAvatar user) {
 		// 登陆成功，保存用户名密码
-//		UserAvatar user = (UserAvatar) result.getRetData();
 		DemoApplication.getInstance().setUserName(currentUsername);
 		DemoApplication.getInstance().setPassword(currentPassword);
 
@@ -259,6 +260,20 @@ public class LoginActivity extends BaseActivity {
 			});
 			return;
 		}
+//		 更新当前用户的nickname 此方法的作用是在ios离线推送时能够显示用户nick
+				boolean updatenick = EMChatManager.getInstance().updateCurrentUserNick(
+						DemoApplication.currentUserNick.trim());
+				if (!updatenick) {
+					Log.e("LoginActivity", "update current user nick fail");
+				}
+				if (!LoginActivity.this.isFinishing() && pd.isShowing()) {
+					pd.dismiss();
+				}
+				// 进入主页面
+				Intent intent = new Intent(LoginActivity.this,
+						MainActivity.class);
+				startActivity(intent);
+				finish();
 	}
 
 	private void initializeContacts() {

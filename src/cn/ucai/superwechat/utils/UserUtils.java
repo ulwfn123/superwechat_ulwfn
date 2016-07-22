@@ -73,6 +73,13 @@ public class UserUtils {
 			Picasso.with(context).load(R.drawable.default_avatar).into(imageView);
 		}
 	}
+	//设置当前用户头像 仿写
+
+	public static void setAppCurrentUserAvatar(Context context, ImageView imageView) {
+		String name = DemoApplication.getInstance().getUserName();
+		setAppUserAvatar(context,name,imageView);
+
+	}
     
     /**
      * 设置用户昵称
@@ -85,22 +92,22 @@ public class UserUtils {
     		textView.setText(username);
     	}
     }
+	  //设置用户好友昵称 仿写
 
-	/**
-	 * 设置用户昵称 仿写
-	 */
 	public static void setAppUserNick(String username,TextView textView){
 		UserAvatar user = getAppUserInfo(username);
+		setAppUserNick(user, textView);
+	}
+	// 设置当前用户昵称  仿写
+	public static void setAppUserNick(UserAvatar user,TextView textView){
 		if(user != null){
 			if (user.getMUserNick() != null) {
 				textView.setText(user.getMUserNick());
+			} else {
+				textView.setText(user.getMUserName());
 			}
-			textView.setText(username);
-		}else{
-			textView.setText(username);
 		}
 	}
-
 
     /**
      * 设置当前用户昵称
@@ -112,7 +119,7 @@ public class UserUtils {
     	}
     }
 
-    
+
     /**
      * 保存或更新某个用户
      * @param  newUser
@@ -134,7 +141,7 @@ public class UserUtils {
 			Picasso.with(context).load(R.drawable.default_avatar).into(imageView);
 		}
 	}
-
+	//这是http://10.0.2.2:8888/SuperWeChatServer/Server?request=download_avatar&name_or_hxid=aaaa&avatarType=user_avatar方法
 	private static String getUserAvatarPath(String username) {
 		StringBuilder path = new StringBuilder(I.SERVER_ROOT);
 		path.append(I.QUESTION).append(I.KEY_REQUEST)

@@ -32,9 +32,13 @@ import android.widget.Toast;
 
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMGroupManager;
+
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.data.OkHttpUtils2;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.domain.InviteMessage;
+import cn.ucai.superwechat.utils.UserUtils;
 
 public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 
@@ -82,7 +86,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 			}
 			
 			holder.reason.setText(msg.getReason());
-			holder.name.setText(msg.getFrom());
+//			holder.name.setText(msg.getFrom());  好友申请 的头像修改
 			// holder.time.setText(DateUtils.getTimestampString(new
 			// Date(msg.getTime())));
 			if (msg.getStatus() == InviteMessage.InviteMesageStatus.BEAGREED) {
@@ -123,6 +127,11 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 			}
 
 			// 设置用户头像
+//			UserUtils.setAppUserAvatar(context, msg.getFrom(), holder.avator);
+//			OkHttpUtils2<String> ut = new OkHttpUtils2<String>();
+//			ut.setRequestUrl(I.SERVER_ROOT)
+//					.addParam(I.QUESTION).addParam(I.EQU)
+//					.addParam()
 		}
 
 		return convertView;
@@ -132,7 +141,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 	 * 同意好友请求或者群申请
 	 * 
 	 * @param button
-	 * @param username
+	 * @param msg
 	 */
 	private void acceptInvitation(final Button button, final InviteMessage msg) {
 		final ProgressDialog pd = new ProgressDialog(context);
@@ -173,7 +182,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 						@Override
 						public void run() {
 							pd.dismiss();
-							Toast.makeText(context, str3 + e.getMessage(), 1).show();
+							Toast.makeText(context, str3 + e.getMessage(), Toast.LENGTH_LONG).show();
 						}
 					});
 
