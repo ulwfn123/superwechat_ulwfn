@@ -22,8 +22,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -271,6 +273,9 @@ public class ContactlistFragment extends Fragment {
 		} else {
 			progressBar.setVisibility(View.GONE);
 		}
+
+		updateContactListener();  // 调用添加好友的监听
+
 	}
 
 	@Override
@@ -500,5 +505,30 @@ public class ContactlistFragment extends Fragment {
 	    	outState.putBoolean(Constant.ACCOUNT_REMOVED, true);
 	    }
 	    
+	}
+
+	//    创建内部类    继承   广播接收机
+	class UpdateContactReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			adapter.notifyDataSetChanged();  // 向电脑发送  刷新
+		}
+
+	}
+	//  定义了一个 类的属性
+	UpdateContactReceiver mUpdateContactReceiver;
+
+	private void updateContactListener() {
+		mUpdateContactReceiver = new UpdateContactReceiver();  //   属性初始化
+		//  接收 监听“update_contact_list”，这字符串为  添加好友时   发出 的广播
+		IntentFilter filter = new IntentFilter("update_contact_list");
+		//启动 “registerReceiver” 广播接收器
+		getActivity().registerReceiver(mUpdateContactReceiver, filter);
+	}
+	// 重写 onDestroyView 方法  “销毁视图”
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		getActivity().unregisterReceiver(mUpdateContactReceiver);
 	}
 }
