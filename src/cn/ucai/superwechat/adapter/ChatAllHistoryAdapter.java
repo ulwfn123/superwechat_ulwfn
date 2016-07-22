@@ -107,7 +107,8 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
             EMChatRoom room = EMChatManager.getInstance().getChatRoom(username);
             holder.name.setText(room != null && !TextUtils.isEmpty(room.getName()) ? room.getName() : username);
 		}else {
-		    UserUtils.setUserAvatar(getContext(), username, holder.avatar);
+			//  使用  仿写方法 修改用户头像
+		    UserUtils.setAppUserAvatar(getContext(), username, holder.avatar);
 			if (username.equals(Constant.GROUP_USERNAME)) {
 				holder.name.setText("群聊");
 

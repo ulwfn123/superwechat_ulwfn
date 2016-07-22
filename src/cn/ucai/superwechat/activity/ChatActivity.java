@@ -391,7 +391,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 					((TextView) findViewById(R.id.name)).setText(toChatUsername);
 				}
 			}else{
-				UserUtils.setUserNick(toChatUsername, (TextView) findViewById(R.id.name));
+				//    使用 仿写的方法  修改用户昵称
+				UserUtils.setAppUserNick(toChatUsername, (TextView) findViewById(R.id.name));
 			}
 		} else {
 			// 群聊
