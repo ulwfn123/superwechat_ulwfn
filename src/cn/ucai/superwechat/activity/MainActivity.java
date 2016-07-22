@@ -44,6 +44,9 @@ import com.easemob.EMEventListener;
 import com.easemob.EMGroupChangeListener;
 import com.easemob.EMNotifierEvent;
 import com.easemob.EMValueCallBack;
+
+import cn.ucai.superwechat.DemoApplication;
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMContactListener;
@@ -59,12 +62,17 @@ import com.easemob.chat.TextMessageBody;
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.DemoHXSDKHelper;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.bean.Result;
+import cn.ucai.superwechat.bean.UserAvatar;
+import cn.ucai.superwechat.data.OkHttpUtils2;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.domain.InviteMessage;
 import cn.ucai.superwechat.domain.InviteMessage.InviteMesageStatus;
 import cn.ucai.superwechat.domain.User;
 import cn.ucai.superwechat.utils.CommonUtils;
+import cn.ucai.superwechat.utils.Utils;
+
 import com.easemob.util.EMLog;
 import com.easemob.util.HanziToPinyin;
 import com.easemob.util.NetUtils;
@@ -514,19 +522,63 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	public class MyContactListener implements EMContactListener {
 
 		@Override
-		public void onContactAdded(List<String> usernameList) {			
+		public void onContactAdded(List<String> usernameList) {
+			Log.e(TAG, "onContactAdded,usernameLiset = " + usernameList);
 			// 保存增加的联系人
 			Map<String, User> localUsers = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList();
 			Map<String, User> toAddUsers = new HashMap<String, User>();
+			//添加语句
+			Map<String, UserAvatar> userMap = DemoApplication.getInstance().getUserMap();
+			List<String> toAddUserName = new ArrayList<String>();
+			//
 			for (String username : usernameList) {
+				Log.e(TAG, "onContactAdded,username = " + username);
 				User user = setUserHead(username);
 				// 添加好友时可能会回调added方法两次
 				if (!localUsers.containsKey(username)) {
 					userDao.saveContact(user);
 				}
 				toAddUsers.put(username, user);
+				//如果 Map中有值，则 List集合中添加
+				if (!userMap.containsKey(username)) {
+					toAddUserName.add(username);
+				}
 			}
 			localUsers.putAll(toAddUsers);
+			//  向服务器添加数据    数据为 用户添加好友
+			for (String name : toAddUserName) {
+				final OkHttpUtils2<String> utils2 = new OkHttpUtils2<String>();
+				utils2.setRequestUrl(I.REQUEST_ADD_CONTACT)
+						.addParam(I.Contact.USER_NAME,DemoApplication.getInstance().getUserName())
+						.addParam(I.Contact.CU_NAME,name)
+						.targetClass(String.class)
+						.execute(new OkHttpUtils2.OnCompleteListener<String>() {
+							@Override
+							public void onSuccess(String s) {
+								Log.e(TAG, "s == " + s);
+								Result result = Utils.getResultFromJson(s, UserAvatar.class);
+								if (result != null && result.isRetMsg()) {
+									UserAvatar user = (UserAvatar) result.getRetData();
+									Log.e(TAG, "user == " + user);
+									if (user != null) {
+										if (!DemoApplication.getInstance().getUserMap().containsKey(user.getMUserName())) {
+											DemoApplication.getInstance().getUserMap().put(user.getMUserName(), user);
+											DemoApplication.getInstance().getUserlist().add(user);
+											// 发送 广播 发送的目标不定
+											sendStickyBroadcast(new Intent("update_contact_list"));
+										}
+									} else {
+									}
+								} else {
+								}
+							}
+
+							@Override
+							public void onError(String error) {
+								Log.i(TAG, "error=" + error.toString());
+							}
+						});
+			}
 			// 刷新ui
 			if (currentTabIndex == 1)
 				contactListFragment.refresh();
@@ -548,7 +600,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 					String st10 = getResources().getString(R.string.have_you_removed);
 					if (ChatActivity.activityInstance != null
 							&& usernameList.contains(ChatActivity.activityInstance.getToChatUsername())) {
-						Toast.makeText(MainActivity.this, ChatActivity.activityInstance.getToChatUsername() + st10, 1)
+						Toast.makeText(MainActivity.this, ChatActivity.activityInstance.getToChatUsername() + st10, Toast.LENGTH_LONG)
 								.show();
 						ChatActivity.activityInstance.finish();
 					}
