@@ -212,7 +212,7 @@ public class ContactAdapter extends ArrayAdapter<User>  implements SectionIndexe
 				for(int i=0;i<count;i++){
 					final User user = mOriginalList.get(i);
 					String username = user.getUsername();
-					
+					// 联系人的  搜索 修改
 					if(username.startsWith(prefixString)){
 						if (!username.equals(Constant.GROUP_USERNAME)&&
 								!username.equals(Constant.NEW_FRIENDS_USERNAME))

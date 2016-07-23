@@ -53,9 +53,6 @@ public class AddContactActivity extends BaseActivity{
 	private TextView tvNothing;
 
 
-
-
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -74,7 +71,6 @@ public class AddContactActivity extends BaseActivity{
 		inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		tvNothing = (TextView) findViewById(R.id.tvNothing);
 	}
-	
 	
 	/**
 	 * 查找contact
@@ -96,14 +92,15 @@ public class AddContactActivity extends BaseActivity{
 				startActivity(new Intent(this, AlertDialog.class).putExtra("msg", str));
 				return;
 			}
-			// 如果 好友存在  ，执行下列操作
+			// 如果 好友存在  ，执行下列操作  先判断查找的用户是否为自己
 			UserAvatar userAvatar = DemoApplication.getInstance().getUserMap().get(toAddUsername);
 			if (userAvatar != null) {
+				//  如果点击查找到的用户，，则自动跳转到该用户的资料界面
 				startActivity(new Intent(AddContactActivity.this,
 						UserProfileActivity.class).putExtra("username",toAddUsername));
 				return;
 			}
-			//查找用户的  自写方法
+			//添加查找用户的  自写方法
 			final OkHttpUtils2<String> utils2 = new OkHttpUtils2<String>();
 			utils2.setRequestUrl(I.REQUEST_FIND_USER)
 					.addParam(I.User.USER_NAME,toAddUsername)
@@ -119,8 +116,8 @@ public class AddContactActivity extends BaseActivity{
 								if (user != null) {
 									//服务器在此显示用户，  显示此用户 和添加按钮
 									searchedUserLayout.setVisibility(View.VISIBLE);
-									UserUtils.setAppUserAvatar(AddContactActivity.this, toAddUsername, avatar);
-									nameText.setText(user.getMUserNick());
+									UserUtils.setAppUserAvatar(AddContactActivity.this, toAddUsername, avatar); //显示添加好友的头像
+									nameText.setText(user.getMUserNick());   //  显示添加好友的昵称
 									tvNothing.setVisibility(View.GONE);
 								}
 							} else {

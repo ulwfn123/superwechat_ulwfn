@@ -262,8 +262,15 @@ public class OkHttpUtils2<T> {
 //        Log.e("okhttp","1 murl="+ mUrl.toString());
         return this;
     }
-
+    //  修改图片下载方法，，，解决图片下载错误问题  和下面的方法功能一样
     public OkHttpUtils2<T> addFile(File file) {
+        if (mUrl == null) {
+            return this;
+        }
+        mFileBody = RequestBody.create(null, file);
+        return this;
+    }
+    public OkHttpUtils2<T> addFile2(File file) {
         if (mUrl == null) {
             return this;
         }

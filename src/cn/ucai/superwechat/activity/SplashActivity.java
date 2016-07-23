@@ -63,7 +63,7 @@ public class SplashActivity extends BaseActivity {
 					UserDao userDao = new UserDao(SplashActivity.this);
 					UserAvatar user = userDao.getUserData(userName);
 					Log.e("main", "user = " + user);
-					if (user != null) {
+					if (user != null) {  //添加包含，， 如果不等于空
 						DemoApplication.getInstance().setUser(user);
 						DemoApplication.currentUserNick=user.getMUserNick();
 					}

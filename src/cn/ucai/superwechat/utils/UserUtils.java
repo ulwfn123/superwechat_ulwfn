@@ -38,9 +38,7 @@ public class UserUtils {
     }
 
 	/**    仿写
-	 * 根据username获取相应useravatar
-	 * @param username
-	 * @return
+	 * 根据username用户名称获取相应useravatar用户头像
 	 */
 	public static UserAvatar getAppUserInfo(String username){
 		UserAvatar user = DemoApplication.getInstance().getUserMap().get(username);
@@ -98,14 +96,16 @@ public class UserUtils {
 		UserAvatar user = getAppUserInfo(username);
 		setAppUserNick(user, textView);
 	}
-	// 设置当前用户昵称  仿写
+	// 设置当前用户昵称  仿写  上面调用
 	public static void setAppUserNick(UserAvatar user,TextView textView){
-		if(user != null){
+		if (user != null) {
 			if (user.getMUserNick() != null) {
 				textView.setText(user.getMUserNick());
 			} else {
 				textView.setText(user.getMUserName());
 			}
+		} else {
+			textView.setText(user.getMUserName());
 		}
 	}
 
@@ -118,6 +118,17 @@ public class UserUtils {
     		textView.setText(user.getNick());
     	}
     }
+
+	 //设置当前用户昵称  仿写
+	public static void setAppCurrentUserNick(TextView textView){
+		UserAvatar user = DemoApplication.getInstance().getUser();
+		if(textView != null&&user!=null){
+			if (user.getMUserNick() != null) {
+				textView.setText(user.getMUserNick());
+			}
+			textView.setText(user.getMUserName());
+		}
+	}
 
 
     /**

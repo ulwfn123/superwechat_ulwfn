@@ -77,13 +77,13 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 		//设置 显示 用户的头像和昵称信息
 		if (username == null||username.equals(EMChatManager.getInstance().getCurrentUser())) {
 			tvUsername.setText(EMChatManager.getInstance().getCurrentUser());
-			UserUtils.setCurrentUserNick(tvNickName);   // 这里不一样， 是否调用的仿写方法
+			UserUtils.setAppCurrentUserNick(tvNickName);   //调用  仿写的 修改昵称方法，，设置登录账户昵称
 			UserUtils.setAppUserAvatar(this, EMChatManager.getInstance().getCurrentUser(),headAvatar);
 		} else {
 			tvUsername.setText(username);
 			UserUtils.setAppUserNick(username, tvNickName);  //  直接调用自写方方 ,显示 搜索的用户昵称
 			UserUtils.setAppUserAvatar(this, username, headAvatar);//  直接调用自写方方 ,显示 搜索的用户头像
-//			asyncFetchUserInfo(username);
+//			asyncFetchUserInfo(username);  //方法好处，从服务器获取数据，处理好友修改资料
 		}
 	}
 
