@@ -274,7 +274,7 @@ public class ContactlistFragment extends Fragment {
 			progressBar.setVisibility(View.GONE);
 		}
 
-		updateContactListener();  // 调用添加好友的监听
+		updateContactListener();  // 调用添加好友的的广播拦截器
 
 	}
 
@@ -517,7 +517,7 @@ public class ContactlistFragment extends Fragment {
 	}
 	//  定义了一个 类的属性
 	UpdateContactReceiver mUpdateContactReceiver;
-
+	// 广播拦截器
 	private void updateContactListener() {
 		mUpdateContactReceiver = new UpdateContactReceiver();  //   属性初始化
 		//  接收 监听“update_contact_list”，这字符串为  添加好友时   发出 的广播

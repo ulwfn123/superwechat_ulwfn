@@ -520,14 +520,14 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	 * 
 	 */
 	public class MyContactListener implements EMContactListener {
-
+        // 发送添加 好友 的 申请
 		@Override
 		public void onContactAdded(List<String> usernameList) {
 			Log.e(TAG, "onContactAdded,usernameLiset = " + usernameList);
 			// 保存增加的联系人
 			Map<String, User> localUsers = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList();
 			Map<String, User> toAddUsers = new HashMap<String, User>();
-			//添加语句
+			//添加好友  自己增加的语句
 			Map<String, UserAvatar> userMap = DemoApplication.getInstance().getUserMap();
 			List<String> toAddUserName = new ArrayList<String>();
 			//
@@ -562,11 +562,11 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 									Log.e(TAG, "user == " + user);
 									if (user != null) {
 										if (!DemoApplication.getInstance().getUserMap().containsKey(user.getMUserName())) {
-											DemoApplication.getInstance().getUserMap().put(user.getMUserName(), user);
-											DemoApplication.getInstance().getUserlist().add(user);
-											// 发送 广播 发送的目标不定
-											sendStickyBroadcast(new Intent("update_contact_list"));
-										}
+                                            DemoApplication.getInstance().getUserMap().put(user.getMUserName(), user);
+                                            DemoApplication.getInstance().getUserlist().add(user);  // 全局变量添加好友
+                                            // 发送 广播 发送的目标不定，会一直发送广播
+                                            sendStickyBroadcast(new Intent("update_contact_list"));
+                                        }
 									} else {
 									}
 								} else {
@@ -584,9 +584,10 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 				contactListFragment.refresh();
 
 		}
-
+        //   zh
 		@Override
 		public void onContactDeleted(final List<String> usernameList) {
+			Log.e(TAG, "onContactDeleted,usernameLiset = " + usernameList);
 			// 被删除
 			Map<String, User> localUsers = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList();
 			for (String username : usernameList) {
@@ -612,10 +613,10 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 			});
 
 		}
-
+        //请求加你为好友
 		@Override
 		public void onContactInvited(String username, String reason) {
-			
+            Log.e(TAG, "onContactInvited, reason= " + reason);
 			// 接到邀请的消息，如果不处理(同意或拒绝)，掉线后，服务器会自动再发过来，所以客户端不需要重复提醒
 			List<InviteMessage> msgs = inviteMessgeDao.getMessagesList();
 
@@ -635,9 +636,10 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 			notifyNewIviteMessage(msg);
 
 		}
-
+        //同意了你的好友请求
 		@Override
 		public void onContactAgreed(String username) {
+            Log.e(TAG, "onContactAgreed, username= " + username);
 			List<InviteMessage> msgs = inviteMessgeDao.getMessagesList();
 			for (InviteMessage inviteMessage : msgs) {
 				if (inviteMessage.getFrom().equals(username)) {

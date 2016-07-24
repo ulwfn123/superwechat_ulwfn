@@ -47,7 +47,7 @@ public class DownloadContactListTask {
                         if (list != null && list.size() >= 0) {
                             Log.e(TAG, "list.size = " + list.size());
                             DemoApplication.getInstance().setUserlist(list);
-                            mContext.sendStickyBroadcast(new Intent("Down_Contact_liattTsk"));
+                            mContext.sendStickyBroadcast(new Intent("update_contact_list"));
                             // 设置好友昵称
                             Map<String, UserAvatar> userMap = DemoApplication.getInstance().getUserMap();
                             for (UserAvatar u : list) {
