@@ -392,7 +392,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 					((TextView) findViewById(R.id.name)).setText(toChatUsername);
 				}
 			}else{
-				//    使用 仿写的方法  修改用户昵称
+				//    使用 仿写的方法  修改聊天好友的的昵称
 				UserUtils.setAppUserNick(toChatUsername, (TextView) findViewById(R.id.name));
 			}
 		} else {
@@ -1417,7 +1417,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 
 						if (filename != "delete_expression") { // 不是删除键，显示表情
 							// 这里用的反射，所以混淆的时候不要混淆SmileUtils这个类
-							//  这里被修改了   添加了 (Utils.getPackageName(ChatActivity.this)+".utils.
+							//  这里被修改了   添加了 (Utils.getPackageName(ChatActivity.this)+".utils.  给的是一个路径
 							Class clz = Class.forName(Utils.getPackageName(ChatActivity.this)+".utils.SmileUtils");
 							Field field = clz.getField(filename);
 							mEditTextContent.append(SmileUtils.getSmiledText(ChatActivity.this,

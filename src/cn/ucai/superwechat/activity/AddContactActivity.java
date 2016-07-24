@@ -143,7 +143,7 @@ public class AddContactActivity extends BaseActivity{
 	}	
 	
 	/**
-	 *  添加contact
+	 *  添加contact   添加好友
 	 * @param
 	 */
 	public void addContact(View view){

@@ -107,7 +107,7 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
             EMChatRoom room = EMChatManager.getInstance().getChatRoom(username);
             holder.name.setText(room != null && !TextUtils.isEmpty(room.getName()) ? room.getName() : username);
 		}else {
-			//  使用  仿写方法 修改用户头像
+			//  使用  仿写方法 修改单聊用户头像
 		    UserUtils.setAppUserAvatar(getContext(), username, holder.avatar);
 			if (username.equals(Constant.GROUP_USERNAME)) {
 				holder.name.setText("群聊");
@@ -124,7 +124,8 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 					holder.name.setText(username);
 				}
 			}else{
-				UserUtils.setUserNick(username, holder.name);
+				// 使用仿写 修改  ，设置  单聊 用户对象昵称
+				UserUtils.setAppUserNick(username, holder.name);
 			}
 		}
 
