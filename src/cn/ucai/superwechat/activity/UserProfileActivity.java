@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -22,16 +23,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.easemob.EMValueCallBack;
+
+import cn.ucai.superwechat.DemoApplication;
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
 import cn.ucai.superwechat.DemoHXSDKHelper;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.bean.Result;
+import cn.ucai.superwechat.bean.UserAvatar;
+import cn.ucai.superwechat.data.OkHttpUtils2;
+import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.domain.User;
 import cn.ucai.superwechat.utils.UserUtils;
+import cn.ucai.superwechat.utils.Utils;
+
 import com.squareup.picasso.Picasso;
 
 public class UserProfileActivity extends BaseActivity implements OnClickListener{
-	
+	private static final String TAG = UserProfileActivity.class.getSimpleName();
 	private static final int REQUESTCODE_PICK = 1;
 	private static final int REQUESTCODE_CUTTING = 2;
 	private ImageView headAvatar;
@@ -95,26 +105,61 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 			break;
 		case R.id.rl_nickname:
 			final EditText editText = new EditText(this);
+			Log.e(TAG, "nick  ====" + DemoApplication.getInstance().getUser().getMUserNick());
+			editText.setText(DemoApplication.getInstance().getUser().getMUserNick());   //设置当前个人资料修改后的昵称
 			new Builder(this).setTitle(R.string.setting_nickname).setIcon(android.R.drawable.ic_dialog_info).setView(editText)
 					.setPositiveButton(R.string.dl_ok, new DialogInterface.OnClickListener() {
-
 						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							String nickString = editText.getText().toString();
+						public void onClick(final DialogInterface dialog, int which) {
+							final String nickString = editText.getText().toString();
 							if (TextUtils.isEmpty(nickString)) {
 								Toast.makeText(UserProfileActivity.this, getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT).show();
 								return;
 							}
-							updateRemoteNick(nickString);
+							updateAppNick(nickString);  //更新本地数据库昵称
 						}
 					}).setNegativeButton(R.string.dl_cancel, null).show();
 			break;
 		default:
 			break;
 		}
-
 	}
-	
+	//更新用户资料本地数据库   昵称
+	private void updateAppNick(final String nickString) {
+		final OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
+		utils.setRequestUrl(I.REQUEST_UPDATE_USER_NICK)
+				.addParam(I.User.USER_NAME, DemoApplication.getInstance().getUserName())
+				.addParam(I.User.NICK,nickString)
+				.targetClass(String.class)
+				.execute(new OkHttpUtils2.OnCompleteListener<String>() {
+					@Override
+					public void onSuccess(String s) {
+						Log.e(TAG, "s == " + s);
+						Result result = Utils.getResultFromJson(s, UserAvatar.class);
+						if (result != null && result.isRetMsg()) {
+							UserAvatar user = (UserAvatar) result.getRetData();
+							if (user != null) {
+								updateRemoteNick(nickString);  //  更新 用户昵称   更新本地服务端和环信服务器
+								DemoApplication.getInstance().setUser(user);
+								DemoApplication.currentUserNick = user.getMUserNick();
+								UserDao dao = new UserDao(UserProfileActivity.this);
+								dao.updateUserNick(user);
+							}
+						} else {
+							Toast.makeText(UserProfileActivity.this, R.string.toast_updatenick_fail ,Toast.LENGTH_LONG).show();
+							dialog.dismiss();
+						}
+					}
+
+					@Override
+					public void onError(String error) {
+						Log.i(TAG, "error=" + error.toString());
+						Toast.makeText(UserProfileActivity.this, R.string.toast_updatenick_fail ,Toast.LENGTH_LONG).show();
+						dialog.dismiss();
+					}
+				});
+	}
+
 	public void asyncFetchUserInfo(String username){
 		((DemoHXSDKHelper)HXSDKHelper.getInstance()).getUserProfileManager().asyncGetUserInfo(username, new EMValueCallBack<User>() {
 			
@@ -136,8 +181,6 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 			}
 		});
 	}
-	
-	
 	
 	private void uploadHeadPhoto() {
 		Builder builder = new Builder(this);
