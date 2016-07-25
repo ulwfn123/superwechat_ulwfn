@@ -384,4 +384,15 @@ public class DemoDBManager {
         }
         return user;
     }
+    //  用户  昵称的修改 更新内存中的昵称
+    synchronized  public void updateUserNick(UserAvatar user) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(UserDao.USER_COLUMN_USER_NICK, user.getMUserNick());  //需要更新的   属性  ，下面括号中第2个参数
+        if (db.isOpen()) {
+            ///  申明   更新 的  条件，  条件为  用户名字
+            db.update(UserDao.USER_TABLE_NAME, values, UserDao.USER_COLUMN_USER_NAME + " = ?",
+                    new String[]{user.getMUserName()});
+        }
+    }
 }

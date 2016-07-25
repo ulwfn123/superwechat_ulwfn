@@ -119,4 +119,8 @@ public class UserDao {
 	public UserAvatar getUserData(String username) {
 		return DemoDBManager.getInstance().getUserData(username);
 	}
+	//  更新用户昵称 ，更新的手机内存
+	public void updateUserNick(UserAvatar user) {
+		DemoDBManager.getInstance().updateUserNick(user);
+	}
 }
