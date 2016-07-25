@@ -584,46 +584,42 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 				contactListFragment.refresh();
 
 		}
-        //   zh
+        //   删除好友
 		@Override
 		public void onContactDeleted(final List<String> usernameList) {
 			Log.e(TAG, "onContactDeleted,usernameLiset = " + usernameList);
 			// 被删除
-			Map<String, User> localUsers = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList();
 			// 删除好友
 			final String currentUserName = DemoApplication.getInstance().getUserName();
-			Map<String, UserAvatar> userMap = DemoApplication.getInstance().getUserMap();
 			List<String> toDelUserName = new ArrayList<String>();
-			for (String username:usernameList) {
+			for (final String username:usernameList) {
 				Log.e(TAG, "onContactDeleted.username = " +username);
-				localUsers.remove(username);
 				toDelUserName.add(username);
-				UserAvatar u = userMap.get(username);
-				usernameList.remove(u);    ///   不知道是否对的“usernameList”
-				userDao.deleteContact(username);
-				inviteMessgeDao.deleteMessage(username);
-			}
-			for (final String name : toDelUserName) {
 				OkHttpUtils2<Result> util = new OkHttpUtils2<Result>();
 				util.setRequestUrl(I.REQUEST_DELETE_CONTACT)
 						.addParam(I.Contact.USER_NAME, currentUserName)
-						.addParam(I.Contact.CU_NAME, name)
+						.addParam(I.Contact.CU_NAME, username)
 						.targetClass(Result.class)
 						.execute(new OkHttpUtils2.OnCompleteListener<Result>() {
 							@Override
 							public void onSuccess(Result result) {
-								Map<String, UserAvatar> userMap = DemoApplication.getInstance().getUserMap();
-								List<UserAvatar> userlist = DemoApplication.getInstance().getUserlist();
-								UserAvatar u = userMap.get(name);
-								userlist.remove(u);
-								userMap.remove(name);
-								sendStickyBroadcast(new Intent("update_contact_list"));
+								if (result.isRetMsg()) {
+
+									((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList().remove(username);
+									UserAvatar u = DemoApplication.getInstance().getUserMap().remove(username);
+									DemoApplication.getInstance().getUserlist().remove(u);
+									DemoApplication.getInstance().getUserMap().remove(username);
+
+									userDao.deleteContact(username);
+									inviteMessgeDao.deleteMessage(username);
+									sendStickyBroadcast(new Intent("update_contact_list"));
+								}
 
 							}
 
 							@Override
 							public void onError(String error) {
-
+								Log.e(TAG, "error = " +error);
 							}
 						});
 			}
@@ -653,7 +649,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
         //请求加你为好友
 		@Override
 		public void onContactInvited(String username, String reason) {
-            Log.e(TAG, "onContactInvited, reason= " + reason);
+            Log.e(TAG, "onContactInvited, reason= " + username+ ", reason"+reason);
 			// 接到邀请的消息，如果不处理(同意或拒绝)，掉线后，服务器会自动再发过来，所以客户端不需要重复提醒
 			List<InviteMessage> msgs = inviteMessgeDao.getMessagesList();
 
@@ -676,7 +672,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
         //同意了你的好友请求
 		@Override
 		public void onContactAgreed(String username) {
-            Log.e(TAG, "onContactAgreed, username= " + username);
+            Log.e(TAG, "onContactAgreed, 同意好友申请username= " + username);
 			List<InviteMessage> msgs = inviteMessgeDao.getMessagesList();
 			for (InviteMessage inviteMessage : msgs) {
 				if (inviteMessage.getFrom().equals(username)) {
@@ -692,7 +688,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 			notifyNewIviteMessage(msg);
 
 		}
-
+		// 拒绝好友申请
 		@Override
 		public void onContactRefused(String username) {
 			
