@@ -590,11 +590,48 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 			Log.e(TAG, "onContactDeleted,usernameLiset = " + usernameList);
 			// 被删除
 			Map<String, User> localUsers = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList();
-			for (String username : usernameList) {
+			// 删除好友
+			final String currentUserName = DemoApplication.getInstance().getUserName();
+			Map<String, UserAvatar> userMap = DemoApplication.getInstance().getUserMap();
+			List<String> toDelUserName = new ArrayList<String>();
+			for (String username:usernameList) {
+				Log.e(TAG, "onContactDeleted.username = " +username);
 				localUsers.remove(username);
+				toDelUserName.add(username);
+				UserAvatar u = userMap.get(username);
+				usernameList.remove(u);    ///   不知道是否对的“usernameList”
 				userDao.deleteContact(username);
 				inviteMessgeDao.deleteMessage(username);
 			}
+			for (final String name : toDelUserName) {
+				OkHttpUtils2<Result> util = new OkHttpUtils2<Result>();
+				util.setRequestUrl(I.REQUEST_DELETE_CONTACT)
+						.addParam(I.Contact.USER_NAME, currentUserName)
+						.addParam(I.Contact.CU_NAME, name)
+						.targetClass(Result.class)
+						.execute(new OkHttpUtils2.OnCompleteListener<Result>() {
+							@Override
+							public void onSuccess(Result result) {
+								Map<String, UserAvatar> userMap = DemoApplication.getInstance().getUserMap();
+								List<UserAvatar> userlist = DemoApplication.getInstance().getUserlist();
+								UserAvatar u = userMap.get(name);
+								userlist.remove(u);
+								userMap.remove(name);
+								sendStickyBroadcast(new Intent("update_contact_list"));
+
+							}
+
+							@Override
+							public void onError(String error) {
+
+							}
+						});
+			}
+//			for (String username : usernameList) {  删除联系人时被注释
+//				localUsers.remove(username);
+//				userDao.deleteContact(username);
+//				inviteMessgeDao.deleteMessage(username);
+//			}
 			runOnUiThread(new Runnable() {
 				public void run() {
 					// 如果正在与此用户的聊天页面

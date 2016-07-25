@@ -114,4 +114,19 @@ public class UserAvatar implements Serializable {
 				+ ", mavatarPath=" + mavatarPath + ", mavatarType=" + mavatarType + ", mavatarLastUpdateTime="
 				+ mavatarLastUpdateTime + "]";
 	}
+	// 删除好友的重写 的方法
+	@Override
+	public boolean equals(Object o) {
+		if (this==o)return true;
+		if (!(o instanceof UserAvatar)) return  false;
+
+		UserAvatar that = (UserAvatar) o;
+		return muserName.equals(that.muserName);
+	}
+	// 删除好友的重写 的方法
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
 }

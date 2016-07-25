@@ -15,10 +15,14 @@ import com.easemob.chat.EMGroupManager;
 
 import cn.ucai.superwechat.DemoApplication;
 import cn.ucai.superwechat.DemoHXSDKHelper;
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.bean.Result;
 import cn.ucai.superwechat.bean.UserAvatar;
+import cn.ucai.superwechat.data.OkHttpUtils2;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.task.DownloadContactListTask;
+import cn.ucai.superwechat.utils.Utils;
 
 /**
  * 开屏页
@@ -62,6 +66,25 @@ public class SplashActivity extends BaseActivity {
 					String userName = DemoApplication.getInstance().getUserName();
 					UserDao userDao = new UserDao(SplashActivity.this);
 					UserAvatar user = userDao.getUserData(userName);
+//					if (user == null) {
+//						OkHttpUtils2<String> utils2 = new OkHttpUtils2<String>();
+//						utils2.setRequestUrl(I.REQUEST_FIND_USER)
+//								.addParam(I.User.USER_NAME,userName)
+//								.targetClass(String.class)
+//								.execute(new OkHttpUtils2.OnCompleteListener<String>() {
+//									@Override
+//									public void onSuccess(String s) {
+//										Log.e(TAG, "s =" + s);
+//										Result use = Utils.getResultFromJson(s,UserAvatar.class);
+////										DemoApplication.getInstance().getUser(use);
+//									}
+//
+//									@Override
+//									public void onError(String error) {
+//										Log.e(TAG, "error =" + error);
+//									}
+//								});
+//					}
 					Log.e("main", "user = " + user);
 					if (user != null) {  //添加包含，， 如果不等于空
 						DemoApplication.getInstance().setUser(user);
