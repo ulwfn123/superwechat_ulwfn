@@ -31,6 +31,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -51,6 +52,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import cn.ucai.superwechat.DemoApplication;
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import cn.ucai.superwechat.applib.controller.HXSDKHelper.HXSyncListener;
 import com.easemob.chat.EMContactManager;
@@ -58,6 +61,9 @@ import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.DemoHXSDKHelper;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.adapter.ContactAdapter;
+import cn.ucai.superwechat.bean.Result;
+import cn.ucai.superwechat.bean.UserAvatar;
+import cn.ucai.superwechat.data.OkHttpUtils2;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.domain.User;
@@ -365,9 +371,33 @@ public class ContactlistFragment extends Fragment {
 
 			}
 		}).start();
+		//   删除联系人   ，删除的 本地数据库中数据
+		String currentUsetName = DemoApplication.getInstance().getUserName();
+		final OkHttpUtils2<Result> utils2 = new OkHttpUtils2<Result>();
+		utils2.setRequestUrl(I.REQUEST_DELETE_CONTACT)
+				.addParam(I.Contact.USER_NAME,currentUsetName)
+				.addParam(I.Contact.CU_NAME,tobeDeleteUser.getUsername())
+				.targetClass(Result.class)
+				.execute(new OkHttpUtils2.OnCompleteListener<Result>() {
+					@Override
+					public void onSuccess(Result result) {
+						Log.e(TAG, "result = =" + result);
+						if (result.isRetMsg()) {
+							Log.e(TAG, "result = =    ........................" );
+							((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList().remove(tobeDeleteUser.getUsername());
+							UserAvatar u = DemoApplication.getInstance().getUserMap().get(tobeDeleteUser);
+							DemoApplication.getInstance().getUserlist().remove(u);
+							DemoApplication.getInstance().getUserMap().remove(tobeDeleteUser.getUsername());
+							getActivity().sendStickyBroadcast(new Intent("update_contact_list"));
+						}
+					}
 
+					@Override
+					public void onError(String error) {
+
+					}
+				});
 	}
-
 	/**
 	 * 把user移入到黑名单
 	 */
