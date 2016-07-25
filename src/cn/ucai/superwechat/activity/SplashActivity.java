@@ -22,6 +22,7 @@ import cn.ucai.superwechat.bean.UserAvatar;
 import cn.ucai.superwechat.data.OkHttpUtils2;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.task.DownloadContactListTask;
+import cn.ucai.superwechat.utils.UserUtils;
 import cn.ucai.superwechat.utils.Utils;
 
 /**
@@ -66,27 +67,31 @@ public class SplashActivity extends BaseActivity {
 					String userName = DemoApplication.getInstance().getUserName();
 					UserDao userDao = new UserDao(SplashActivity.this);
 					UserAvatar user = userDao.getUserData(userName);
-//					if (user == null) {
-//						OkHttpUtils2<String> utils2 = new OkHttpUtils2<String>();
-//						utils2.setRequestUrl(I.REQUEST_FIND_USER)
-//								.addParam(I.User.USER_NAME,userName)
-//								.targetClass(String.class)
-//								.execute(new OkHttpUtils2.OnCompleteListener<String>() {
-//									@Override
-//									public void onSuccess(String s) {
-//										Log.e(TAG, "s =" + s);
-//										Result use = Utils.getResultFromJson(s,UserAvatar.class);
-////										DemoApplication.getInstance().getUser(use);
-//									}
-//
-//									@Override
-//									public void onError(String error) {
-//										Log.e(TAG, "error =" + error);
-//									}
-//								});
-//					}
-					Log.e("main", "user = " + user);
-					if (user != null) {  //添加包含，， 如果不等于空
+					if (user == null) {   // 如果手机上没有登录账户的信息，，则 去本地数据库下载
+						OkHttpUtils2<String> utils2 = new OkHttpUtils2<String>();
+						utils2.setRequestUrl(I.REQUEST_FIND_USER)
+								.addParam(I.User.USER_NAME,userName)
+								.targetClass(String.class)
+								.execute(new OkHttpUtils2.OnCompleteListener<String>() {
+									@Override
+									public void onSuccess(String s) {
+										Log.e(TAG, "s =" + s);
+										Result result = Utils.getResultFromJson(s,UserAvatar.class);
+										if (result != null && result.isRetMsg()) {
+											UserAvatar user = (UserAvatar) result.getRetData();
+											if (user != null) {
+												DemoApplication.getInstance().setUser(user);
+												DemoApplication.currentUserNick=user.getMUserNick();
+											}
+										}
+									}
+
+									@Override
+									public void onError(String error) {
+										Log.e(TAG, "error =" + error);
+									}
+								});
+					}else {  //添加包含，， 如果不等于空
 						DemoApplication.getInstance().setUser(user);
 						DemoApplication.currentUserNick=user.getMUserNick();
 					}
