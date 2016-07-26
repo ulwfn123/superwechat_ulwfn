@@ -148,11 +148,11 @@ public class NewGroupActivity extends BaseActivity {
 						    group = EMGroupManager.getInstance().createPrivateGroup(groupName, desc, members, memberCheckbox.isChecked(),200);
 						}
                         Log.e(TAG, "HxId" + group.getGroupId());
+                        createAppGroup(group.getGroupId(),groupName,desc,members);
                         runOnUiThread(new Runnable() {
 							public void run() {
-								progressDialog.dismiss();
-								setResult(RESULT_OK);
-//                                createAppGroup(group.getGroupId(),groupName,desc,members);
+                                progressDialog.dismiss();
+                                setResult(RESULT_OK);
 								finish();
 							}
 						});
@@ -169,75 +169,114 @@ public class NewGroupActivity extends BaseActivity {
 		}
 	}
     //   创建 群组
-//    private void createAppGroup(String groupid, String groupName, String desc, final String[] members) {
-//        boolean isPublic = checkBox.isChecked();
-//        boolean invites = isPublic;
-//        File file = new File(OnSetAvatarListener.getAvatarPath(NewGroupActivity.this, I.AVATAR_TYPE_GROUP_PATH));
-//        String own = DemoApplication.getInstance().getUserName();
-//        final OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
-//        utils.setRequestUrl(I.REQUEST_CREATE_GROUP)
-//                .addParam(I.Group.HX_ID,groupid)
-//                .addParam(I.Group.NAME,groupName)
-//                .addParam(I.Group.OWNER,own)
-//                .addParam(I.Group.DESCRIPTION,desc)
-//                .addParam(I.Group.IS_PUBLIC,String.valueOf(isPublic))
-//                .addParam(I.Group.ALLOW_INVITES,String.valueOf(invites))
-//                .targetClass(String.class)
-//                .addFile(file)
-//                .execute(new OkHttpUtils2.OnCompleteListener<String>() {
-//                    @Override
-//                    public void onSuccess(String s) {
-//                        Log.e(TAG, "s = " + s);
-//                        Result result = Utils.getResultFromJson(s, GroupAvatar.class);
+    private void createAppGroup(final String groupid, String groupName, String desc, final String[] members) {
+        boolean isPublic = checkBox.isChecked();
+        boolean invites = !isPublic;
+        File file = new File(OnSetAvatarListener.getAvatarPath(NewGroupActivity.this, I.AVATAR_TYPE_GROUP_PATH ),
+                avatarName+I.AVATAR_SUFFIX_JPG);
+        Log.e(TAG, "file ====" + file);
+        Log.e(TAG, "groupid ====" + groupid);
+        Log.e(TAG, "groupName ====" + groupName);
+
+        Log.e(TAG, "desc ====" + desc);
+        Log.e(TAG, "String.valueOf(isPublic) ====" + String.valueOf(isPublic));
+        Log.e(TAG, "String.valueOf(invites) ====" + String.valueOf(invites));
+
+        String own = DemoApplication.getInstance().getUserName();
+        Log.e(TAG, "own ====" + own);
+        final OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
+        utils.setRequestUrl(I.REQUEST_CREATE_GROUP)
+                .addParam(I.Group.HX_ID,groupid)
+                .addParam(I.Group.NAME,groupName)
+                .addParam(I.Group.OWNER,own)
+                .addParam(I.Group.DESCRIPTION,desc)
+                .addParam(I.Group.IS_PUBLIC,String.valueOf(isPublic))
+                .addParam(I.Group.ALLOW_INVITES,String.valueOf(invites))
+                .targetClass(String.class)
+                .addFile(file)
+                .execute(new OkHttpUtils2.OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        Log.e(TAG, "s = " + s);
+                        Result result = Utils.getResultFromJson(s, GroupAvatar.class);
 //                        GroupAvatar groupAvatar = (GroupAvatar) result.getRetData();
-//                        Log.e(TAG, "groupAvatar  = " + groupAvatar);
-//                        if (result != null && result.isRetMsg()) {
-//                            if (members != null && members.length > 0) {
-////                                addGroupMembers(groupAvatar, members);
-//                            }
-//                            runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    progressDialog.dismiss();
-//                                    setResult((RESULT_OK));
-//                                    finish();
-//                                }
-//                            });
-//
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(String error) {
-//
-//                    }
-//                });
-//    }
-    //创建 群组成员
-//    private void addGroupMembers(GroupAvatar groupAvatar, String[] members) {
-//        String memberArr = "";
-//        for (String m : members) {
-//            memberArr += m + ",";
-//        }
-//        memberArr.substring(1, memberArr.length() - 1);
-//        Log.e(TAG, "memberArr = = " + memberArr);
-//        final OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
-//        utils.setRequestUrl(I.REQUEST_ADD_GROUP_MEMBERS)
-//                .addParam(I.Member.USER_NAME,memberArr)
-//                .addParam(I.Member.GROUP_HX_ID,groupId)
-//                .targetClass(String.class)
-//                .execute(new OkHttpUtils2.OnCompleteListener<String>() {
-//                    @Override
-//                    public void onSuccess(String result) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onError(String error) {
-//
-//                    }
-//                });
-//    }
+//                        Log.e(TAG, "groupAvatar  = " + result.toString());
+                        if (result != null && result.isRetMsg()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setResult((RESULT_OK));
+                                    progressDialog.dismiss();
+                                    finish();
+                                }
+                            });
+                            /*if (members != null && members.length > 0) {
+                                addGroupMembers(groupid, members);
+                            }else {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        setResult((RESULT_OK));
+                                        progressDialog.dismiss();
+                                        finish();
+                                    }
+                                });
+                            }*/
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Log.e(TAG, "123456789");
+                        progressDialog.dismiss();
+                        Toast.makeText(NewGroupActivity.this, st2 + error, Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+//     添加群组成员
+    private void addGroupMembers(String hxid, String[] members) {
+        String memberArr = "";
+        for (String m : members) {
+            memberArr += m + ",";
+        }
+       memberArr= memberArr.substring(0, memberArr.length() - 1);
+        Log.e(TAG, "memberArr = = " + memberArr);
+        final OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
+        utils.setRequestUrl(I.REQUEST_ADD_GROUP_MEMBERS)
+                .addParam(I.Member.GROUP_HX_ID,hxid)
+                .addParam(I.Member.USER_NAME,memberArr)
+                .targetClass(String.class)
+                .execute(new OkHttpUtils2.OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        Log.e(TAG, "s = " + s);
+                        Result result = Utils.getResultFromJson(s, GroupAvatar.class);
+                        GroupAvatar groupAvatar = (GroupAvatar) result.getRetData();
+//                        Log.e(TAG, "result  = " + groupAvatar);
+                        if (result != null && result.isRetMsg()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressDialog.dismiss();
+                                    setResult((RESULT_OK));
+                                    finish();
+                                }
+                            });
+                        } else {
+                            progressDialog.dismiss();
+                            Toast.makeText(NewGroupActivity.this, st2 , Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Log.e(TAG, "result =  " + error);
+                        progressDialog.dismiss();
+                        Toast.makeText(NewGroupActivity.this, st2 + error, Toast.LENGTH_LONG).show();
+
+                    }
+                });
+    }
 
     public void back(View view) {
 		finish();
