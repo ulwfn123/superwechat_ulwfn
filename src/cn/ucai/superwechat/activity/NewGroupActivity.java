@@ -30,11 +30,18 @@ import android.widget.Toast;
 import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMGroupManager;
 
+import cn.ucai.superwechat.DemoApplication;
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.bean.GroupAvatar;
+import cn.ucai.superwechat.bean.Result;
+import cn.ucai.superwechat.data.OkHttpUtils2;
 import cn.ucai.superwechat.listener.OnSetAvatarListener;
+import cn.ucai.superwechat.utils.Utils;
 
 import com.easemob.exceptions.EaseMobException;
+
+import java.io.File;
 
 public class NewGroupActivity extends BaseActivity {
 
@@ -49,7 +56,7 @@ public class NewGroupActivity extends BaseActivity {
 	private ImageView avatar;
     private OnSetAvatarListener mOnSetAvatarListener;
     private String avatarName;
-    private static int CREATE_GROUP = 50;
+    private static int CREATE_GROUP = 100;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +71,7 @@ public class NewGroupActivity extends BaseActivity {
 
         avatar = (ImageView) findViewById(R.id.iv_avatar);
         checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
+
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if(isChecked){
@@ -78,13 +85,13 @@ public class NewGroupActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 mOnSetAvatarListener = new OnSetAvatarListener(NewGroupActivity.this, R.id.layout_group,
-                        getAvvatarName(), I.AVATAR_TYPE_GROUP_PATH);
+                        getAvatarName(), I.AVATAR_TYPE_GROUP_PATH);
             }
         });
 
 	}
     // 创建 群组的 时间属性
-    private String getAvvatarName() {
+    private String getAvatarName() {
         avatarName = String.valueOf(System.currentTimeMillis());
         return avatarName;
     }
@@ -115,10 +122,7 @@ public class NewGroupActivity extends BaseActivity {
             return;
         }
         mOnSetAvatarListener.setAvatar(requestCode,data,avatar);
-//        if (resultCode == OnSetAvatarListener.REQUEST_CROP_PHOTO) {
-//            createAppGroup();
-//        }
-        if (resultCode == RESULT_OK) {
+        if (requestCode == CREATE_GROUP) {
 			//新建群组
 			progressDialog = new ProgressDialog(this);
 			progressDialog.setMessage(st1);
@@ -129,15 +133,16 @@ public class NewGroupActivity extends BaseActivity {
 				@Override
 				public void run() {
 					// 调用sdk创建群组方法
-					String groupName = groupNameEditText.getText().toString().trim();
-					String desc = introductionEditText.getText().toString();
-					String[] members = data.getStringArrayExtra("newmembers");
-                    EMGroup group;
+					final String groupName = groupNameEditText.getText().toString().trim();
+					final String desc = introductionEditText.getText().toString();
+					final String[] members = data.getStringArrayExtra("newmembers");
+                    final EMGroup group;
 					try {
 						if(checkBox.isChecked()){
 							//创建公开群，此种方式创建的群，可以自由加入
 							//创建公开群，此种方式创建的群，用户需要申请，等群主同意后才能加入此群
 						    group = EMGroupManager.getInstance().createPublicGroup(groupName, desc, members, true,200);
+//                            groupId = g
 						}else{
 							//创建不公开群
 						    group = EMGroupManager.getInstance().createPrivateGroup(groupName, desc, members, memberCheckbox.isChecked(),200);
@@ -147,6 +152,7 @@ public class NewGroupActivity extends BaseActivity {
 							public void run() {
 								progressDialog.dismiss();
 								setResult(RESULT_OK);
+//                                createAppGroup(group.getGroupId(),groupName,desc,members);
 								finish();
 							}
 						});
@@ -158,13 +164,82 @@ public class NewGroupActivity extends BaseActivity {
 							}
 						});
 					}
-					
 				}
 			}).start();
 		}
 	}
+    //   创建 群组
+//    private void createAppGroup(String groupid, String groupName, String desc, final String[] members) {
+//        boolean isPublic = checkBox.isChecked();
+//        boolean invites = isPublic;
+//        File file = new File(OnSetAvatarListener.getAvatarPath(NewGroupActivity.this, I.AVATAR_TYPE_GROUP_PATH));
+//        String own = DemoApplication.getInstance().getUserName();
+//        final OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
+//        utils.setRequestUrl(I.REQUEST_CREATE_GROUP)
+//                .addParam(I.Group.HX_ID,groupid)
+//                .addParam(I.Group.NAME,groupName)
+//                .addParam(I.Group.OWNER,own)
+//                .addParam(I.Group.DESCRIPTION,desc)
+//                .addParam(I.Group.IS_PUBLIC,String.valueOf(isPublic))
+//                .addParam(I.Group.ALLOW_INVITES,String.valueOf(invites))
+//                .targetClass(String.class)
+//                .addFile(file)
+//                .execute(new OkHttpUtils2.OnCompleteListener<String>() {
+//                    @Override
+//                    public void onSuccess(String s) {
+//                        Log.e(TAG, "s = " + s);
+//                        Result result = Utils.getResultFromJson(s, GroupAvatar.class);
+//                        GroupAvatar groupAvatar = (GroupAvatar) result.getRetData();
+//                        Log.e(TAG, "groupAvatar  = " + groupAvatar);
+//                        if (result != null && result.isRetMsg()) {
+//                            if (members != null && members.length > 0) {
+////                                addGroupMembers(groupAvatar, members);
+//                            }
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    progressDialog.dismiss();
+//                                    setResult((RESULT_OK));
+//                                    finish();
+//                                }
+//                            });
+//
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onError(String error) {
+//
+//                    }
+//                });
+//    }
+    //创建 群组成员
+//    private void addGroupMembers(GroupAvatar groupAvatar, String[] members) {
+//        String memberArr = "";
+//        for (String m : members) {
+//            memberArr += m + ",";
+//        }
+//        memberArr.substring(1, memberArr.length() - 1);
+//        Log.e(TAG, "memberArr = = " + memberArr);
+//        final OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
+//        utils.setRequestUrl(I.REQUEST_ADD_GROUP_MEMBERS)
+//                .addParam(I.Member.USER_NAME,memberArr)
+//                .addParam(I.Member.GROUP_HX_ID,groupId)
+//                .targetClass(String.class)
+//                .execute(new OkHttpUtils2.OnCompleteListener<String>() {
+//                    @Override
+//                    public void onSuccess(String result) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onError(String error) {
+//
+//                    }
+//                });
+//    }
 
-	public void back(View view) {
+    public void back(View view) {
 		finish();
 	}
 }
