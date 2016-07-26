@@ -153,7 +153,7 @@ public class UserUtils {
 		}
 	}
 	//这是http://10.0.2.2:8888/SuperWeChatServer/Server?request=download_avatar&name_or_hxid=aaaa&avatarType=user_avatar方法
-	private static String getUserAvatarPath(String username) {
+	public static String getUserAvatarPath(String username) {
 		StringBuilder path = new StringBuilder(I.SERVER_ROOT);
 		path.append(I.QUESTION).append(I.KEY_REQUEST)
 				.append(I.EQU).append(I.REQUEST_DOWNLOAD_AVATAR)
