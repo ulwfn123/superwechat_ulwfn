@@ -120,6 +120,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 						public void onClick(final DialogInterface dialog, int which) {
 							final String nickString = editText.getText().toString();
 							if (TextUtils.isEmpty(nickString)) {
+
 								Toast.makeText(UserProfileActivity.this, getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT).show();
 								return;
 							}
@@ -165,6 +166,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 						dialog.dismiss();
 					}
 				});
+//		dialog.show();
 	}
 
 	public void asyncFetchUserInfo(String username){
@@ -216,11 +218,10 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 	}
 	
 	
-
+	//  向环信服务器  添加修改 的用户 昵称
 	private void updateRemoteNick(final String nickName) {
 		dialog = ProgressDialog.show(this, getString(R.string.dl_update_nick), getString(R.string.dl_waiting));
 		new Thread(new Runnable() {
-
 			@Override
 			public void run() {
 				boolean updatenick = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getUserProfileManager().updateParseNickName(nickName);
@@ -239,15 +240,16 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							dialog.dismiss();
 							Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatenick_success), Toast.LENGTH_SHORT)
 									.show();
 							tvNickName.setText(nickName);
+							dialog.dismiss();
 						}
 					});
 				}
 			}
 		}).start();
+//		dialog.show();
 	}
 
 	@Override
@@ -259,7 +261,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 
 		if (requestCode == OnSetAvatarListener.REQUEST_CROP_PHOTO) {
 			Log.e(TAG, "upload avatar to app server ....");
-			uploadUserAvatar();
+			uploadUserAvatar(data);   // 个人资料，头像
 			return;
 		}
 		Log.e(TAG, "requestCode  = =" + requestCode);
@@ -282,7 +284,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 
 	}
 	//  更新 用户 个人资料   中的 头像 信息
-	private void uploadUserAvatar() {
+	private void uploadUserAvatar(final Intent data) {
 		File file = new File(OnSetAvatarListener.getAvatarPath(UserProfileActivity.this, I.AVATAR_TYPE_USER_PATH),
 				avatarName + I.AVATAR_SUFFIX_JPG);
 		String userName = DemoApplication.getInstance().getUserName();
@@ -299,6 +301,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 							Log.e(TAG, "result ====" + result);
 							Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatephoto_success),
 									Toast.LENGTH_SHORT).show();
+							setPicToView(data);   // 传入  头像的数据
 						}
 					}
 
@@ -363,7 +366,6 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 
 			}
 		}).start();
-
 		dialog.show();
 	}
 	
