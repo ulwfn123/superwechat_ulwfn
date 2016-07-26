@@ -59,6 +59,7 @@ public class UserUtils {
             Picasso.with(context).load(R.drawable.default_avatar).into(imageView);
         }
     }
+
     
     /**
      * 设置当前用户头像
@@ -141,19 +142,31 @@ public class UserUtils {
 		}
 		((DemoHXSDKHelper) HXSDKHelper.getInstance()).saveContact(newUser);
 	}
-	//  设置头像  仿写
+	//  设置y用户 头像  仿写
 	public static void setAppUserAvatar(Context context, String username, ImageView imageView){
 		String path = "";
 		if(path != null && username != null){
 			path = getUserAvatarPath(username);
-//			Log(TAG, "path" + path);
 			Picasso.with(context).load(path).placeholder(R.drawable.default_avatar).into(imageView);
 		}else{
 			Picasso.with(context).load(R.drawable.default_avatar).into(imageView);
 		}
 	}
+    //  设置 群组 成员头像的
+    public static void setAppGroupAvatar(Context context, String hxid, ImageView imageView){
+        String path = "";
+        if(path != null && hxid != null){
+            path = getGroupAvatarPath(hxid);
+            Picasso.with(context).load(path).placeholder(R.drawable.group_icon).into(imageView);
+        }else{
+            Picasso.with(context).load(R.drawable.group_icon).into(imageView);
+        }
+    }
+
+
 	//这是http://10.0.2.2:8888/SuperWeChatServer/Server?request=download_avatar&name_or_hxid=aaaa&avatarType=user_avatar方法
-	public static String getUserAvatarPath(String username) {
+	//  设置  用户 好友头像
+    public static String getUserAvatarPath(String username) {
 		StringBuilder path = new StringBuilder(I.SERVER_ROOT);
 		path.append(I.QUESTION).append(I.KEY_REQUEST)
 				.append(I.EQU).append(I.REQUEST_DOWNLOAD_AVATAR)
@@ -163,4 +176,16 @@ public class UserUtils {
 				.append(I.AVATAR_TYPE).append(I.EQU).append(I.AVATAR_TYPE_USER_PATH);
 		return path.toString();
 	}
+
+    //  设置  群组成员 头像
+    public static String getGroupAvatarPath(String hxid) {
+        StringBuilder path = new StringBuilder(I.SERVER_ROOT);
+        path.append(I.QUESTION).append(I.KEY_REQUEST)
+                .append(I.EQU).append(I.REQUEST_DOWNLOAD_AVATAR)
+                .append(I.AND)
+                .append(I.NAME_OR_HXID).append(I.EQU).append(hxid)
+                .append(I.AND)
+                .append(I.AVATAR_TYPE).append(I.EQU).append(I.AVATAR_TYPE_GROUP_PATH);
+        return path.toString();
+    }
 }

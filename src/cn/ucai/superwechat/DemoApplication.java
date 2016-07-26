@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.ucai.superwechat.adapter.GroupAdapter;
+import cn.ucai.superwechat.bean.GroupAvatar;
 import cn.ucai.superwechat.bean.UserAvatar;
 
 public class DemoApplication extends Application {
@@ -138,6 +140,8 @@ public class DemoApplication extends Application {
 	public void setUserlist(List<UserAvatar> userlist) {
 		this.userlist = userlist;
 	}
+    // 当前登录用户的 群组集合
+    public List<GroupAvatar> groupList = new ArrayList<GroupAvatar>();
 
 	public Map<String, UserAvatar> getUserMap() {
 		return userMap;
@@ -146,4 +150,12 @@ public class DemoApplication extends Application {
 	public void setUserMap(Map<String, UserAvatar> userMap) {
 		this.userMap = userMap;
 	}
+
+    public List<GroupAvatar> getGroupList() {
+        return groupList;
+    }
+
+    public void setGroupList(List<GroupAvatar> groupList) {
+        this.groupList = groupList;
+    }
 }

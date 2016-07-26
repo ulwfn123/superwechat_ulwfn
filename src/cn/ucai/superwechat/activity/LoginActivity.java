@@ -54,6 +54,7 @@ import cn.ucai.superwechat.data.OkHttpUtils2;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.domain.User;
 import cn.ucai.superwechat.task.DownloadContactListTask;
+import cn.ucai.superwechat.task.DownloadGroupListTask;
 import cn.ucai.superwechat.utils.CommonUtils;
 import cn.ucai.superwechat.utils.UserUtils;
 import cn.ucai.superwechat.utils.Utils;
@@ -247,7 +248,7 @@ public class LoginActivity extends BaseActivity {
 					public void onResponse(Response response) throws IOException {
 						byte[] data = response.body().bytes();
 						final String avatarUrl = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getUserProfileManager().uploadUserAvatar(data);
-
+						Log.e(TAG, "个人资料头像上传的avatar = " + avatarUrl);
 					}
 				})
 				.execute(new OkHttpUtils2.OnCompleteListener<Message>() {
@@ -279,7 +280,8 @@ public class LoginActivity extends BaseActivity {
 		DemoApplication.getInstance().setUser(user);
 		DemoApplication.currentUserNick = user.getMUserNick();
 		Log.e("main", "登录用户名 ===" + user);
-		new DownloadContactListTask(LoginActivity.this,currentUsername).excute();
+		new DownloadContactListTask(LoginActivity.this,currentUsername).excute();  //
+		new DownloadGroupListTask(LoginActivity.this,currentUsername).excute(); //  群组中的头像下载
 
 		try {
 			// ** 第一次登录或者之前logout后再登录，加载所有本地群和回话
