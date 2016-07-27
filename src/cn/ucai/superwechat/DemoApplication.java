@@ -25,6 +25,7 @@ import java.util.Map;
 
 import cn.ucai.superwechat.adapter.GroupAdapter;
 import cn.ucai.superwechat.bean.GroupAvatar;
+import cn.ucai.superwechat.bean.MemberUserAvatar;
 import cn.ucai.superwechat.bean.UserAvatar;
 
 public class DemoApplication extends Application {
@@ -142,6 +143,8 @@ public class DemoApplication extends Application {
 	}
     // 当前登录用户的 群组集合
     public List<GroupAvatar> groupList = new ArrayList<GroupAvatar>();
+    // 添加 群组中 群聊 人员的 昵称属性
+    public Map<String, HashMap<String, MemberUserAvatar>> memberMap = new HashMap<String, HashMap<String, MemberUserAvatar>>();
 
 	public Map<String, UserAvatar> getUserMap() {
 		return userMap;
@@ -157,5 +160,13 @@ public class DemoApplication extends Application {
 
     public void setGroupList(List<GroupAvatar> groupList) {
         this.groupList = groupList;
+    }
+
+    public Map<String, HashMap<String, MemberUserAvatar>> getMemberMap() {
+        return memberMap;
+    }
+
+    public void setMemberMap(Map<String, HashMap<String, MemberUserAvatar>> memberMap) {
+        this.memberMap = memberMap;
     }
 }
