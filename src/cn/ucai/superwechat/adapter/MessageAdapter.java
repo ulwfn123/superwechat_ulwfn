@@ -583,6 +583,7 @@ public class MessageAdapter extends BaseAdapter{
 				Intent intent = new Intent();
 				intent.setClass(context, UserProfileActivity.class);
 				intent.putExtra("username", message.getFrom());
+				intent.putExtra("groupId", username); // 利用群的ID 和用户名  在群组 中显示用户的昵称和头像
 				context.startActivity(intent);
 			}
 		});

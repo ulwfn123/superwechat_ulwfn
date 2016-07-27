@@ -78,6 +78,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 	private void initListener() {
 		Intent intent = getIntent();
 		String username = intent.getStringExtra("username");
+		String hxid = intent.getStringExtra("groupId");  // 通过 环信ID获取 群组中全部人员 的信息
 		boolean enableUpdate = intent.getBooleanExtra("setting", false);
 		if (enableUpdate) {
 			headPhotoUpdate.setVisibility(View.VISIBLE);
@@ -94,13 +95,17 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 			UserUtils.setAppCurrentUserNick(tvNickName);   //调用  仿写的 修改昵称方法，，设置登录账户昵称
 //			UserUtils.setAppUserAvatar(this, EMChatManager.getInstance().getCurrentUser(),headAvatar);  // 调用 仿写修改头像方法
 			UserUtils.setCurrentUserAvatar(this, headAvatar);   //   自带的显示图片方法
-		} else {
-			tvUsername.setText(username);
-			UserUtils.setAppUserNick(username, tvNickName);  //  直接调用自写方方 ,显示 搜索的用户昵称
-			UserUtils.setAppUserAvatar(this, username, headAvatar);//  直接调用自写方方 ,显示 搜索的用户头像
+        } else if (hxid != null) {   // 通过 环信ID  显示群组中全部成员的昵称和头像
+            tvUsername.setText(username);
+            UserUtils.setAppMemberNick(hxid,username, tvNickName);   // 通过 环信ID  显示群组中全部成员的昵称
+            UserUtils.setAppUserAvatar(this, username, headAvatar);
+        } else {
+            tvUsername.setText(username);
+            UserUtils.setAppUserNick(username, tvNickName);  //  直接调用自写方方 ,显示 搜索的用户昵称
+            UserUtils.setAppUserAvatar(this, username, headAvatar);//  直接调用自写方方 ,显示 搜索的用户头像
 //			asyncFetchUserInfo(username);  //方法好处，从服务器获取数据，处理好友修改资料
-		}
-	}
+        }
+    }
 
 	@Override
 	public void onClick(View v) {
