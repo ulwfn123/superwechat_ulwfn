@@ -11,9 +11,13 @@ import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import cn.ucai.superwechat.DemoHXSDKHelper;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.bean.MemberUserAvatar;
 import cn.ucai.superwechat.bean.UserAvatar;
 import cn.ucai.superwechat.domain.User;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserUtils {
 	private  static final String TAG = UserUtils.class.getSimpleName();
@@ -131,7 +135,6 @@ public class UserUtils {
 		}
 	}
 
-
     /**
      * 保存或更新某个用户
      * @param  newUser
@@ -187,5 +190,26 @@ public class UserUtils {
                 .append(I.AND)
                 .append(I.AVATAR_TYPE).append(I.EQU).append(I.AVATAR_TYPE_GROUP_PATH);
         return path.toString();
+    }
+
+    //   群组中 昵称的显示      通过环信ID 获取用户名 及用户名的昵称 添加到textView
+	public static void setAppMemberNick(String hxid, String username, TextView textView) {
+		MemberUserAvatar member = getAppMemberInfo(hxid,username);
+        if (member != null && member.getMUserNick() != null) {
+            textView.setText(member.getMUserNick());
+        } else {
+            textView.setText(member.getMUserName());
+        }
+    }
+    //  上面 调用的 方法 是通过 环信ID  获取  群组中 用户 的个人资料
+    public static MemberUserAvatar getAppMemberInfo(String hxid,String username){
+        MemberUserAvatar member = null;
+        Map<String,MemberUserAvatar> user =  DemoApplication.getInstance().getMemberMap().get(hxid);
+        if (user == null && user.size() < 0) {
+            return null;
+        } else {
+            member = user.get(username);
+        }
+        return member;
     }
 }

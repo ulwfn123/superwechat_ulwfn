@@ -527,21 +527,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
         groupListener = new GroupListener();
         EMGroupManager.getInstance().addGroupChangeListener(groupListener);
 	}
-    //  好友列表群组的监听
-    class UpdateMemberListener extends BroadcastReceiver {
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            adapter.notifyDataSetChanged();
-        }
-    }
-    UpdateMemberListener mReceiver;
-    private void settUpdateMemberListener() {
-        mReceiver = new UpdateMemberListener();
-        IntentFilter filter = new IntentFilter("update_member_list");
-        registerReceiver(mReceiver, filter);
-    }
-    //
 
     protected void onChatRoomViewCreation(){
         
@@ -1491,7 +1477,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		if(groupListener != null){
 		    EMGroupManager.getInstance().removeGroupChangeListener(groupListener);
 		}
-	}
+        if (mReceiver != null) {
+            unregisterReceiver(mReceiver);
+        }
+    }
 
 	@Override
 	protected void onResume() {
@@ -1774,5 +1763,19 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	public ListView getListView() {
 		return listView;
 	}
+    //  好友列表群组的监听
+    class UpdateMemberListener extends BroadcastReceiver {
 
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            adapter.notifyDataSetChanged();
+        }
+    }
+    UpdateMemberListener mReceiver;
+    private void settUpdateMemberListener() {
+        mReceiver = new UpdateMemberListener();
+        IntentFilter filter = new IntentFilter("update_member_list");
+        registerReceiver(mReceiver, filter);
+    }
+    //
 }
