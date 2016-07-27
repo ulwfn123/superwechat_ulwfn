@@ -195,6 +195,7 @@ public class UserUtils {
     //   群组中 昵称的显示      通过环信ID 获取用户名 及用户名的昵称 添加到textView
 	public static void setAppMemberNick(String hxid, String username, TextView textView) {
 		MemberUserAvatar member = getAppMemberInfo(hxid,username);
+        Log.e(TAG, "member  ==" + member);
         if (member != null && member.getMUserNick() != null) {
             textView.setText(member.getMUserNick());
         } else {
@@ -205,11 +206,15 @@ public class UserUtils {
     public static MemberUserAvatar getAppMemberInfo(String hxid,String username){
         MemberUserAvatar member = null;
         Map<String,MemberUserAvatar> user =  DemoApplication.getInstance().getMemberMap().get(hxid);
-        if (user == null && user.size() < 0) {
+        Log.e(TAG, "user  ==" + user+ "userName  ==  " + username);
+        Log.e(TAG, "hxid  ==" + hxid);
+        if (user == null || user.size() < 0) {
             return null;
         } else {
             member = user.get(username);
+            Log.e(TAG, "member" + member);
         }
+        Log.e(TAG, "member111111" + member);
         return member;
     }
 }

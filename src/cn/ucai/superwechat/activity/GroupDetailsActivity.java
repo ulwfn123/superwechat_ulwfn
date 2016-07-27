@@ -17,11 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,8 +44,15 @@ import android.widget.Toast;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMGroupManager;
+
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.bean.GroupAvatar;
+import cn.ucai.superwechat.bean.Result;
+import cn.ucai.superwechat.data.OkHttpUtils2;
+import cn.ucai.superwechat.task.DownloadMemberMapTask;
 import cn.ucai.superwechat.utils.UserUtils;
+import cn.ucai.superwechat.utils.Utils;
 import cn.ucai.superwechat.widget.ExpandGridView;
 import com.easemob.exceptions.EaseMobException;
 import com.easemob.util.EMLog;
@@ -56,9 +66,12 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 	private static final int REQUEST_CODE_CLEAR_ALL_HISTORY = 3;
 	private static final int REQUEST_CODE_ADD_TO_BALCKLIST = 4;
 	private static final int REQUEST_CODE_EDIT_GROUPNAME = 5;
-
+	public static GroupDetailsActivity instance;
 	String longClickUsername = null;
-
+	String st = "";
+    //  向本地服务器群组添加成员
+     String st2 ;
+    UndateMemberReceiver mReceiver;
 	private ExpandGridView userGridview;
 	private String groupId;
 	private ProgressBar loadingPB;
@@ -69,7 +82,6 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 	private int referenceWidth;
 	private int referenceHeight;
 	private ProgressDialog progressDialog;
-
 	private RelativeLayout rl_switch_block_groupmsg;
 	/**
 	 * 屏蔽群消息imageView
@@ -79,10 +91,6 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 	 * 关闭屏蔽群消息imageview
 	 */
 	private ImageView iv_switch_unblock_groupmsg;
-
-	public static GroupDetailsActivity instance;
-	
-	String st = "";
 	// 清空所有聊天记录
 	private RelativeLayout clearAllHistory;
 	private RelativeLayout blacklistLayout;
@@ -93,7 +101,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
-	    
+
 	    // 获取传过来的groupid
         groupId = getIntent().getStringExtra("groupId");
         group = EMGroupManager.getInstance().getGroup(groupId);
@@ -103,7 +111,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
             finish();
             return;
         }
-        
+
 		setContentView(R.layout.activity_group_details);
 		instance = this;
 		st = getResources().getString(R.string.people);
@@ -117,7 +125,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 		idLayout = (RelativeLayout) findViewById(R.id.rl_group_id);
 		idLayout.setVisibility(View.VISIBLE);
 		idText = (TextView) findViewById(R.id.tv_group_id_value);
-		
+
 		rl_switch_block_groupmsg = (RelativeLayout) findViewById(R.id.rl_switch_block_groupmsg);
 
 		iv_switch_block_groupmsg = (ImageView) findViewById(R.id.iv_switch_block_groupmsg);
@@ -143,12 +151,12 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 			exitBtn.setVisibility(View.GONE);
 			deleteBtn.setVisibility(View.VISIBLE);
 		}
-		
+
 		((TextView) findViewById(R.id.group_name)).setText(group.getGroupName() + "(" + group.getAffiliationsCount() + st);
-		
+
 		List<String> members = new ArrayList<String>();
 		members.addAll(group.getMembers());
-		
+
 		adapter = new GridAdapter(this, R.layout.grid, members);
 		userGridview.setAdapter(adapter);
 
@@ -180,7 +188,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 		changeGroupNameLayout.setOnClickListener(this);
 
 	}
-
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -193,7 +201,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 		final String st7 = getResources().getString(R.string.change_the_group_name_failed_please);
 		String st8 = getResources().getString(R.string.Are_moving_to_blacklist);
 		final String st9 = getResources().getString(R.string.failed_to_move_into);
-		
+
 		final String stsuccess = getResources().getString(R.string.Move_into_blacklist_success);
 		if (resultCode == RESULT_OK) {
 			if (progressDialog == null) {
@@ -230,7 +238,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 				if(!TextUtils.isEmpty(returnData)){
 					progressDialog.setMessage(st5);
 					progressDialog.show();
-					
+
 					new Thread(new Runnable() {
 						public void run() {
 							try {
@@ -240,10 +248,10 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 										((TextView) findViewById(R.id.group_name)).setText(returnData + "(" + group.getAffiliationsCount()
 												+ st);
 										progressDialog.dismiss();
-										Toast.makeText(getApplicationContext(), st6, 0).show();
+										Toast.makeText(getApplicationContext(), st6, Toast.LENGTH_SHORT).show();
 									}
 								});
-								
+
 							} catch (EaseMobException e) {
 								e.printStackTrace();
 								runOnUiThread(new Runnable() {
@@ -291,17 +299,17 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
 	private void refreshMembers(){
 	    adapter.clear();
-        
+
         List<String> members = new ArrayList<String>();
         members.addAll(group.getMembers());
         adapter.addAll(members);
-        
+
         adapter.notifyDataSetChanged();
 	}
-	
+
 	/**
 	 * 点击退出群组按钮
-	 * 
+	 *
 	 * @param view
 	 */
 	public void exitGroup(View view) {
@@ -311,7 +319,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
 	/**
 	 * 点击解散群组按钮
-	 * 
+	 *
 	 * @param view
 	 */
 	public void exitDeleteGroup(View view) {
@@ -333,7 +341,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
 	/**
 	 * 退出群组
-	 * 
+	 *
 	 * @param
 	 */
 	private void exitGrop() {
@@ -365,7 +373,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
 	/**
 	 * 解散群组
-	 * 
+	 *
 	 * @param
 	 */
 	private void deleteGrop() {
@@ -393,17 +401,18 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 				}
 			}
 		}).start();
+//        addGroupMembers(groupId,n);
 	}
 
 	/**
-	 * 增加群成员
-	 * 
+	 * 增加群成员   向环信添加群组成员
+	 *
 	 * @param newmembers
 	 */
 	private void addMembersToGroup(final String[] newmembers) {
 		final String st6 = getResources().getString(R.string.Add_group_members_fail);
 		new Thread(new Runnable() {
-			
+
 			public void run() {
 				try {
 					// 创建者调用add方法
@@ -431,7 +440,53 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 				}
 			}
 		}).start();
+		addGroupMembers(groupId,newmembers);  // 向本地 服务器添加群组成员
 	}
+
+    private void addGroupMembers(String hxid, String[] members) {
+        st2 = getResources().getString(R.string.Add_group_members_fail);
+        String memberArr = "";
+        for (String m : members) {
+            memberArr += m + ",";
+        }
+        memberArr= memberArr.substring(0, memberArr.length() -1);
+        Log.e(TAG, "memberArr = = " + memberArr);
+        final OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
+        utils.setRequestUrl(I.REQUEST_ADD_GROUP_MEMBERS)
+                .addParam(I.Member.GROUP_HX_ID,hxid)
+                .addParam(I.Member.USER_NAME,memberArr)
+                .targetClass(String.class)
+                .execute(new OkHttpUtils2.OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        Log.e(TAG, "s = " + s);
+                        Result result = Utils.getResultFromJson(s, GroupAvatar.class);
+                        GroupAvatar groupAvatar = (GroupAvatar) result.getRetData();
+                        if (result != null && result.isRetMsg()) {
+//                            new DownloadMemberMapTask(getApplicationContext(),groupId).excute(); // 创建
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressDialog.dismiss();
+                                    setResult((RESULT_OK));
+                                    finish();
+                                }
+                            });
+                        } else {
+                            progressDialog.dismiss();
+                            Toast.makeText(getApplicationContext(), st2 , Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Log.e(TAG, "result =  " + error);
+                        progressDialog.dismiss();
+                        Toast.makeText(getApplicationContext(), st2 + error, Toast.LENGTH_LONG).show();
+
+                    }
+                });
+    }
 
 	@Override
 	public void onClick(View v) {
@@ -466,11 +521,11 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                                     Toast.makeText(getApplicationContext(), st7, Toast.LENGTH_LONG).show();
                                 }
                             });
-                            
+
                         }
                     }
                 }).start();
-				
+
 			} else {
 				String st8 = getResources().getString(R.string.group_is_blocked);
 				final String st9 = getResources().getString(R.string.group_of_shielding);
@@ -501,7 +556,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                                 }
                             });
                         }
-                        
+
                     }
                 }).start();
 			}
@@ -530,16 +585,95 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
 	}
 
+	protected void updateGroup() {
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+					final EMGroup returnGroup = EMGroupManager.getInstance().getGroupFromServer(groupId);
+					// 更新本地数据
+					EMGroupManager.getInstance().createOrUpdateLocalGroup(returnGroup);
+
+					runOnUiThread(new Runnable() {
+						public void run() {
+							((TextView) findViewById(R.id.group_name)).setText(group.getGroupName() + "(" + group.getAffiliationsCount()
+									+ ")");
+							loadingPB.setVisibility(View.INVISIBLE);
+							refreshMembers();
+							if (EMChatManager.getInstance().getCurrentUser().equals(group.getOwner())) {
+								// 显示解散按钮
+								exitBtn.setVisibility(View.GONE);
+								deleteBtn.setVisibility(View.VISIBLE);
+							} else {
+								// 显示退出按钮
+								exitBtn.setVisibility(View.VISIBLE);
+								deleteBtn.setVisibility(View.GONE);
+							}
+
+							// update block
+							EMLog.d(TAG, "group msg is blocked:" + group.getMsgBlocked());
+							if (group.isMsgBlocked()) {
+								iv_switch_block_groupmsg.setVisibility(View.VISIBLE);
+								iv_switch_unblock_groupmsg.setVisibility(View.INVISIBLE);
+							} else {
+								iv_switch_block_groupmsg.setVisibility(View.INVISIBLE);
+								iv_switch_unblock_groupmsg.setVisibility(View.VISIBLE);
+							}
+						}
+					});
+
+				} catch (Exception e) {
+					runOnUiThread(new Runnable() {
+						public void run() {
+							loadingPB.setVisibility(View.INVISIBLE);
+						}
+					});
+				}
+			}
+		}).start();
+	}
+
+	public void back(View view) {
+		setResult(RESULT_OK);
+		finish();
+	}
+
+	@Override
+	public void onBackPressed() {
+		setResult(RESULT_OK);
+		finish();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		instance = null;
+        if (mReceiver != null) {  // 群组添加人员的广播监听销毁
+            unregisterReceiver(mReceiver);
+        }
+    }
+	
+    private void setUpdateMemberListener() {
+        mReceiver = new UndateMemberReceiver();
+        IntentFilter filter = new IntentFilter("update_member_list");
+        registerReceiver(mReceiver, filter);
+    }
+
+	private static class ViewHolder{
+	    ImageView imageView;
+	    TextView textView;
+	    ImageView badgeDeleteView;
+	}
+
 	/**
 	 * 群组成员gridadapter
-	 * 
+	 *
 	 * @author admin_new
-	 * 
+	 *
 	 */
 	private class GridAdapter extends ArrayAdapter<String> {
 
-		private int res;
 		public boolean isInDeleteMode;
+		private int res;
 		private List<String> objects;
 
 		public GridAdapter(Context context, int textViewResourceId, List<String> objects) {
@@ -671,7 +805,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
 					/**
 					 * 删除群成员
-					 * 
+					 *
 					 * @param username
 					 */
 					protected void deleteMembersFromGroup(final String username) {
@@ -737,74 +871,12 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 		}
 	}
 
-	protected void updateGroup() {
-		new Thread(new Runnable() {
-			public void run() {
-				try {
-					final EMGroup returnGroup = EMGroupManager.getInstance().getGroupFromServer(groupId);
-					// 更新本地数据
-					EMGroupManager.getInstance().createOrUpdateLocalGroup(returnGroup);
+    //  为 群组 添加人员  所新建的内部类 继承了    广播监听
+    class UndateMemberReceiver extends BroadcastReceiver {
 
-					runOnUiThread(new Runnable() {
-						public void run() {
-							((TextView) findViewById(R.id.group_name)).setText(group.getGroupName() + "(" + group.getAffiliationsCount()
-									+ ")");
-							loadingPB.setVisibility(View.INVISIBLE);
-							refreshMembers();
-							if (EMChatManager.getInstance().getCurrentUser().equals(group.getOwner())) {
-								// 显示解散按钮
-								exitBtn.setVisibility(View.GONE);
-								deleteBtn.setVisibility(View.VISIBLE);
-							} else {
-								// 显示退出按钮
-								exitBtn.setVisibility(View.VISIBLE);
-								deleteBtn.setVisibility(View.GONE);
-							}
-
-							// update block
-							EMLog.d(TAG, "group msg is blocked:" + group.getMsgBlocked());
-							if (group.isMsgBlocked()) {
-								iv_switch_block_groupmsg.setVisibility(View.VISIBLE);
-								iv_switch_unblock_groupmsg.setVisibility(View.INVISIBLE);
-							} else {
-								iv_switch_block_groupmsg.setVisibility(View.INVISIBLE);
-								iv_switch_unblock_groupmsg.setVisibility(View.VISIBLE);
-							}
-						}
-					});
-
-				} catch (Exception e) {
-					runOnUiThread(new Runnable() {
-						public void run() {
-							loadingPB.setVisibility(View.INVISIBLE);
-						}
-					});
-				}
-			}
-		}).start();
-	}
-
-	public void back(View view) {
-		setResult(RESULT_OK);
-		finish();
-	}
-
-	@Override
-	public void onBackPressed() {
-		setResult(RESULT_OK);
-		finish();
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		instance = null;
-	}
-	
-	private static class ViewHolder{
-	    ImageView imageView;
-	    TextView textView;
-	    ImageView badgeDeleteView;
-	}
-
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            refreshMembers();
+        }
+    }
 }
