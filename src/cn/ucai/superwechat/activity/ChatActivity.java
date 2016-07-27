@@ -22,8 +22,10 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -95,6 +97,7 @@ import cn.ucai.superwechat.adapter.ExpressionPagerAdapter;
 import cn.ucai.superwechat.adapter.MessageAdapter;
 import cn.ucai.superwechat.adapter.VoicePlayClickListener;
 import cn.ucai.superwechat.domain.RobotUser;
+import cn.ucai.superwechat.task.DownloadMemberMapTask;
 import cn.ucai.superwechat.utils.CommonUtils;
 import cn.ucai.superwechat.utils.ImageUtils;
 import cn.ucai.superwechat.utils.SmileUtils;
@@ -423,7 +426,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	            forwardMessage(forward_msg_id);
 	        }
 		}
-	}
+        settUpdateMemberListener();  // 这里掉用 好友列表群组的监听
+    }
 
 	protected void onConversationInit(){
 	    if(chatType == CHATTYPE_SINGLE){
@@ -518,13 +522,28 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
         }else{
             ((TextView) findViewById(R.id.name)).setText(toChatUsername);
         }
-        
+        new DownloadMemberMapTask(getApplicationContext(),toChatUsername).excute();//   监听 群组列表
         // 监听当前会话的群聊解散被T事件
         groupListener = new GroupListener();
         EMGroupManager.getInstance().addGroupChangeListener(groupListener);
 	}
-	
-	protected void onChatRoomViewCreation(){
+    //  好友列表群组的监听
+    class UpdateMemberListener extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            adapter.notifyDataSetChanged();
+        }
+    }
+    UpdateMemberListener mReceiver;
+    private void settUpdateMemberListener() {
+        mReceiver = new UpdateMemberListener();
+        IntentFilter filter = new IntentFilter("update_member_list");
+        registerReceiver(mReceiver, filter);
+    }
+    //
+
+    protected void onChatRoomViewCreation(){
         
         final ProgressDialog pd = ProgressDialog.show(this, "", "Joining......");
         EMChatManager.getInstance().joinChatRoom(toChatUsername, new EMValueCallBack<EMChatRoom>() {

@@ -16,7 +16,7 @@ import cn.ucai.superwechat.bean.UserAvatar;
 import cn.ucai.superwechat.data.OkHttpUtils2;
 import cn.ucai.superwechat.utils.Utils;
 
-/**  新建的类 目的：下载用户好友信息
+/**  新建的类 目的：下载群组成员的信息
  * Created by Administrator on 2016/7/20.
  */
 public class DownloadMemberMapTask {
