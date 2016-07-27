@@ -72,6 +72,8 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
     //  向本地服务器群组添加成员
      String st2 ;
     UndateMemberReceiver mReceiver;
+    //  创建拦截广播 拦截群组的广播
+    UndateMemberReceiver mUndateMemberReceiver;
 	private ExpandGridView userGridview;
 	private String groupId;
 	private ProgressBar loadingPB;
@@ -97,7 +99,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 	private RelativeLayout changeGroupNameLayout;
     private RelativeLayout idLayout;
     private TextView idText;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
@@ -186,9 +188,9 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 		clearAllHistory.setOnClickListener(this);
 		blacklistLayout.setOnClickListener(this);
 		changeGroupNameLayout.setOnClickListener(this);
-
+        setUpdateMemberListener(); // 添加 拦截监听
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -443,6 +445,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 		addGroupMembers(groupId,newmembers);  // 向本地 服务器添加群组成员
 	}
 
+    // 向本地 服务器添加群组成员
     private void addGroupMembers(String hxid, String[] members) {
         st2 = getResources().getString(R.string.Add_group_members_fail);
         String memberArr = "";
@@ -463,7 +466,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                         Result result = Utils.getResultFromJson(s, GroupAvatar.class);
                         GroupAvatar groupAvatar = (GroupAvatar) result.getRetData();
                         if (result != null && result.isRetMsg()) {
-//                            new DownloadMemberMapTask(getApplicationContext(),groupId).excute(); // 创建
+                            new DownloadMemberMapTask(getApplicationContext(),groupId).excute(); // 刷新 群组
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -642,7 +645,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 		setResult(RESULT_OK);
 		finish();
 	}
-
+	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -651,9 +654,15 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
             unregisterReceiver(mReceiver);
         }
     }
-	
+
     private void setUpdateMemberListener() {
         mReceiver = new UndateMemberReceiver();
+        IntentFilter filter = new IntentFilter("update_member_list");
+        registerReceiver(mReceiver, filter);
+    }
+
+    private void UndateMemberReceiver () {
+        mUndateMemberReceiver = new UndateMemberReceiver();
         IntentFilter filter = new IntentFilter("update_member_list");
         registerReceiver(mReceiver, filter);
     }
