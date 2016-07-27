@@ -13,7 +13,7 @@ import cn.ucai.superwechat.bean.Result;
 import cn.ucai.superwechat.data.OkHttpUtils2;
 import cn.ucai.superwechat.utils.Utils;
 
-/**  新建的类 目的：下载用户好友信息
+/**  新建的类 目的：群组用户好友信息
  * Created by Administrator on 2016/7/20.
  */
 public class DownloadGroupListTask {
@@ -46,6 +46,9 @@ public class DownloadGroupListTask {
                         if (list != null && list.size() >= 0) {
                             Log.e(TAG, "list.size = " + list.size());
                             DemoApplication.getInstance().setGroupList(list);
+                            for (GroupAvatar g : list) {
+                                DemoApplication.getInstance().getGroupMap().put(g.getMGroupHxid(),g);   // 添加 群组的集合
+                            }
                             mContext.sendStickyBroadcast(new Intent("update_group_list"));
                         }
                     }

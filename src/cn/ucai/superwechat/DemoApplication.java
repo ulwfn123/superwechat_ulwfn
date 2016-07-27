@@ -31,15 +31,30 @@ import cn.ucai.superwechat.bean.UserAvatar;
 public class DemoApplication extends Application {
 
 	public static Context applicationContext;
-	private static DemoApplication instance;
-	// login user name
-	public final String PREF_USERNAME = "username";
-
 	/**
 	 * 当前用户nickname,为了苹果推送不是userid而是昵称
 	 */
 	public static String currentUserNick = "";
 	public static DemoHXSDKHelper hxSDKHelper = new DemoHXSDKHelper();
+	private static DemoApplication instance;
+	// login user name
+	public final String PREF_USERNAME = "username";
+    // 当前登录用户的 群组集合
+    public List<GroupAvatar> groupList = new ArrayList<GroupAvatar>();
+    // 添加 群组中 群聊 人员的 昵称属性
+    public Map<String, HashMap<String, MemberUserAvatar>> memberMap = new HashMap<String, HashMap<String, MemberUserAvatar>>();
+	//  为下载全局当前用户好 定义属性
+	private UserAvatar user;
+	//全局的当前 登录用户的好友集合
+	private List<UserAvatar> userlist = new ArrayList<UserAvatar>();
+	//获取昵称的  定义属性
+	private Map<String, UserAvatar> userMap = new HashMap<String, UserAvatar>();
+	//获取当前登录用户的 群组的集合
+	private Map<String, GroupAvatar> GroupMap = new HashMap<String, GroupAvatar>();
+
+	public static DemoApplication getInstance() {
+		return instance;
+	}
 
 	@Override
 	public void onCreate() {
@@ -68,11 +83,6 @@ public class DemoApplication extends Application {
 		hxSDKHelper.onInit(applicationContext);
 	}
 
-	public static DemoApplication getInstance() {
-		return instance;
-	}
-
-
 	/**
 	 * 获取当前登陆用户名
 	 *
@@ -83,21 +93,21 @@ public class DemoApplication extends Application {
 	}
 
 	/**
-	 * 获取密码
-	 *
-	 * @return
-	 */
-	public String getPassword() {
-		return hxSDKHelper.getPassword();
-	}
-
-	/**
 	 * 设置用户名
 	 *
 	 * @param
 	 */
 	public void setUserName(String username) {
 		hxSDKHelper.setHXId(username);
+	}
+
+	/**
+	 * 获取密码
+	 *
+	 * @return
+	 */
+	public String getPassword() {
+		return hxSDKHelper.getPassword();
 	}
 
 	/**
@@ -118,14 +128,6 @@ public class DemoApplication extends Application {
 		hxSDKHelper.logout(isGCM, emCallBack);
 	}
 
-	//  为下载全局当前用户好 定义属性
-	private UserAvatar user;
-	//全局的当前 登录用户的好友集合
-	private List<UserAvatar> userlist = new ArrayList<UserAvatar>();
-	//获取昵称的  定义属性
-	private Map<String, UserAvatar> userMap = new HashMap<String, UserAvatar>();
-
-
 	public UserAvatar getUser() {
 		return user;
 	}
@@ -141,10 +143,6 @@ public class DemoApplication extends Application {
 	public void setUserlist(List<UserAvatar> userlist) {
 		this.userlist = userlist;
 	}
-    // 当前登录用户的 群组集合
-    public List<GroupAvatar> groupList = new ArrayList<GroupAvatar>();
-    // 添加 群组中 群聊 人员的 昵称属性
-    public Map<String, HashMap<String, MemberUserAvatar>> memberMap = new HashMap<String, HashMap<String, MemberUserAvatar>>();
 
 	public Map<String, UserAvatar> getUserMap() {
 		return userMap;
@@ -169,4 +167,12 @@ public class DemoApplication extends Application {
     public void setMemberMap(Map<String, HashMap<String, MemberUserAvatar>> memberMap) {
         this.memberMap = memberMap;
     }
+
+	public Map<String, GroupAvatar> getGroupMap() {
+		return GroupMap;
+	}
+
+	public void setGroupMap(Map<String, GroupAvatar> groupMap) {
+		GroupMap = groupMap;
+	}
 }

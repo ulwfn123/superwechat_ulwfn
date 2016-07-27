@@ -45,6 +45,7 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMGroupManager;
 
+import cn.ucai.superwechat.DemoApplication;
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.bean.GroupAvatar;
@@ -99,7 +100,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 	private RelativeLayout changeGroupNameLayout;
     private RelativeLayout idLayout;
     private TextView idText;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
@@ -371,6 +372,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 				}
 			}
 		}).start();
+        deleteMembersFromAppGroup(DemoApplication.getInstance().getUserName(),true);  //  群组成员 退出群组
 	}
 
 	/**
@@ -645,7 +647,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 		setResult(RESULT_OK);
 		finish();
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -665,6 +667,47 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
         mUndateMemberReceiver = new UndateMemberReceiver();
         IntentFilter filter = new IntentFilter("update_member_list");
         registerReceiver(mReceiver, filter);
+    }
+
+    //  删除群组成员
+    private void deleteMembersFromAppGroup(final String username, final boolean isExit) {
+        Log.e(TAG, "被删除的群组成员 username = " + username);
+        GroupAvatar group = DemoApplication.getInstance().getGroupMap().get(groupId);
+        Log.e(TAG, "被删除的群组成员 group = " + group);  //尽然为空
+        Log.e(TAG, "被删除的群组成员 groupId = " + groupId);
+        if (group != null) {
+            final OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
+            utils.setRequestUrl(I.REQUEST_DELETE_GROUP_MEMBER)
+                    .addParam(I.Member.GROUP_ID,String.valueOf(group.getMGroupId()))
+                    .addParam(I.Member.USER_NAME,username)
+                    .targetClass(String.class)
+                    .execute(new OkHttpUtils2.OnCompleteListener<String>() {
+                        @Override
+                        public void onSuccess(String s) {
+                            Log.e(TAG, "被删除的群组成员 s = " + s);
+                            Result result = Utils.getResultFromJson(s, GroupAvatar.class);
+                            if (result != null && result.isRetMsg()) {
+                                if (isExit) {
+                                    GroupAvatar group = DemoApplication.getInstance().getGroupMap().get(groupId);
+                                    DemoApplication.getInstance().getGroupList().remove(group);   //  群组成员退出群组
+                                    DemoApplication.getInstance().getGroupMap().remove(groupId);
+                                } else {
+                                    Log.e(TAG, "被删除的群组成员 result = " + result);
+                                    DemoApplication.getInstance().getMemberMap().get(groupId).remove(username);
+                                    Log.e(TAG, "删除成功 = ");
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onError(String error) {
+                            Log.e(TAG, "error = " + error);
+                        }
+                    });
+        } else {
+            finish();
+            return;
+        }
     }
 
 	private static class ViewHolder{
@@ -801,7 +844,9 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 								return;
 							}
 							EMLog.d("group", "remove user from group:" + username);
-							deleteMembersFromGroup(username);
+							deleteMembersFromGroup(username);   // 删除   环信服务器上数据
+							deleteMembersFromAppGroup(username,false); //   删除 本地服务器 群组人员
+
 						} else {
 							// 正常情况下点击user，可以进入用户详情或者聊天页面等等
 							// startActivity(new
@@ -834,11 +879,11 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
 										@Override
 										public void run() {
-											deleteDialog.dismiss();
 											refreshMembers();
-											((TextView) findViewById(R.id.group_name)).setText(group.getGroupName() + "("
+                                            ((TextView) findViewById(R.id.group_name)).setText(group.getGroupName() + "("
 													+ group.getAffiliationsCount() + st);
-										}
+                                            deleteDialog.dismiss();
+                                        }
 									});
 								} catch (final Exception e) {
 									deleteDialog.dismiss();
@@ -873,8 +918,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 			}
 			return convertView;
 		}
-
-		@Override
+        @Override
 		public int getCount() {
 			return super.getCount() + 2;
 		}

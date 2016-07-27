@@ -42,7 +42,6 @@ public class DownloadContactListTask {
                     public void onSuccess(String s) {
                         Log.e(TAG, "s  = " + s);
                         Result result =  Utils.getListResultFromJson(s, UserAvatar.class);
-
                         List<UserAvatar> list = (List<UserAvatar>) result.getRetData();
                         if (list != null && list.size() >= 0) {
                             Log.e(TAG, "list.size = " + list.size());
