@@ -37,6 +37,7 @@ import cn.ucai.superwechat.bean.GroupAvatar;
 import cn.ucai.superwechat.bean.Result;
 import cn.ucai.superwechat.data.OkHttpUtils2;
 import cn.ucai.superwechat.listener.OnSetAvatarListener;
+import cn.ucai.superwechat.task.DownloadMemberMapTask;
 import cn.ucai.superwechat.utils.Utils;
 
 import com.easemob.exceptions.EaseMobException;
@@ -46,17 +47,17 @@ import java.io.File;
 public class NewGroupActivity extends BaseActivity {
 
     private final static String TAG = NewGroupActivity.class.getSimpleName();
+    private static int CREATE_GROUP = 100;
+    String st2 ;
     private EditText groupNameEditText;
 	private ProgressDialog progressDialog;
 	private EditText introductionEditText;
 	private CheckBox checkBox;
 	private CheckBox memberCheckbox;
 	private LinearLayout openInviteContainer;
-
 	private ImageView avatar;
     private OnSetAvatarListener mOnSetAvatarListener;
     private String avatarName;
-    private static int CREATE_GROUP = 100;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,7 @@ public class NewGroupActivity extends BaseActivity {
         });
 
 	}
+
     // 创建 群组的 时间属性
     private String getAvatarName() {
         avatarName = String.valueOf(System.currentTimeMillis());
@@ -111,7 +113,7 @@ public class NewGroupActivity extends BaseActivity {
 			startActivityForResult(new Intent(this, GroupPickContactsActivity.class).putExtra("groupName", name),CREATE_GROUP);
 		}
 	}
-    String st2 ;
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -174,16 +176,7 @@ public class NewGroupActivity extends BaseActivity {
         boolean invites = !isPublic;
         File file = new File(OnSetAvatarListener.getAvatarPath(NewGroupActivity.this, I.AVATAR_TYPE_GROUP_PATH ),
                 avatarName+I.AVATAR_SUFFIX_JPG);
-        Log.e(TAG, "file ====" + file);
-        Log.e(TAG, "groupid ====" + groupid);
-        Log.e(TAG, "groupName ====" + groupName);
-
-        Log.e(TAG, "desc ====" + desc);
-        Log.e(TAG, "String.valueOf(isPublic) ====" + String.valueOf(isPublic));
-        Log.e(TAG, "String.valueOf(invites) ====" + String.valueOf(invites));
-
         String own = DemoApplication.getInstance().getUserName();
-        Log.e(TAG, "own ====" + own);
         final OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
         utils.setRequestUrl(I.REQUEST_CREATE_GROUP)
                 .addParam(I.Group.HX_ID,groupid)
@@ -199,30 +192,13 @@ public class NewGroupActivity extends BaseActivity {
                     public void onSuccess(String s) {
                         Log.e(TAG, "s = " + s);
                         Result result = Utils.getResultFromJson(s, GroupAvatar.class);
-//                        GroupAvatar groupAvatar = (GroupAvatar) result.getRetData();
-//                        Log.e(TAG, "groupAvatar  = " + result.toString());
-                        if (result != null && result.isRetMsg()) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    setResult((RESULT_OK));
-                                    progressDialog.dismiss();
-                                    finish();
-                                }
-                            });
-                            /*if (members != null && members.length > 0) {
-                                addGroupMembers(groupid, members);
+                        GroupAvatar groupAvatar = (GroupAvatar) result.getRetData();
+                        Log.e(TAG, "groupAvatar  = " + result.toString());
+                            if (members != null && members.length > 0) {
+                                addGroupMembers(groupid, members,groupAvatar);
                             }else {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        setResult((RESULT_OK));
-                                        progressDialog.dismiss();
-                                        finish();
-                                    }
-                                });
-                            }*/
-                        }
+                                createGroupSucess(groupAvatar);
+                            }
                     }
 
                     @Override
@@ -234,13 +210,13 @@ public class NewGroupActivity extends BaseActivity {
                 });
     }
 //     添加群组成员
-    private void addGroupMembers(String hxid, String[] members) {
+    private void addGroupMembers(String hxid, String[] members,final GroupAvatar group) {
         String memberArr = "";
         for (String m : members) {
             memberArr += m + ",";
         }
        memberArr= memberArr.substring(0, memberArr.length() - 1);
-        Log.e(TAG, "memberArr = = " + memberArr);
+        Log.e(TAG, "members = = " + members);
         final OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
         utils.setRequestUrl(I.REQUEST_ADD_GROUP_MEMBERS)
                 .addParam(I.Member.GROUP_HX_ID,hxid)
@@ -254,14 +230,7 @@ public class NewGroupActivity extends BaseActivity {
                         GroupAvatar groupAvatar = (GroupAvatar) result.getRetData();
 //                        Log.e(TAG, "result  = " + groupAvatar);
                         if (result != null && result.isRetMsg()) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    progressDialog.dismiss();
-                                    setResult((RESULT_OK));
-                                    finish();
-                                }
-                            });
+                            createGroupSucess(group);
                         } else {
                             progressDialog.dismiss();
                             Toast.makeText(NewGroupActivity.this, st2 , Toast.LENGTH_LONG).show();
@@ -274,6 +243,44 @@ public class NewGroupActivity extends BaseActivity {
                         progressDialog.dismiss();
                         Toast.makeText(NewGroupActivity.this, st2 + error, Toast.LENGTH_LONG).show();
 
+                    }
+                });
+    }
+    //   添加 公共群的方法
+    private void createGroupSucess(GroupAvatar group) {
+        DemoApplication.getInstance().getGroupMap().put(group.getMGroupHxid(), group);
+        DemoApplication.getInstance().getGroupList().add(group);   // 添加到全局变量中
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog.dismiss();
+                setResult((RESULT_OK));
+                finish();
+            }
+        });
+    }
+
+    // yo用户 申请 添加群
+    private void addMemberToAppGroup(String username, final String hxid) {
+        final OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
+        utils.setRequestUrl(I.REQUEST_ADD_GROUP_MEMBER)
+                .addParam(I.Member.USER_NAME,username)
+                .addParam(I.Member.GROUP_HX_ID,hxid)
+                .targetClass(String.class)
+                .execute(new OkHttpUtils2.OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        Log.e(TAG, "  申请加入群组的s = =" + s);
+                        Result result = Utils.getResultFromJson(s, GroupAvatar.class);
+                        if (result != null && result.isRetMsg()) {
+                            new DownloadMemberMapTask(NewGroupActivity.this, hxid).excute();
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Log.e(TAG, "error = =" + error);
                     }
                 });
     }
