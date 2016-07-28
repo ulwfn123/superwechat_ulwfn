@@ -228,7 +228,6 @@ public class NewGroupActivity extends BaseActivity {
                         Log.e(TAG, "s = " + s);
                         Result result = Utils.getResultFromJson(s, GroupAvatar.class);
                         GroupAvatar groupAvatar = (GroupAvatar) result.getRetData();
-//                        Log.e(TAG, "result  = " + groupAvatar);
                         if (result != null && result.isRetMsg()) {
                             createGroupSucess(group);
                         } else {
@@ -259,30 +258,6 @@ public class NewGroupActivity extends BaseActivity {
                 finish();
             }
         });
-    }
-
-    // yo用户 申请 添加群
-    private void addMemberToAppGroup(String username, final String hxid) {
-        final OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
-        utils.setRequestUrl(I.REQUEST_ADD_GROUP_MEMBER)
-                .addParam(I.Member.USER_NAME,username)
-                .addParam(I.Member.GROUP_HX_ID,hxid)
-                .targetClass(String.class)
-                .execute(new OkHttpUtils2.OnCompleteListener<String>() {
-                    @Override
-                    public void onSuccess(String s) {
-                        Log.e(TAG, "  申请加入群组的s = =" + s);
-                        Result result = Utils.getResultFromJson(s, GroupAvatar.class);
-                        if (result != null && result.isRetMsg()) {
-                            new DownloadMemberMapTask(NewGroupActivity.this, hxid).excute();
-                        }
-                    }
-
-                    @Override
-                    public void onError(String error) {
-                        Log.e(TAG, "error = =" + error);
-                    }
-                });
     }
 
     public void back(View view) {
