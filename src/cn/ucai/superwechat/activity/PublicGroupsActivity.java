@@ -29,6 +29,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -38,25 +39,27 @@ import android.widget.Toast;
 import com.easemob.chat.EMCursorResult;
 import com.easemob.chat.EMGroupInfo;
 import com.easemob.chat.EMGroupManager;
+
+import cn.ucai.superwechat.DemoApplication;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.utils.UserUtils;
+
 import com.easemob.exceptions.EaseMobException;
 
 public class PublicGroupsActivity extends BaseActivity {
+	private final int pagesize = 20;
 	private ProgressBar pb;
 	private ListView listView;
 	private GroupsAdapter adapter;
-	
 	private List<EMGroupInfo> groupsList;
 	private boolean isLoading;
 	private boolean isFirstLoading = true;
 	private boolean hasMoreData = true;
 	private String cursor;
-	private final int pagesize = 20;
     private LinearLayout footLoadingLayout;
     private ProgressBar footLoadingPB;
     private TextView footLoadingText;
     private Button searchBtn;
-    
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +70,8 @@ public class PublicGroupsActivity extends BaseActivity {
 		listView = (ListView) findViewById(R.id.list);
 		groupsList = new ArrayList<EMGroupInfo>();
 		searchBtn = (Button) findViewById(R.id.btn_search);
-		
+
+
 		View footView = getLayoutInflater().inflate(R.layout.listview_footer_view, null);
         footLoadingLayout = (LinearLayout) footView.findViewById(R.id.loading_layout);
         footLoadingPB = (ProgressBar)footView.findViewById(R.id.loading_bar);
@@ -130,7 +134,11 @@ public class PublicGroupsActivity extends BaseActivity {
 
                         public void run() {
                             searchBtn.setVisibility(View.VISIBLE);
-                            groupsList.addAll(returnGroups);
+                            for (EMGroupInfo g : returnGroups) {   //  搜索 公开群的 时候 ，过滤 以添加 的公开群
+                                if (!DemoApplication.getInstance().getGroupMap().containsKey(g.getGroupId())) {
+                                    groupsList.add(g);   // 过滤 ，如果 不包含 groupid  则添加
+                                }
+                            }
                             if(returnGroups.size() != 0){
                                 //获取cursor
                                 cursor = result.getCursor();
@@ -162,25 +170,31 @@ public class PublicGroupsActivity extends BaseActivity {
                             isLoading = false;
                             pb.setVisibility(View.INVISIBLE);
                             footLoadingLayout.setVisibility(View.GONE);
-                            Toast.makeText(PublicGroupsActivity.this, "加载数据失败，请检查网络或稍后重试", 0).show();
+                            Toast.makeText(PublicGroupsActivity.this, "加载数据失败，请检查网络或稍后重试", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
             }
         }).start();
 	}
+
+	public void back(View view){
+		finish();
+	}
+	
 	/**
 	 * adapter
 	 *
 	 */
 	private class GroupsAdapter extends ArrayAdapter<EMGroupInfo> {
-
+        Context mContext;
 		private LayoutInflater inflater;
 
 		public GroupsAdapter(Context context, int res, List<EMGroupInfo> groups) {
 			super(context, res, groups);
-			this.inflater = LayoutInflater.from(context);
-		}
+            mContext = context;
+            this.inflater = LayoutInflater.from(context);
+        }
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
@@ -189,12 +203,11 @@ public class PublicGroupsActivity extends BaseActivity {
 			}
 
 			((TextView) convertView.findViewById(R.id.name)).setText(getItem(position).getGroupName());
-
+            // 搜索的群组头像的显示
+            UserUtils.setAppGroupAvatar(mContext,getItem(position).getGroupId(),((ImageView) convertView.findViewById(R.id.avatar)));
+//  UserUtils.setAppGroupAvatar(mContext,getItem(position).getGroupId(),
+//                    (ImageView) convertView.findViewById(R.id.avatar));
 			return convertView;
 		}
-	}
-	
-	public void back(View view){
-		finish();
 	}
 }
