@@ -15,6 +15,7 @@ package cn.ucai.superwechat.activity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -266,7 +267,8 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 							}
 						}
 					}).start();
-				}
+                    updateGroupName(returnData);  //  修改 群组名称 传入 修改的Date
+                }
 				break;
 			case REQUEST_CODE_ADD_TO_BALCKLIST:
 				progressDialog.setMessage(st8);
@@ -299,8 +301,34 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 			}
 		}
 	}
+    //  修改  群组的  名称
+    private void updateGroupName(String newGouopName) {
+        final   GroupAvatar group = DemoApplication.getInstance().getGroupMap().get(groupId);
+        final OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
+        utils.setRequestUrl(I.REQUEST_UPDATE_GROUP_NAME)
+                .addParam(I.Group.GROUP_ID,String.valueOf(group.getMGroupId()))
+                .addParam(I.Group.NAME,newGouopName)
+                .targetClass(String.class)
+                .execute(new OkHttpUtils2.OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        Log.e(TAG, "result = " + s);
+                        Result result = Utils.getResultFromJson(s, GroupAvatar.class);
+                        if (result != null && result.isRetMsg()) {
+                            GroupAvatar group = (GroupAvatar) result.getRetData();
+                            DemoApplication.getInstance().getGroupMap().put(groupId, group);
+                            DemoApplication.getInstance().getGroupList().add(group);
+                        }
+                    }
 
-	private void refreshMembers(){
+                    @Override
+                    public void onError(String error) {
+                        Log.e(TAG, "error = " + error);
+                    }
+                });
+    }
+	@SuppressWarnings("ResourceType")
+    private void refreshMembers(){
 	    adapter.clear();
 
         List<String> members = new ArrayList<String>();
@@ -405,8 +433,30 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 				}
 			}
 		}).start();
-//        addGroupMembers(groupId,n);
+        deleteGroupFormApp();   // 解散群组 的方法
 	}
+    // 解散群组  本地服务器数据删除
+	protected void deleteGroupFormApp() {
+		final GroupAvatar group = DemoApplication.getInstance().getGroupMap().get(groupId);
+        Log.e(TAG, "被删除的 groupMap" + group);
+        Log.e(TAG, "被删除的 groupId" + groupId);
+        final OkHttpUtils2<Result> utils = new OkHttpUtils2<Result>();
+        	utils.setRequestUrl(I.REQUEST_DELETE_GROUP)
+                .addParam(I.Group.GROUP_ID,String.valueOf(group.getMGroupId()))
+                .targetClass(Result.class)
+                .execute(new OkHttpUtils2.OnCompleteListener<Result>() {
+                    @Override
+                    public void onSuccess(Result result) {
+                        Log.e(TAG, "deleteGroupFormApp.deleteGorpu = " + result);
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Log.e(TAG, "error = " + error);
+                    }
+                });
+    }
+
 
 	/**
 	 * 增加群成员   向环信添加群组成员
@@ -671,7 +721,6 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
     //  删除群组成员
     private void deleteMembersFromAppGroup(final String username, final boolean isExit) {
-        Log.e(TAG, "被删除的群组成员 username = " + username);
         GroupAvatar group = DemoApplication.getInstance().getGroupMap().get(groupId);
         Log.e(TAG, "被删除的群组成员 group = " + group);  //尽然为空
         Log.e(TAG, "被删除的群组成员 groupId = " + groupId);
@@ -692,7 +741,6 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                                     DemoApplication.getInstance().getGroupList().remove(group);   //  群组成员退出群组
                                     DemoApplication.getInstance().getGroupMap().remove(groupId);
                                 } else {
-                                    Log.e(TAG, "被删除的群组成员 result = " + result);
                                     DemoApplication.getInstance().getMemberMap().get(groupId).remove(username);
                                     Log.e(TAG, "删除成功 = ");
                                 }
