@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import cn.ucai.fulicenter.I;
-import cn.ucai.fulicenter.DemoApplication;
+import cn.ucai.fulicenter.FuliCenterApplication;
 
 /**
  *  * OkHttp框架的二次封装
@@ -44,19 +44,17 @@ import cn.ucai.fulicenter.DemoApplication;
  * 3.在execute方法中增加对url中request的检查。
  */
 public class OkHttpUtils2<T> {
-    private static String UTF_8 = "utf-8";
-    /** 解析成功的消息 */
-    private static final int RESULT_SUCCESS = 0;
-    /** 解析失败的消息 */
-    private static final int RESULT_ERROR = 1;
-
     /**下载进度的消息 */
     public static final int DOWNLOADING_PERCENT = 2;
     /** 下载开始的消息 */
     public static final int DOWNLOADING_START = 3;
     /** 下载结束的消息 */
     public static final int DOWNLOADING_FINISH = 4;
-
+    /** 解析成功的消息 */
+    private static final int RESULT_SUCCESS = 0;
+    /** 解析失败的消息 */
+    private static final int RESULT_ERROR = 1;
+    private static String UTF_8 = "utf-8";
     /** mokHttpClient必须保持单例，这样能在一个队列里执行多个请求。
      * 但在Activity等组件的onDestroy方法中要调用close方法释放mOkHttpClient引用的对象 */
     private static OkHttpClient mOkHttpClient;
@@ -78,18 +76,6 @@ public class OkHttpUtils2<T> {
     /** 用于存放服务端根地址和请求参数 */
     private StringBuilder mUrl;
 
-    /**
-     * 主线程执行的代码块，用于处理工作线程的结果
-     * @param <T>
-     */
-    public interface OnCompleteListener<T> {
-        /**处理成功返回结果*/
-        void onSuccess(T result);
-
-        /**处理返回失败的结果*/
-        void onError(String error);
-    }
-
     /**执行本构造方法后，别忘了在当前组件的onDestroy方法中调用
      * OkHttpUtils.release()
      */
@@ -100,9 +86,48 @@ public class OkHttpUtils2<T> {
         initHandler();
     }
 
+    /**
+     * iso8859-1的文本转换为utf-8的文本
+     *
+     * @param iso
+     * @return
+     */
+    public static String iso2utf8(String iso) {
+        try {
+            String utf8 = new String(iso.getBytes("iso8859-1"), "utf-8");
+            return utf8;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return iso;
+    }
+
+    /**
+     * 数组转换为ArrayList集合
+     *
+     * @param array
+     * @param <T>
+     * @return
+     */
+    public static <T> ArrayList<T> array2List(T[] array) {
+        final List<T> list = Arrays.asList(array);
+        return new ArrayList(list);
+    }
+
+    /**
+     * OkHttpUtils创建后，必须在组件的onDestroy方法中调用本方法，释放mOkHttpClient
+     */
+    public static void release() {
+
+        if (mOkHttpClient != null) {
+            mOkHttpClient = null;
+            Log.i("main", "OkHttpClient对象成功释放");
+        }
+    }
+
     /**初始化mHandler*/
     private void initHandler() {
-        mHandler = new Handler(DemoApplication.applicationContext.getMainLooper()) {
+        mHandler = new Handler(FuliCenterApplication.applicationContext.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
@@ -208,23 +233,6 @@ public class OkHttpUtils2<T> {
         return this;
     }
 
-    /**
-     * iso8859-1的文本转换为utf-8的文本
-     *
-     * @param iso
-     * @return
-     */
-    public static String iso2utf8(String iso) {
-        try {
-            String utf8 = new String(iso.getBytes("iso8859-1"), "utf-8");
-            return utf8;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return iso;
-    }
-
-
     /**获取服务端根地址
      * @param rootUrl:
      */
@@ -255,7 +263,6 @@ public class OkHttpUtils2<T> {
         return this;
     }
 
-
     public OkHttpUtils2<T> setRequestUrl(String request) {
         mUrl = new StringBuilder(I.SERVER_ROOT);
         mUrl.append(I.QUESTION).append(I.KEY_REQUEST).append(I.EQU).append(request);
@@ -263,6 +270,7 @@ public class OkHttpUtils2<T> {
 //        Log.e("okhttp","1 murl="+ mUrl.toString());
         return this;
     }
+
     //  修改图片下载方法，，，解决图片下载错误问题  和下面的方法功能一样
     public OkHttpUtils2<T> addFile(File file) {
         if (mUrl == null) {
@@ -271,6 +279,7 @@ public class OkHttpUtils2<T> {
         mFileBody = RequestBody.create(null, file);
         return this;
     }
+
     public OkHttpUtils2<T> addFile2(File file) {
         if (mUrl == null) {
             return this;
@@ -406,34 +415,23 @@ public class OkHttpUtils2<T> {
         }
     }
 
-    /**
-     * 数组转换为ArrayList集合
-     *
-     * @param array
-     * @param <T>
-     * @return
-     */
-    public static <T> ArrayList<T> array2List(T[] array) {
-        final List<T> list = Arrays.asList(array);
-        return new ArrayList(list);
-    }
-
-    /**
-     * OkHttpUtils创建后，必须在组件的onDestroy方法中调用本方法，释放mOkHttpClient
-     */
-    public static void release() {
-
-        if (mOkHttpClient != null) {
-            mOkHttpClient = null;
-            Log.i("main", "OkHttpClient对象成功释放");
-        }
-    }
-
     public void free() {
         mListener=null;
         mHandler=null;
         mFileBody=null;
         mUrl=null;mCallback=null;
         mClazz=null;
+    }
+
+    /**
+     * 主线程执行的代码块，用于处理工作线程的结果
+     * @param <T>
+     */
+    public interface OnCompleteListener<T> {
+        /**处理成功返回结果*/
+        void onSuccess(T result);
+
+        /**处理返回失败的结果*/
+        void onError(String error);
     }
 }

@@ -44,7 +44,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import cn.ucai.fulicenter.Constant;
-import cn.ucai.fulicenter.DemoApplication;
+import cn.ucai.fulicenter.FuliCenterApplication;
 import cn.ucai.fulicenter.DemoHXSDKHelper;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.bean.Result;
@@ -107,8 +107,8 @@ public class LoginActivity extends BaseActivity {
 
 			}
 		});
-		if (DemoApplication.getInstance().getUserName() != null) {
-			usernameEditText.setText(DemoApplication.getInstance().getUserName());
+		if (FuliCenterApplication.getInstance().getUserName() != null) {
+			usernameEditText.setText(FuliCenterApplication.getInstance().getUserName());
 		}
 	}
 
@@ -269,11 +269,11 @@ public class LoginActivity extends BaseActivity {
 	}
 	private void  loginSuccess(UserAvatar user) {
 		// 登陆成功，保存用户名密码
-		DemoApplication.getInstance().setUserName(currentUsername);
-		DemoApplication.getInstance().setPassword(currentPassword);
+		FuliCenterApplication.getInstance().setUserName(currentUsername);
+		FuliCenterApplication.getInstance().setPassword(currentPassword);
 
-		DemoApplication.getInstance().setUser(user);
-		DemoApplication.currentUserNick = user.getMUserNick();
+		FuliCenterApplication.getInstance().setUser(user);
+		FuliCenterApplication.currentUserNick = user.getMUserNick();
 		Log.e("main", "登录用户名 ===" + user);
 		new DownloadContactListTask(LoginActivity.this,currentUsername).excute();  //
 		new DownloadGroupListTask(LoginActivity.this,currentUsername).excute(); //  群组中的头像下载
@@ -299,7 +299,7 @@ public class LoginActivity extends BaseActivity {
 		}
 //		 更新当前用户的nickname 此方法的作用是在ios离线推送时能够显示用户nick
 				boolean updatenick = EMChatManager.getInstance().updateCurrentUserNick(
-						DemoApplication.currentUserNick.trim());
+						FuliCenterApplication.currentUserNick.trim());
 				if (!updatenick) {
 					Log.e("LoginActivity", "update current user nick fail");
 				}

@@ -38,7 +38,7 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMConversation.EMConversationType;
 import cn.ucai.fulicenter.Constant;
-import cn.ucai.fulicenter.DemoApplication;
+import cn.ucai.fulicenter.FuliCenterApplication;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.adapter.ChatAllHistoryAdapter;
 import cn.ucai.fulicenter.db.InviteMessgeDao;
@@ -49,14 +49,13 @@ import cn.ucai.fulicenter.db.InviteMessgeDao;
  */
 public class ChatAllHistoryFragment extends Fragment implements OnClickListener {
 
+	public RelativeLayout errorItem;
+	public TextView errorText;
 	private InputMethodManager inputMethodManager;
 	private ListView listView;
 	private ChatAllHistoryAdapter adapter;
 	private EditText query;
 	private ImageButton clearSearch;
-	public RelativeLayout errorItem;
-
-	public TextView errorText;
 	private boolean hidden;
 	private List<EMConversation> conversationList = new ArrayList<EMConversation>();
 		
@@ -88,7 +87,7 @@ public class ChatAllHistoryFragment extends Fragment implements OnClickListener 
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				EMConversation conversation = adapter.getItem(position);
 				String username = conversation.getUserName();
-				if (username.equals(DemoApplication.getInstance().getUserName()))
+				if (username.equals(FuliCenterApplication.getInstance().getUserName()))
 					Toast.makeText(getActivity(), st2, 0).show();
 				else {
 				    // 进入聊天页面

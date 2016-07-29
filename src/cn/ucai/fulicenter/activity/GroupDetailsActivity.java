@@ -45,7 +45,7 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMGroupManager;
 
-import cn.ucai.fulicenter.DemoApplication;
+import cn.ucai.fulicenter.FuliCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.bean.GroupAvatar;
@@ -302,7 +302,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 	}
     //  修改  群组的  名称
     private void updateGroupName(String newGouopName) {
-        final   GroupAvatar group = DemoApplication.getInstance().getGroupMap().get(groupId);
+        final   GroupAvatar group = FuliCenterApplication.getInstance().getGroupMap().get(groupId);
         final OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
         utils.setRequestUrl(I.REQUEST_UPDATE_GROUP_NAME)
                 .addParam(I.Group.GROUP_ID,String.valueOf(group.getMGroupId()))
@@ -315,8 +315,8 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                         Result result = Utils.getResultFromJson(s, GroupAvatar.class);
                         if (result != null && result.isRetMsg()) {
                             GroupAvatar group = (GroupAvatar) result.getRetData();
-                            DemoApplication.getInstance().getGroupMap().put(groupId, group);
-                            DemoApplication.getInstance().getGroupList().add(group);
+                            FuliCenterApplication.getInstance().getGroupMap().put(groupId, group);
+                            FuliCenterApplication.getInstance().getGroupList().add(group);
                         }
                     }
 
@@ -399,7 +399,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 				}
 			}
 		}).start();
-        deleteMembersFromAppGroup(DemoApplication.getInstance().getUserName(),true);  //  群组成员 退出群组
+        deleteMembersFromAppGroup(FuliCenterApplication.getInstance().getUserName(),true);  //  群组成员 退出群组
 	}
 
 	/**
@@ -436,7 +436,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 	}
     // 解散群组  本地服务器数据删除
 	protected void deleteGroupFormApp() {
-		final GroupAvatar group = DemoApplication.getInstance().getGroupMap().get(groupId);
+		final GroupAvatar group = FuliCenterApplication.getInstance().getGroupMap().get(groupId);
         Log.e(TAG, "被删除的 groupMap" + group);
         Log.e(TAG, "被删除的 groupId" + groupId);
         final OkHttpUtils2<Result> utils = new OkHttpUtils2<Result>();
@@ -720,7 +720,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
     //  删除群组成员
     private void deleteMembersFromAppGroup(final String username, final boolean isExit) {
-        GroupAvatar group = DemoApplication.getInstance().getGroupMap().get(groupId);
+        GroupAvatar group = FuliCenterApplication.getInstance().getGroupMap().get(groupId);
         Log.e(TAG, "被删除的群组成员 group = " + group);  //尽然为空
         Log.e(TAG, "被删除的群组成员 groupId = " + groupId);
         if (group != null) {
@@ -736,11 +736,11 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                             Result result = Utils.getResultFromJson(s, GroupAvatar.class);
                             if (result != null && result.isRetMsg()) {
                                 if (isExit) {
-                                    GroupAvatar group = DemoApplication.getInstance().getGroupMap().get(groupId);
-                                    DemoApplication.getInstance().getGroupList().remove(group);   //  群组成员退出群组
-                                    DemoApplication.getInstance().getGroupMap().remove(groupId);
+                                    GroupAvatar group = FuliCenterApplication.getInstance().getGroupMap().get(groupId);
+                                    FuliCenterApplication.getInstance().getGroupList().remove(group);   //  群组成员退出群组
+                                    FuliCenterApplication.getInstance().getGroupMap().remove(groupId);
                                 } else {
-                                    DemoApplication.getInstance().getMemberMap().get(groupId).remove(username);
+                                    FuliCenterApplication.getInstance().getMemberMap().get(groupId).remove(username);
                                     Log.e(TAG, "删除成功 = ");
                                 }
                             }

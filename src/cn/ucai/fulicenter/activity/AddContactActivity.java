@@ -28,10 +28,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import cn.ucai.fulicenter.FuliCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMContactManager;
-import cn.ucai.fulicenter.DemoApplication;
+
 import cn.ucai.fulicenter.DemoHXSDKHelper;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.bean.Result;
@@ -87,13 +88,13 @@ public class AddContactActivity extends BaseActivity{
 				startActivity(new Intent(this, AlertDialog.class).putExtra("msg", st));
 				return;
 			}
-			if(DemoApplication.getInstance().getUserName().equals(nameText.getText().toString())){
+			if(FuliCenterApplication.getInstance().getUserName().equals(nameText.getText().toString())){
 				String str = getString(R.string.not_add_myself);
 				startActivity(new Intent(this, AlertDialog.class).putExtra("msg", str));
 				return;
 			}
 			// 如果 好友存在  ，执行下列操作  先判断查找的用户是否为自己
-			UserAvatar userAvatar = DemoApplication.getInstance().getUserMap().get(toAddUsername);
+			UserAvatar userAvatar = FuliCenterApplication.getInstance().getUserMap().get(toAddUsername);
 			if (userAvatar != null) {
 				//  如果点击查找到的用户，，则自动跳转到该用户的资料界面
 				startActivity(new Intent(AddContactActivity.this,

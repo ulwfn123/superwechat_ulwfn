@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.ucai.fulicenter.DemoApplication;
+import cn.ucai.fulicenter.FuliCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.bean.MemberUserAvatar;
 import cn.ucai.fulicenter.bean.Result;
@@ -48,7 +48,7 @@ public class DownloadMemberMapTask {
                         if (list != null && list.size() >= 0) {
                             Log.e(TAG, "list.size = " + list.size());
                             Map<String,HashMap<String,MemberUserAvatar>> memberMap =
-                                    DemoApplication.getInstance().getMemberMap();
+                                    FuliCenterApplication.getInstance().getMemberMap();
                             if (!memberMap.containsKey(hxid)) {
                                 memberMap.put(hxid,new HashMap<String, MemberUserAvatar>());
                             }

@@ -52,7 +52,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import cn.ucai.fulicenter.DemoApplication;
+import cn.ucai.fulicenter.FuliCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.applib.controller.HXSDKHelper;
 import cn.ucai.fulicenter.applib.controller.HXSDKHelper.HXSyncListener;
@@ -77,13 +77,6 @@ import com.easemob.util.EMLog;
  */
 public class ContactlistFragment extends Fragment {
 	public static final String TAG = "ContactlistFragment";
-	private ContactAdapter adapter;
-	private List<User> contactList;
-	private ListView listView;
-	private boolean hidden;
-	private Sidebar sidebar;
-	private InputMethodManager inputMethodManager;
-	private List<String> blackList;
 	ImageButton clearSearch;
 	EditText query;
 	HXContactSyncListener contactSyncListener;
@@ -91,76 +84,23 @@ public class ContactlistFragment extends Fragment {
 	HXContactInfoSyncListener contactInfoSyncListener;
 	View progressBar;
 	Handler handler = new Handler();
+	//  定义了一个 类的属性
+	UpdateContactReceiver mUpdateContactReceiver;
+	private ContactAdapter adapter;
+	private List<User> contactList;
+	private ListView listView;
+	private boolean hidden;
+	private Sidebar sidebar;
+	private InputMethodManager inputMethodManager;
+	private List<String> blackList;
     private User toBeProcessUser;
     private String toBeProcessUsername;
-
-	class HXContactSyncListener implements HXSyncListener {
+	
 		@Override
-		public void onSyncSucess(final boolean success) {
-			EMLog.d(TAG, "on contact list sync success:" + success);
-			ContactlistFragment.this.getActivity().runOnUiThread(new Runnable() {
-				public void run() {
-				    getActivity().runOnUiThread(new Runnable(){
-
-		                @Override
-		                public void run() {
-		                    if(success){
-		                        progressBar.setVisibility(View.GONE);
-                                refresh();
-		                    }else{
-		                        String s1 = getResources().getString(R.string.get_failed_please_check);
-		                        Toast.makeText(getActivity(), s1, Toast.LENGTH_LONG).show();
-		                        progressBar.setVisibility(View.GONE);
-		                    }
-		                }
-		                
-		            });
-				}
-			});
-		}
-	}
-	
-	class HXBlackListSyncListener implements HXSyncListener{
-
-        @Override
-        public void onSyncSucess(boolean success) {
-            getActivity().runOnUiThread(new Runnable(){
-
-                @Override
-                public void run() {
-                    blackList = EMContactManager.getInstance().getBlackListUsernames();
-                    refresh();
-                }
-                
-            });
-        }
-	    
-	};
-	
-	class HXContactInfoSyncListener implements HXSyncListener{
-
-		@Override
-		public void onSyncSucess(final boolean success) {
-			EMLog.d(TAG, "on contactinfo list sync success:" + success);
-			getActivity().runOnUiThread(new Runnable() {
-				
-				@Override
-				public void run() {
-					progressBar.setVisibility(View.GONE);
-					if(success){
-						refresh();
-					}
-				}
-			});
-		}
-		
-	}
-	
-	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.fragment_contact_list, container, false);
-	}
-
+	};
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -171,13 +111,13 @@ public class ContactlistFragment extends Fragment {
 		listView = (ListView) getView().findViewById(R.id.list);
 		sidebar = (Sidebar) getView().findViewById(R.id.sidebar);
 		sidebar.setListView(listView);
-        
+
 		//黑名单列表
 		blackList = EMContactManager.getInstance().getBlackListUsernames();
 		contactList = new ArrayList<User>();
 		// 获取设置contactlist
 		getContactList();
-		
+
 		//搜索框
 		query = (EditText) getView().findViewById(R.id.query);
 		query.setHint(R.string.search);
@@ -189,7 +129,7 @@ public class ContactlistFragment extends Fragment {
 					clearSearch.setVisibility(View.VISIBLE);
 				} else {
 					clearSearch.setVisibility(View.INVISIBLE);
-					
+
 				}
 			}
 
@@ -206,7 +146,7 @@ public class ContactlistFragment extends Fragment {
 				hideSoftKeyboard();
 			}
 		});
-		
+
 		// 设置adapter
 		adapter = new ContactAdapter(getActivity(), R.layout.row_contact, contactList);
 		listView.setAdapter(adapter);
@@ -262,18 +202,18 @@ public class ContactlistFragment extends Fragment {
 			}
 		});
 		registerForContextMenu(listView);
-		
+
 		progressBar = (View) getView().findViewById(R.id.progress_bar);
 
 		contactSyncListener = new HXContactSyncListener();
 		HXSDKHelper.getInstance().addSyncContactListener(contactSyncListener);
-		
+
 		blackListSyncListener = new HXBlackListSyncListener();
 		HXSDKHelper.getInstance().addSyncBlackListListener(blackListSyncListener);
-		
+
 		contactInfoSyncListener = new HXContactInfoSyncListener();
 		((DemoHXSDKHelper)HXSDKHelper.getInstance()).getUserProfileManager().addSyncContactInfoListener(contactInfoSyncListener);
-		
+
 		if (!HXSDKHelper.getInstance().isContactsSyncedWithServer()) {
 			progressBar.setVisibility(View.VISIBLE);
 		} else {
@@ -283,7 +223,7 @@ public class ContactlistFragment extends Fragment {
 		updateContactListener();  // 调用添加好友的的广播拦截器
 
 	}
-
+	
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
@@ -333,7 +273,7 @@ public class ContactlistFragment extends Fragment {
 
 	/**
 	 * 删除联系人
-	 * 
+	 *
 	 * @param
 	 */
 	public void deleteContact(final User tobeDeleteUser) {
@@ -372,7 +312,7 @@ public class ContactlistFragment extends Fragment {
 			}
 		}).start();
 		//   删除联系人   ，删除的 本地数据库中数据
-		String currentUsetName = DemoApplication.getInstance().getUserName();
+		String currentUsetName = FuliCenterApplication.getInstance().getUserName();
 		final OkHttpUtils2<Result> utils2 = new OkHttpUtils2<Result>();
 		utils2.setRequestUrl(I.REQUEST_DELETE_CONTACT)
 				.addParam(I.Contact.USER_NAME,currentUsetName)
@@ -385,9 +325,9 @@ public class ContactlistFragment extends Fragment {
 						if (result.isRetMsg()) {
 							Log.e(TAG, "result = =    ........................" );
 							((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList().remove(tobeDeleteUser.getUsername());
-							UserAvatar u = DemoApplication.getInstance().getUserMap().get(tobeDeleteUser);
-							DemoApplication.getInstance().getUserlist().remove(u);
-							DemoApplication.getInstance().getUserMap().remove(tobeDeleteUser.getUsername());
+							UserAvatar u = FuliCenterApplication.getInstance().getUserMap().get(tobeDeleteUser);
+							FuliCenterApplication.getInstance().getUserlist().remove(u);
+							FuliCenterApplication.getInstance().getUserMap().remove(tobeDeleteUser.getUsername());
 							getActivity().sendStickyBroadcast(new Intent("update_contact_list"));
 						}
 					}
@@ -398,6 +338,7 @@ public class ContactlistFragment extends Fragment {
 					}
 				});
 	}
+
 	/**
 	 * 把user移入到黑名单
 	 */
@@ -432,9 +373,9 @@ public class ContactlistFragment extends Fragment {
 				}
 			}
 		}).start();
-		
+
 	}
-	
+
 	// 刷新ui
 	public void refresh() {
 		try {
@@ -456,11 +397,11 @@ public class ContactlistFragment extends Fragment {
 			HXSDKHelper.getInstance().removeSyncContactListener(contactSyncListener);
 			contactSyncListener = null;
 		}
-		
+
 		if(blackListSyncListener != null){
 		    HXSDKHelper.getInstance().removeSyncBlackListListener(blackListSyncListener);
 		}
-		
+
 		if(contactInfoSyncListener != null){
 			((DemoHXSDKHelper)HXSDKHelper.getInstance()).getUserProfileManager().removeSyncContactInfoListener(contactInfoSyncListener);
 		}
@@ -515,7 +456,7 @@ public class ContactlistFragment extends Fragment {
 		// 把"申请与通知"添加到首位
 		if(users.get(Constant.NEW_FRIENDS_USERNAME) != null)
 		    contactList.add(0, users.get(Constant.NEW_FRIENDS_USERNAME));
-		
+
 	}
 	
 	void hideSoftKeyboard() {
@@ -525,7 +466,7 @@ public class ContactlistFragment extends Fragment {
                         InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
-	
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -534,7 +475,85 @@ public class ContactlistFragment extends Fragment {
 	    }else if(((MainActivity)getActivity()).getCurrentAccountRemoved()){
 	    	outState.putBoolean(Constant.ACCOUNT_REMOVED, true);
 	    }
-	    
+
+	}
+	
+	// 广播拦截器
+	private void updateContactListener() {
+		mUpdateContactReceiver = new UpdateContactReceiver();  //   属性初始化
+		//  接收 监听“update_contact_list”，这字符串为  添加好友时   发出 的广播
+		IntentFilter filter = new IntentFilter("update_contact_list");
+		//启动 “registerReceiver” 广播接收器
+		getActivity().registerReceiver(mUpdateContactReceiver, filter);
+	}
+	
+	// 重写 onDestroyView 方法  “销毁视图”
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		getActivity().unregisterReceiver(mUpdateContactReceiver);
+	}
+
+	class HXContactSyncListener implements HXSyncListener {
+		@Override
+		public void onSyncSucess(final boolean success) {
+			EMLog.d(TAG, "on contact list sync success:" + success);
+			ContactlistFragment.this.getActivity().runOnUiThread(new Runnable() {
+				public void run() {
+				    getActivity().runOnUiThread(new Runnable(){
+
+		                @Override
+		                public void run() {
+		                    if(success){
+		                        progressBar.setVisibility(View.GONE);
+                                refresh();
+		                    }else{
+		                        String s1 = getResources().getString(R.string.get_failed_please_check);
+		                        Toast.makeText(getActivity(), s1, Toast.LENGTH_LONG).show();
+		                        progressBar.setVisibility(View.GONE);
+		                    }
+		                }
+
+		            });
+				}
+			});
+		}
+	}
+
+class HXBlackListSyncListener implements HXSyncListener{
+
+        @Override
+        public void onSyncSucess(boolean success) {
+            getActivity().runOnUiThread(new Runnable(){
+
+                @Override
+                public void run() {
+                    blackList = EMContactManager.getInstance().getBlackListUsernames();
+                    refresh();
+                }
+
+            });
+        }
+
+	}
+
+	class HXContactInfoSyncListener implements HXSyncListener{
+
+		@Override
+		public void onSyncSucess(final boolean success) {
+			EMLog.d(TAG, "on contactinfo list sync success:" + success);
+			getActivity().runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					progressBar.setVisibility(View.GONE);
+					if(success){
+						refresh();
+					}
+				}
+			});
+		}
+
 	}
 
 	//    创建内部类    继承   广播接收机
@@ -544,21 +563,5 @@ public class ContactlistFragment extends Fragment {
 			adapter.notifyDataSetChanged();  // 向电脑发送  刷新
 		}
 
-	}
-	//  定义了一个 类的属性
-	UpdateContactReceiver mUpdateContactReceiver;
-	// 广播拦截器
-	private void updateContactListener() {
-		mUpdateContactReceiver = new UpdateContactReceiver();  //   属性初始化
-		//  接收 监听“update_contact_list”，这字符串为  添加好友时   发出 的广播
-		IntentFilter filter = new IntentFilter("update_contact_list");
-		//启动 “registerReceiver” 广播接收器
-		getActivity().registerReceiver(mUpdateContactReceiver, filter);
-	}
-	// 重写 onDestroyView 方法  “销毁视图”
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		getActivity().unregisterReceiver(mUpdateContactReceiver);
 	}
 }

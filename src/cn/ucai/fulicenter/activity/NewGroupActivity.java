@@ -30,7 +30,7 @@ import android.widget.Toast;
 import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMGroupManager;
 
-import cn.ucai.fulicenter.DemoApplication;
+import cn.ucai.fulicenter.FuliCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.bean.GroupAvatar;
@@ -175,7 +175,7 @@ public class NewGroupActivity extends BaseActivity {
         boolean invites = !isPublic;
         File file = new File(OnSetAvatarListener.getAvatarPath(NewGroupActivity.this, I.AVATAR_TYPE_GROUP_PATH ),
                 avatarName+I.AVATAR_SUFFIX_JPG);
-        String own = DemoApplication.getInstance().getUserName();
+        String own = FuliCenterApplication.getInstance().getUserName();
         final OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
         utils.setRequestUrl(I.REQUEST_CREATE_GROUP)
                 .addParam(I.Group.HX_ID,groupid)
@@ -246,8 +246,8 @@ public class NewGroupActivity extends BaseActivity {
     }
     //   添加 公共群的方法
     private void createGroupSucess(GroupAvatar group) {
-        DemoApplication.getInstance().getGroupMap().put(group.getMGroupHxid(), group);
-        DemoApplication.getInstance().getGroupList().add(group);   // 添加到全局变量中
+        FuliCenterApplication.getInstance().getGroupMap().put(group.getMGroupHxid(), group);
+        FuliCenterApplication.getInstance().getGroupList().add(group);   // 添加到全局变量中
 
         runOnUiThread(new Runnable() {
             @Override

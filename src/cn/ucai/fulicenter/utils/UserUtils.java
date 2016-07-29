@@ -6,7 +6,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import cn.ucai.fulicenter.DemoApplication;
+import cn.ucai.fulicenter.FuliCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.applib.controller.HXSDKHelper;
 import cn.ucai.fulicenter.DemoHXSDKHelper;
@@ -44,7 +44,7 @@ public class UserUtils {
 	 * 根据username用户名称获取相应useravatar用户头像
 	 */
 	public static UserAvatar getAppUserInfo(String username){
-		UserAvatar user = DemoApplication.getInstance().getUserMap().get(username);
+		UserAvatar user = FuliCenterApplication.getInstance().getUserMap().get(username);
 		if(user == null){
 			user = new UserAvatar(username);
 		}
@@ -78,7 +78,7 @@ public class UserUtils {
 	//设置当前用户头像 仿写
 
 	public static void setAppCurrentUserAvatar(Context context, ImageView imageView) {
-		String name = DemoApplication.getInstance().getUserName();
+		String name = FuliCenterApplication.getInstance().getUserName();
 		setAppUserAvatar(context,name,imageView);
 
 	}
@@ -125,7 +125,7 @@ public class UserUtils {
 
 	 //设置当前用户昵称  仿写
 	public static void setAppCurrentUserNick(TextView textView){
-		UserAvatar user = DemoApplication.getInstance().getUser();
+		UserAvatar user = FuliCenterApplication.getInstance().getUser();
 		if(textView != null&&user!=null){
 			if (user.getMUserNick() != null) {
 				textView.setText(user.getMUserNick());
@@ -204,7 +204,7 @@ public class UserUtils {
     //  上面 调用的 方法 是通过 环信ID  获取  群组中 用户 的个人资料
     public static MemberUserAvatar getAppMemberInfo(String hxid,String username){
         MemberUserAvatar member = null;
-        Map<String,MemberUserAvatar> user =  DemoApplication.getInstance().getMemberMap().get(hxid);
+        Map<String,MemberUserAvatar> user =  FuliCenterApplication.getInstance().getMemberMap().get(hxid);
         Log.e(TAG, "user  ==" + user+ "userName  ==  " + username);
         Log.e(TAG, "hxid  ==" + hxid);
         if (user == null || user.size() < 0) {

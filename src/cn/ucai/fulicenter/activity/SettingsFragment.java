@@ -31,7 +31,7 @@ import android.widget.Toast;
 
 import com.easemob.EMCallBack;
 
-import cn.ucai.fulicenter.DemoApplication;
+import cn.ucai.fulicenter.FuliCenterApplication;
 import cn.ucai.fulicenter.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatOptions;
@@ -48,6 +48,7 @@ import cn.ucai.fulicenter.R;
  */
 public class SettingsFragment extends Fragment implements OnClickListener {
 
+	DemoHXSDKModel model;
 	/**
 	 * 设置新消息通知布局
 	 */
@@ -64,7 +65,6 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 	 * 设置扬声器布局
 	 */
 	private RelativeLayout rl_switch_speaker;
-
 	/**
 	 * 打开新消息通知imageView
 	 */
@@ -97,27 +97,20 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 	 * 关闭扬声器播放语音
 	 */
 	private ImageView iv_switch_close_speaker;
-
 	/**
 	 * 声音和震动中间的那条线
 	 */
 	private TextView textview1, textview2;
-
 	private LinearLayout blacklistContainer;
-	
 	private LinearLayout userProfileContainer;
-	
 	/**
 	 * 退出按钮
 	 */
 	private Button logoutBtn;
-
 	private RelativeLayout rl_switch_chatroom_leave;
 	private ImageView iv_switch_room_owner_leave_allow;
 	private ImageView iv_switch_room_owner_leave_disallow;
-	
 	private EMChatOptions chatOptions;
- 
 	/**
 	 * 诊断
 	 */
@@ -126,8 +119,6 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 	 * iOS离线推送昵称
 	 */
 	private LinearLayout pushNick;
-	
-	DemoHXSDKModel model;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -362,7 +353,7 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 //						DemoApplication.getInstance().setUser(null);
 //						DemoApplication.getInstance().getUserMap().clear();
 //						DemoApplication.getInstance().getUserlist().clear();     //添加 用户 头像
-						DemoApplication.getInstance().getGroupList().clear();   //  添加群组成员 头像
+						FuliCenterApplication.getInstance().getGroupList().clear();   //  添加群组成员 头像
 
 						// 重新显示登陆页面
 						((MainActivity) getActivity()).finish();

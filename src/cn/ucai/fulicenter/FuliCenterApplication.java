@@ -27,7 +27,7 @@ import cn.ucai.fulicenter.bean.GroupAvatar;
 import cn.ucai.fulicenter.bean.MemberUserAvatar;
 import cn.ucai.fulicenter.bean.UserAvatar;
 
-public class DemoApplication extends Application {
+public class FuliCenterApplication extends Application {
 
 	public static Context applicationContext;
 	/**
@@ -35,7 +35,7 @@ public class DemoApplication extends Application {
 	 */
 	public static String currentUserNick = "";
 	public static DemoHXSDKHelper hxSDKHelper = new DemoHXSDKHelper();
-	private static DemoApplication instance;
+	private static FuliCenterApplication instance;
 	// login user name
 	public final String PREF_USERNAME = "username";
     // 当前登录用户的 群组集合
@@ -50,8 +50,13 @@ public class DemoApplication extends Application {
 	private Map<String, UserAvatar> userMap = new HashMap<String, UserAvatar>();
 	//获取当前登录用户的 群组的集合
 	private Map<String, GroupAvatar> GroupMap = new HashMap<String, GroupAvatar>();
+    private List<GroupAvatar> GroupDeleteList = new ArrayList<GroupAvatar>();
 
-	public static DemoApplication getInstance() {
+	public static FuliCenterApplication getInstance() {
+		return instance;
+	}
+
+	public static FuliCenterApplication getInstance() {
 		return instance;
 	}
 
@@ -154,13 +159,6 @@ public class DemoApplication extends Application {
     public List<GroupAvatar> getGroupList() {
         return groupList;
     }
-    public void setGroupList(List<GroupAvatar> groupList) {
-        this.groupList = groupList;
-    }
-
-    public Map<String, HashMap<String, MemberUserAvatar>> getMemberMap() {
-        return memberMap;
-    }
 
 //    public List<GroupAvatar> getGroupDeleteList() {
 //        return GroupDeleteList;
@@ -170,8 +168,13 @@ public class DemoApplication extends Application {
 //        GroupDeleteList = groupDeleteList;
 //    }
 
-    //  删除群组人员或群组的全局变量
-    private List<GroupAvatar> GroupDeleteList = new ArrayList<GroupAvatar>();
+    public void setGroupList(List<GroupAvatar> groupList) {
+        this.groupList = groupList;
+    }
+
+    public Map<String, HashMap<String, MemberUserAvatar>> getMemberMap() {
+        return memberMap;
+    }    //  删除群组人员或群组的全局变量
 
     public void setMemberMap(Map<String, HashMap<String, MemberUserAvatar>> memberMap) {
         this.memberMap = memberMap;

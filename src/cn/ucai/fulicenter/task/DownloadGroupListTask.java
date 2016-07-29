@@ -7,7 +7,7 @@ import android.util.Log;
 import java.util.List;
 import java.util.Map;
 
-import cn.ucai.fulicenter.DemoApplication;
+import cn.ucai.fulicenter.FuliCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.bean.GroupAvatar;
 import cn.ucai.fulicenter.bean.Result;
@@ -46,8 +46,8 @@ public class DownloadGroupListTask {
                         List<GroupAvatar> list = (List<GroupAvatar>) result.getRetData();
                         Log.e(TAG, " result.getRetData()  === " +  result.getRetData());
                         if (list != null && list.size() >= 0) {
-                            DemoApplication.getInstance().setGroupList(list);
-                            Map<String, GroupAvatar> groupMap = DemoApplication.getInstance().getGroupMap();// 添加 群组的集合
+                            FuliCenterApplication.getInstance().setGroupList(list);
+                            Map<String, GroupAvatar> groupMap = FuliCenterApplication.getInstance().getGroupMap();// 添加 群组的集合
                             Log.e(TAG, " groupMap  === " +  groupMap);
                             for (GroupAvatar g : list) {
                                 groupMap.put(g.getMAvatarUserName(), g);

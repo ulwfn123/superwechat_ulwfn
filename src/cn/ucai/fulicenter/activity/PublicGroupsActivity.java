@@ -40,7 +40,7 @@ import com.easemob.chat.EMCursorResult;
 import com.easemob.chat.EMGroupInfo;
 import com.easemob.chat.EMGroupManager;
 
-import cn.ucai.fulicenter.DemoApplication;
+import cn.ucai.fulicenter.FuliCenterApplication;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.utils.UserUtils;
 
@@ -135,7 +135,7 @@ public class PublicGroupsActivity extends BaseActivity {
                         public void run() {
                             searchBtn.setVisibility(View.VISIBLE);
                             for (EMGroupInfo g : returnGroups) {   //  搜索 公开群的 时候 ，过滤 以添加 的公开群
-                                if (!DemoApplication.getInstance().getGroupMap().containsKey(g.getGroupId())) {
+                                if (!FuliCenterApplication.getInstance().getGroupMap().containsKey(g.getGroupId())) {
                                     groupsList.add(g);   // 过滤 ，如果 不包含 groupid  则添加
                                 }
                             }

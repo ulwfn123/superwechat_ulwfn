@@ -26,7 +26,7 @@ import android.widget.Toast;
 
 import com.easemob.EMError;
 import com.easemob.chat.EMChatManager;
-import cn.ucai.fulicenter.DemoApplication;
+import cn.ucai.fulicenter.FuliCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.bean.Result;
@@ -44,19 +44,17 @@ import java.io.File;
  */
 public class RegisterActivity extends BaseActivity {
 	private static final String TAG = RegisterActivity.class.getSimpleName();
+	String avatarName;
+	String username ;
+	String nick ;
+	String pwd ;
+	ProgressDialog pd;
 	private EditText userNameEditText;
 	private EditText userNickEditText;
 	private EditText passwordEditText;
 	private EditText confirmPwdEditText;
 	private RelativeLayout layoutAvatar;
 	private ImageView imAvatar;
-	String avatarName;
-
-	String username ;
-	String nick ;
-	String pwd ;
-	ProgressDialog pd;
-
 	private OnSetAvatarListener mOnSetAvatarListener;
 
 	@Override
@@ -204,7 +202,7 @@ public class RegisterActivity extends BaseActivity {
 							if (!RegisterActivity.this.isFinishing())
 								pd.dismiss();
 							// 保存用户名
-							DemoApplication.getInstance().setUserName(username);
+							FuliCenterApplication.getInstance().setUserName(username);
 							Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registered_successfully), Toast.LENGTH_SHORT).show();
 							finish();
 						}

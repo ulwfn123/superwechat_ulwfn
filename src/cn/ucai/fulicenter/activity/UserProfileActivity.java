@@ -25,7 +25,7 @@ import android.widget.Toast;
 
 import com.easemob.EMValueCallBack;
 
-import cn.ucai.fulicenter.DemoApplication;
+import cn.ucai.fulicenter.FuliCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
@@ -117,8 +117,8 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 			break;
 		case R.id.rl_nickname:
 			final EditText editText = new EditText(this);
-			Log.e(TAG, "nick  ====" + DemoApplication.getInstance().getUser().getMUserNick());
-			editText.setText(DemoApplication.getInstance().getUser().getMUserNick());   //设置当前个人资料修改后的昵称
+			Log.e(TAG, "nick  ====" + FuliCenterApplication.getInstance().getUser().getMUserNick());
+			editText.setText(FuliCenterApplication.getInstance().getUser().getMUserNick());   //设置当前个人资料修改后的昵称
 			new Builder(this).setTitle(R.string.setting_nickname).setIcon(android.R.drawable.ic_dialog_info).setView(editText)
 					.setPositiveButton(R.string.dl_ok, new DialogInterface.OnClickListener() {
 						@Override
@@ -141,7 +141,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 	private void updateAppNick(final String nickString) {
 		final OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
 		utils.setRequestUrl(I.REQUEST_UPDATE_USER_NICK)
-				.addParam(I.User.USER_NAME, DemoApplication.getInstance().getUserName())
+				.addParam(I.User.USER_NAME, FuliCenterApplication.getInstance().getUserName())
 				.addParam(I.User.NICK,nickString)
 				.targetClass(String.class)
 				.execute(new OkHttpUtils2.OnCompleteListener<String>() {
@@ -153,8 +153,8 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 							UserAvatar user = (UserAvatar) result.getRetData();
 							if (user != null) {
 								updateRemoteNick(nickString);  //  更新 用户昵称   更新本地服务端和环信服务器
-								DemoApplication.getInstance().setUser(user);
-								DemoApplication.currentUserNick = user.getMUserNick();
+								FuliCenterApplication.getInstance().setUser(user);
+								FuliCenterApplication.currentUserNick = user.getMUserNick();
 								UserDao dao = new UserDao(UserProfileActivity.this);
 								dao.updateUserNick(user);
 							}
@@ -292,7 +292,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 	private void uploadUserAvatar(final Intent data) {
 		File file = new File(OnSetAvatarListener.getAvatarPath(UserProfileActivity.this, I.AVATAR_TYPE_USER_PATH),
 				avatarName + I.AVATAR_SUFFIX_JPG);
-		String userName = DemoApplication.getInstance().getUserName();
+		String userName = FuliCenterApplication.getInstance().getUserName();
 		final OkHttpUtils2<Result> utils = new OkHttpUtils2<Result>();
 		utils.setRequestUrl(I.REQUEST_UPLOAD_AVATAR)
 				.addParam(I.NAME_OR_HXID,userName)

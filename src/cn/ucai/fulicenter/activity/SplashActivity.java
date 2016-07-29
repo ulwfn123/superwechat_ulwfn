@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMGroupManager;
 
-import cn.ucai.fulicenter.DemoApplication;
+import cn.ucai.fulicenter.FuliCenterApplication;
 import cn.ucai.fulicenter.DemoHXSDKHelper;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
@@ -31,10 +31,9 @@ import cn.ucai.fulicenter.utils.Utils;
  */
 public class SplashActivity extends BaseActivity {
 	private static final String TAG = SplashActivity.class.getSimpleName();
+	private static final int sleepTime = 2000;
 	private RelativeLayout rootLayout;
 	private TextView versionText;
-	
-	private static final int sleepTime = 2000;
 
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -64,7 +63,7 @@ public class SplashActivity extends BaseActivity {
 					EMGroupManager.getInstance().loadAllGroups();
 					EMChatManager.getInstance().loadAllConversations();
 					// 获取闪屏时用户信息
-					String userName = DemoApplication.getInstance().getUserName();
+					String userName = FuliCenterApplication.getInstance().getUserName();
 					UserDao userDao = new UserDao(SplashActivity.this);
 					UserAvatar user = userDao.getUserData(userName);
 					if (user == null) {   // 如果手机上没有登录账户的信息，，则 去本地数据库下载
@@ -80,8 +79,8 @@ public class SplashActivity extends BaseActivity {
 										if (result != null && result.isRetMsg()) {
 											UserAvatar user = (UserAvatar) result.getRetData();
 											if (user != null) {
-												DemoApplication.getInstance().setUser(user);
-												DemoApplication.currentUserNick=user.getMUserNick();
+												FuliCenterApplication.getInstance().setUser(user);
+												FuliCenterApplication.currentUserNick=user.getMUserNick();
 											}
 										}
 									}
@@ -92,8 +91,8 @@ public class SplashActivity extends BaseActivity {
 									}
 								});
 					}else {  //添加包含，， 如果不等于空
-						DemoApplication.getInstance().setUser(user);
-						DemoApplication.currentUserNick=user.getMUserNick();
+						FuliCenterApplication.getInstance().setUser(user);
+						FuliCenterApplication.currentUserNick=user.getMUserNick();
 					}
 					new DownloadContactListTask(SplashActivity.this,userName).excute();
 					new DownloadGroupListTask(SplashActivity.this,userName).excute(); // 闪屏界面群组中的

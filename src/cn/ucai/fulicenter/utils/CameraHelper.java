@@ -24,14 +24,12 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 
 import com.easemob.chat.EMVideoCallHelper;
-import cn.ucai.fulicenter.DemoApplication;
+import cn.ucai.fulicenter.FuliCenterApplication;
 
 public class CameraHelper implements PreviewCallback {
-    private static final String TAG = "CameraHelper";
-
     static final int mwidth = 320;
     static final int mheight = 240;
-
+    private static final String TAG = "CameraHelper";
     private Camera mCamera;
     private int camera_count;
 
@@ -309,6 +307,6 @@ public class CameraHelper implements PreviewCallback {
     }
 
     boolean isScreenOriatationPortrait() {
-        return DemoApplication.applicationContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+        return FuliCenterApplication.applicationContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
     }
 }
