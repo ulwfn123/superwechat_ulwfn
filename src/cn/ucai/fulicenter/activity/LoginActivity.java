@@ -63,18 +63,15 @@ import cn.ucai.fulicenter.utils.Utils;
  * 
  */
 public class LoginActivity extends BaseActivity {
-	private static final String TAG = "LoginActivity";
 	public static final int REQUEST_CODE_SETNICK = 1;
+	private static final String TAG = "LoginActivity";
+	ProgressDialog pd;
 	private EditText usernameEditText;
 	private EditText passwordEditText;
-
 	private boolean progressShow;
 	private boolean autoLogin = false;
-
 	private String currentUsername;
 	private String currentPassword;
-
-	ProgressDialog pd;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -218,8 +215,7 @@ public class LoginActivity extends BaseActivity {
 						} else {
 							pd.dismiss();
 							DemoHXSDKHelper.getInstance().logout(true,null);
-							Toast.makeText(getApplicationContext(), R.string.Login_failed+ Utils.getResourceString(LoginActivity.this,
-									result.getRetCode()), Toast.LENGTH_LONG).show();
+
 						}
 					}
 
