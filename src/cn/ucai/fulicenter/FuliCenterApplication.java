@@ -56,10 +56,6 @@ public class FuliCenterApplication extends Application {
 		return instance;
 	}
 
-	public static FuliCenterApplication getInstance() {
-		return instance;
-	}
-
 	@Override
 	public void onCreate() {
 		super.onCreate();
