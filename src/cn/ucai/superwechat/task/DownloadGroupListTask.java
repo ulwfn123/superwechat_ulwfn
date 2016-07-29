@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.ucai.superwechat.DemoApplication;
 import cn.ucai.superwechat.I;
@@ -33,7 +34,7 @@ public class DownloadGroupListTask {
     // 使用用户名 下载用户好友信息
     public void excute() {
         final OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
-        utils.setRequestUrl(I.REQUEST_FIND_GROUP_BY_GROUP_NAME)
+        utils.setRequestUrl(I.REQUEST_FIND_GROUP_BY_USER_NAME)
                 .addParam(I.User.USER_NAME, username)
                 .targetClass(String.class)
                 .execute(new OkHttpUtils2.OnCompleteListener<String>() {
@@ -41,13 +42,15 @@ public class DownloadGroupListTask {
                     public void onSuccess(String s) {
                         Log.e(TAG, "s  = " + s);
                         Result result =  Utils.getListResultFromJson(s, GroupAvatar.class);
+
                         List<GroupAvatar> list = (List<GroupAvatar>) result.getRetData();
-                        Log.e(TAG, "result = " + result);
+                        Log.e(TAG, " result.getRetData()  === " +  result.getRetData());
                         if (list != null && list.size() >= 0) {
-                            Log.e(TAG, "list.size = " + list.size());
                             DemoApplication.getInstance().setGroupList(list);
+                            Map<String, GroupAvatar> groupMap = DemoApplication.getInstance().getGroupMap();// 添加 群组的集合
+                            Log.e(TAG, " groupMap  === " +  groupMap);
                             for (GroupAvatar g : list) {
-                                DemoApplication.getInstance().getGroupMap().put(g.getMGroupHxid(),g);   // 添加 群组的集合
+                                groupMap.put(g.getMAvatarUserName(), g);
                             }
                             mContext.sendStickyBroadcast(new Intent("update_group_list"));
                         }

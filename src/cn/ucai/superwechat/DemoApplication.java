@@ -155,7 +155,6 @@ public class DemoApplication extends Application {
     public List<GroupAvatar> getGroupList() {
         return groupList;
     }
-
     public void setGroupList(List<GroupAvatar> groupList) {
         this.groupList = groupList;
     }
@@ -163,6 +162,17 @@ public class DemoApplication extends Application {
     public Map<String, HashMap<String, MemberUserAvatar>> getMemberMap() {
         return memberMap;
     }
+
+//    public List<GroupAvatar> getGroupDeleteList() {
+//        return GroupDeleteList;
+//    }
+//
+//    public void setGroupDeleteList(List<GroupAvatar> groupDeleteList) {
+//        GroupDeleteList = groupDeleteList;
+//    }
+
+    //  删除群组人员或群组的全局变量
+    private List<GroupAvatar> GroupDeleteList = new ArrayList<GroupAvatar>();
 
     public void setMemberMap(Map<String, HashMap<String, MemberUserAvatar>> memberMap) {
         this.memberMap = memberMap;
@@ -174,5 +184,13 @@ public class DemoApplication extends Application {
 
 	public void setGroupMap(Map<String, GroupAvatar> groupMap) {
 		GroupMap = groupMap;
+	}
+
+	public List<GroupAvatar> getGroupDeleteList() {
+		return GroupDeleteList;
+	}
+
+	public void setGroupDeleteList(List<GroupAvatar> groupDeleteList) {
+		GroupDeleteList = groupDeleteList;
 	}
 }
