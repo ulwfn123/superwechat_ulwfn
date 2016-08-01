@@ -94,8 +94,10 @@ import com.easemob.util.TextFormater;
 
 public class MessageAdapter extends BaseAdapter{
 
+	public static final String IMAGE_DIR = "chat/image/";
+	public static final String VOICE_DIR = "chat/audio/";
+	public static final String VIDEO_DIR = "chat/video";
 	private final static String TAG = "msg";
-
 	private static final int MESSAGE_TYPE_RECV_TXT = 0;
 	private static final int MESSAGE_TYPE_SENT_TXT = 1;
 	private static final int MESSAGE_TYPE_SENT_IMAGE = 2;
@@ -114,35 +116,15 @@ public class MessageAdapter extends BaseAdapter{
 	private static final int MESSAGE_TYPE_RECV_VIDEO_CALL = 15;
 	private static final int MESSAGE_TYPE_SENT_ROBOT_MENU = 16;
 	private static final int MESSAGE_TYPE_RECV_ROBOT_MENU = 17;
-
-	public static final String IMAGE_DIR = "chat/image/";
-	public static final String VOICE_DIR = "chat/audio/";
-	public static final String VIDEO_DIR = "chat/video";
-
-	private String username;
-	private LayoutInflater inflater;
-	private Activity activity;
-	
 	private static final int HANDLER_MESSAGE_REFRESH_LIST = 0;
 	private static final int HANDLER_MESSAGE_SELECT_LAST = 1;
 	private static final int HANDLER_MESSAGE_SEEK_TO = 2;
-
+	EMMessage[] messages = null;
+	private String username;
+	private LayoutInflater inflater;
+	private Activity activity;
 	// reference to conversation object in chatsdk
 	private EMConversation conversation;
-	EMMessage[] messages = null;
-
-	private Context context;
-
-	private Map<String, Timer> timers = new Hashtable<String, Timer>();
-
-	public MessageAdapter(Context context, String username, int chatType) {
-		this.username = username;
-		this.context = context;
-		inflater = LayoutInflater.from(context);
-		activity = (Activity) context;
-		this.conversation = EMChatManager.getInstance().getConversation(username);
-	}
-	
 	Handler handler = new Handler() {
 		private void refreshList() {
 			// UI线程不能直接使用conversation.getAllMessages()
@@ -154,7 +136,7 @@ public class MessageAdapter extends BaseAdapter{
 			}
 			notifyDataSetChanged();
 		}
-		
+
 		@Override
 		public void handleMessage(android.os.Message message) {
 			switch (message.what) {
@@ -181,7 +163,16 @@ public class MessageAdapter extends BaseAdapter{
 			}
 		}
 	};
-
+	private Context context;
+	private Map<String, Timer> timers = new Hashtable<String, Timer>();
+	
+	public MessageAdapter(Context context, String username, int chatType) {
+		this.username = username;
+		this.context = context;
+		inflater = LayoutInflater.from(context);
+		activity = (Activity) context;
+		this.conversation = EMChatManager.getInstance().getConversation(username);
+	}
 
 	/**
 	 * 获取item数
@@ -418,7 +409,7 @@ public class MessageAdapter extends BaseAdapter{
 		if ((chatType == ChatType.GroupChat || chatType == ChatType.ChatRoom) && message.direct == Direct.RECEIVE){
 		    //demo里使用username代码nick
 //			UserUtils.setUserNick(message.getFrom(), holder.tv_usernick);
-			UserUtils.setAppMemberNick(username,message.getFrom(),holder.tv_usernick);  // 群聊里面的 用户昵称加载
+//			UserUtils.setAppMemberNick(username,message.getFrom(),holder.tv_usernick);  // 群聊里面的 用户昵称加载
 		}
 		if(message.direct == Direct.SEND){
 			UserUtils.setCurrentUserNick(holder.tv_usernick);
