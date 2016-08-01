@@ -1,5 +1,6 @@
 package cn.ucai.fulicenter.bean;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.io.Serializable;
@@ -57,7 +58,7 @@ public class CartBean implements Serializable {
     public void setCount(int count) {
         this.count = count;
     }
-    @JsonProperty
+    @JsonIgnore
     public boolean isChecked() {
         return isChecked;
     }
