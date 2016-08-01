@@ -97,7 +97,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 			UserUtils.setCurrentUserAvatar(this, headAvatar);   //   自带的显示图片方法
         } else if (hxid != null) {   // 通过 环信ID  显示群组中全部成员的昵称和头像
             tvUsername.setText(username);
-            UserUtils.setAppMemberNick(hxid,username, tvNickName);   // 通过 环信ID  显示群组中全部成员的昵称
+//            UserUtils.setAppMemberNick(hxid,username, tvNickName);   // 通过 环信ID  显示群组中全部成员的昵称
             UserUtils.setAppUserAvatar(this, username, headAvatar);
         } else {
             tvUsername.setText(username);

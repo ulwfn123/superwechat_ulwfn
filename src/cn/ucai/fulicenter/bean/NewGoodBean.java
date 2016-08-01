@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * Created by Administrator on 2016/7/29.
  */
-public class NewGood implements Serializable{
+public class NewGoodBean implements Serializable{
 
     /**
      * id : 1

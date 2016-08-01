@@ -9,7 +9,7 @@ import java.util.Map;
 
 import cn.ucai.fulicenter.FuliCenterApplication;
 import cn.ucai.fulicenter.I;
-import cn.ucai.fulicenter.bean.GroupAvatar;
+//import cn.ucai.fulicenter.bean.GroupAvatar;
 import cn.ucai.fulicenter.bean.Result;
 import cn.ucai.fulicenter.data.OkHttpUtils2;
 import cn.ucai.fulicenter.utils.Utils;
@@ -32,34 +32,34 @@ public class DownloadGroupListTask {
         this.username = username;
     }
     // 使用用户名 下载用户好友信息
-    public void excute() {
-        final OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
-        utils.setRequestUrl(I.REQUEST_FIND_GROUP_BY_USER_NAME)
-                .addParam(I.User.USER_NAME, username)
-                .targetClass(String.class)
-                .execute(new OkHttpUtils2.OnCompleteListener<String>() {
-                    @Override
-                    public void onSuccess(String s) {
-                        Log.e(TAG, "s  = " + s);
-                        Result result =  Utils.getListResultFromJson(s, GroupAvatar.class);
-
-                        List<GroupAvatar> list = (List<GroupAvatar>) result.getRetData();
-                        Log.e(TAG, " result.getRetData()  === " +  result.getRetData());
-                        if (list != null && list.size() >= 0) {
-                            FuliCenterApplication.getInstance().setGroupList(list);
-                            Map<String, GroupAvatar> groupMap = FuliCenterApplication.getInstance().getGroupMap();// 添加 群组的集合
-                            Log.e(TAG, " groupMap  === " +  groupMap);
-                            for (GroupAvatar g : list) {
-                                groupMap.put(g.getMAvatarUserName(), g);
-                            }
-                            mContext.sendStickyBroadcast(new Intent("update_group_list"));
-                        }
-                    }
-
-                    @Override
-                    public void onError(String error) {
-                        Log.e(TAG, "error = " + error);
-                    }
-                });
-    }
+//    public void excute() {
+//        final OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
+//        utils.setRequestUrl(I.REQUEST_FIND_GROUP_BY_USER_NAME)
+//                .addParam(I.User.USER_NAME, username)
+//                .targetClass(String.class)
+//                .execute(new OkHttpUtils2.OnCompleteListener<String>() {
+//                    @Override
+//                    public void onSuccess(String s) {
+//                        Log.e(TAG, "s  = " + s);
+//                        Result result =  Utils.getListResultFromJson(s, GroupAvatar.class);
+//
+//                        List<GroupAvatar> list = (List<GroupAvatar>) result.getRetData();
+//                        Log.e(TAG, " result.getRetData()  === " +  result.getRetData());
+//                        if (list != null && list.size() >= 0) {
+//                            FuliCenterApplication.getInstance().setGroupList(list);
+//                            Map<String, GroupAvatar> groupMap = FuliCenterApplication.getInstance().getGroupMap();// 添加 群组的集合
+//                            Log.e(TAG, " groupMap  === " +  groupMap);
+//                            for (GroupAvatar g : list) {
+//                                groupMap.put(g.getMAvatarUserName(), g);
+//                            }
+//                            mContext.sendStickyBroadcast(new Intent("update_group_list"));
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onError(String error) {
+//                        Log.e(TAG, "error = " + error);
+//                    }
+//                });
+//    }
 }

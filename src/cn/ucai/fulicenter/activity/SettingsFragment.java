@@ -350,10 +350,10 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 				getActivity().runOnUiThread(new Runnable() {
 					public void run() {
 						pd.dismiss();
-//						DemoApplication.getInstance().setUser(null);
-//						DemoApplication.getInstance().getUserMap().clear();
-//						DemoApplication.getInstance().getUserlist().clear();     //添加 用户 头像
-						FuliCenterApplication.getInstance().getGroupList().clear();   //  添加群组成员 头像
+						FuliCenterApplication.getInstance().setUser(null);
+						FuliCenterApplication.getInstance().getUserMap().clear();
+						FuliCenterApplication.getInstance().getUserlist().clear();     //添加 用户 头像
+//						FuliCenterApplication.getInstance().getGroupList().clear();   //  添加群组成员 头像
 
 						// 重新显示登陆页面
 						((MainActivity) getActivity()).finish();

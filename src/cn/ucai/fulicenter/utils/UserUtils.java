@@ -11,7 +11,7 @@ import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.applib.controller.HXSDKHelper;
 import cn.ucai.fulicenter.DemoHXSDKHelper;
 import cn.ucai.fulicenter.R;
-import cn.ucai.fulicenter.bean.MemberUserAvatar;
+//import cn.ucai.fulicenter.bean.MemberUserAvatar;
 import cn.ucai.fulicenter.bean.UserAvatar;
 import cn.ucai.fulicenter.domain.User;
 import com.squareup.picasso.Picasso;
@@ -154,16 +154,16 @@ public class UserUtils {
 			Picasso.with(context).load(R.drawable.default_avatar).into(imageView);
 		}
 	}
-    //  设置 群组 成员头像的
-    public static void setAppGroupAvatar(Context context, String hxid, ImageView imageView){
-        String path = "";
-        if(path != null && hxid != null){
-            path = getGroupAvatarPath(hxid);
-            Picasso.with(context).load(path).placeholder(R.drawable.group_icon).into(imageView);
-        }else{
-            Picasso.with(context).load(R.drawable.group_icon).into(imageView);
-        }
-    }
+//    //  设置 群组 成员头像的
+//    public static void setAppGroupAvatar(Context context, String hxid, ImageView imageView){
+//        String path = "";
+//        if(path != null && hxid != null){
+//            path = getGroupAvatarPath(hxid);
+//            Picasso.with(context).load(path).placeholder(R.drawable.group_icon).into(imageView);
+//        }else{
+//            Picasso.with(context).load(R.drawable.group_icon).into(imageView);
+//        }
+//    }
 
 
 	//这是http://10.0.2.2:8888/SuperWeChatServer/Server?request=download_avatar&name_or_hxid=aaaa&avatarType=user_avatar方法
@@ -179,41 +179,41 @@ public class UserUtils {
 		return path.toString();
 	}
 
-    //  设置  群组成员 头像
-    public static String getGroupAvatarPath(String hxid) {
-        StringBuilder path = new StringBuilder(I.SERVER_ROOT);
-        path.append(I.QUESTION).append(I.KEY_REQUEST)
-                .append(I.EQU).append(I.REQUEST_DOWNLOAD_AVATAR)
-                .append(I.AND)
-                .append(I.NAME_OR_HXID).append(I.EQU).append(hxid)
-                .append(I.AND)
-                .append(I.AVATAR_TYPE).append(I.EQU).append(I.AVATAR_TYPE_GROUP_PATH);
-        return path.toString();
-    }
+//    //  设置  群组成员 头像
+//    public static String getGroupAvatarPath(String hxid) {
+//        StringBuilder path = new StringBuilder(I.SERVER_ROOT);
+//        path.append(I.QUESTION).append(I.KEY_REQUEST)
+//                .append(I.EQU).append(I.REQUEST_DOWNLOAD_AVATAR)
+//                .append(I.AND)
+//                .append(I.NAME_OR_HXID).append(I.EQU).append(hxid)
+//                .append(I.AND)
+//                .append(I.AVATAR_TYPE).append(I.EQU).append(I.AVATAR_TYPE_GROUP_PATH);
+//        return path.toString();
+//    }
 
-    //   群组中 昵称的显示      通过环信ID 获取用户名 及用户名的昵称 添加到textView
-	public static void setAppMemberNick(String hxid, String username, TextView textView) {
-		MemberUserAvatar member = getAppMemberInfo(hxid,username);
-        Log.e(TAG, "member  ==" + member);
-        if (member != null && member.getMUserNick() != null) {
-            textView.setText(member.getMUserNick());
-        } else {
-            textView.setText(member.getMUserName());
-        }
-    }
-    //  上面 调用的 方法 是通过 环信ID  获取  群组中 用户 的个人资料
-    public static MemberUserAvatar getAppMemberInfo(String hxid,String username){
-        MemberUserAvatar member = null;
-        Map<String,MemberUserAvatar> user =  FuliCenterApplication.getInstance().getMemberMap().get(hxid);
-        Log.e(TAG, "user  ==" + user+ "userName  ==  " + username);
-        Log.e(TAG, "hxid  ==" + hxid);
-        if (user == null || user.size() < 0) {
-            return null;
-        } else {
-            member = user.get(username);
-            Log.e(TAG, "member" + member);
-        }
-        Log.e(TAG, "member111111" + member);
-        return member;
-    }
+//    //   群组中 昵称的显示      通过环信ID 获取用户名 及用户名的昵称 添加到textView
+//	public static void setAppMemberNick(String hxid, String username, TextView textView) {
+//		MemberUserAvatar member = getAppMemberInfo(hxid,username);
+//        Log.e(TAG, "member  ==" + member);
+//        if (member != null && member.getMUserNick() != null) {
+//            textView.setText(member.getMUserNick());
+//        } else {
+//            textView.setText(member.getMUserName());
+//        }
+//    }
+//    //  上面 调用的 方法 是通过 环信ID  获取  群组中 用户 的个人资料
+//    public static MemberUserAvatar getAppMemberInfo(String hxid,String username){
+//        MemberUserAvatar member = null;
+//        Map<String,MemberUserAvatar> user =  FuliCenterApplication.getInstance().getMemberMap().get(hxid);
+//        Log.e(TAG, "user  ==" + user+ "userName  ==  " + username);
+//        Log.e(TAG, "hxid  ==" + hxid);
+//        if (user == null || user.size() < 0) {
+//            return null;
+//        } else {
+//            member = user.get(username);
+//            Log.e(TAG, "member" + member);
+//        }
+//        Log.e(TAG, "member111111" + member);
+//        return member;
+//    }
 }

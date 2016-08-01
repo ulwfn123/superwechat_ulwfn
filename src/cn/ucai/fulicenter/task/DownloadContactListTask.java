@@ -42,15 +42,18 @@ public class DownloadContactListTask {
                     public void onSuccess(String s) {
                         Log.e(TAG, "s  = " + s);
                         Result result =  Utils.getListResultFromJson(s, UserAvatar.class);
-                        List<UserAvatar> list = (List<UserAvatar>) result.getRetData();
-                        if (list != null && list.size() >= 0) {
-                            Log.e(TAG, "list.size = " + list.size());
-                            FuliCenterApplication.getInstance().setUserlist(list);
-                            mContext.sendStickyBroadcast(new Intent("update_contact_list"));
-                            // 设置好友昵称
-                            Map<String, UserAvatar> userMap = FuliCenterApplication.getInstance().getUserMap();
-                            for (UserAvatar u : list) {
-                                userMap.put(u.getMUserName(), u);
+                        if (result != null) {
+
+                            List<UserAvatar> list = (List<UserAvatar>) result.getRetData();
+                            if (list != null && list.size() >= 0) {
+                                Log.e(TAG, "list.size = " + list.size());
+                                FuliCenterApplication.getInstance().setUserlist(list);
+                                mContext.sendStickyBroadcast(new Intent("update_contact_list"));
+                                // 设置好友昵称
+                                Map<String, UserAvatar> userMap = FuliCenterApplication.getInstance().getUserMap();
+                                for (UserAvatar u : list) {
+                                    userMap.put(u.getMUserName(), u);
+                                }
                             }
                         }
                     }
