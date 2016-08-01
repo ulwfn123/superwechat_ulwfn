@@ -16,7 +16,7 @@ public interface I {
 //        String CU_NAME = "m_contact_cname";                //好友账号
 //    }
 
-    //	String AVATAR_PATH 								= 		"E:/test/";
+//    	String AVATAR_PATH 								= 		"E:/test/";
     String ISON8859_1 = "iso8859-1";
     String UTF_8 = "utf-8";
     String PAGE_ID = "page_id";                        //分页的起始下标
