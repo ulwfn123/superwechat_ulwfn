@@ -157,29 +157,29 @@ public class MainActivity extends BaseActivity implements EMEventListener {
                 newFriends.setNick(strChat);
 
                 userlist.put(Constant.NEW_FRIENDS_USERNAME, newFriends);
-                // 添加"群聊"
-                User groupUser = new User();
-                String strGroup = context.getString(R.string.group_chat);
-                groupUser.setUsername(Constant.GROUP_USERNAME);
-                groupUser.setNick(strGroup);
-                groupUser.setHeader("");
-                userlist.put(Constant.GROUP_USERNAME, groupUser);
-
-                 // 添加"聊天室"
-                User chatRoomItem = new User();
-                String strChatRoom = context.getString(R.string.chat_room);
-                chatRoomItem.setUsername(Constant.CHAT_ROOM);
-                chatRoomItem.setNick(strChatRoom);
-                chatRoomItem.setHeader("");
-                userlist.put(Constant.CHAT_ROOM, chatRoomItem);
-
-                // 添加"Robot"
-        		User robotUser = new User();
-        		String strRobot = context.getString(R.string.robot_chat);
-        		robotUser.setUsername(Constant.CHAT_ROBOT);
-        		robotUser.setNick(strRobot);
-        		robotUser.setHeader("");
-        		userlist.put(Constant.CHAT_ROBOT, robotUser);
+//                // 添加"群聊"
+//                User groupUser = new User();
+//                String strGroup = context.getString(R.string.group_chat);
+//                groupUser.setUsername(Constant.GROUP_USERNAME);//
+//                 // 添加"聊天室"
+//                User chatRoomItem = new User();
+//                String strChatRoom = context.getString(R.string.chat_room);
+//                chatRoomItem.setUsername(Constant.CHAT_ROOM);
+//                chatRoomItem.setNick(strChatRoom);
+//                chatRoomItem.setHeader("");
+//                userlist.put(Constant.CHAT_ROOM, chatRoomItem);
+//
+//                // 添加"Robot"
+//        		User robotUser = new User();
+//        		String strRobot = context.getString(R.string.robot_chat);
+//        		robotUser.setUsername(Constant.CHAT_ROBOT);
+//        		robotUser.setNick(strRobot);
+//        		robotUser.setHeader("");
+//        		userlist.put(Constant.CHAT_ROBOT, robotUser);
+//
+//				groupUser.setNick(strGroup);
+//                groupUser.setHeader("");
+//                userlist.put(Constant.GROUP_USERNAME, groupUser);
 
                  // 存入内存
                 ((DemoHXSDKHelper)HXSDKHelper.getInstance()).setContactList(userlist);
@@ -776,7 +776,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 				final OkHttpUtils2<String> utils2 = new OkHttpUtils2<String>();
 				utils2.setRequestUrl(I.REQUEST_ADD_CONTACT)
 						.addParam(I.Contact.USER_NAME, FuliCenterApplication.getInstance().getUserName())
-						.addParam(I.Contact.CU_NAME,name)
+						.addParam(I.Contact.NAME,name)
 						.targetClass(String.class)
 						.execute(new OkHttpUtils2.OnCompleteListener<String>() {
 							@Override
@@ -824,7 +824,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 				OkHttpUtils2<Result> util = new OkHttpUtils2<Result>();
 				util.setRequestUrl(I.REQUEST_DELETE_CONTACT)
 						.addParam(I.Contact.USER_NAME, currentUserName)
-						.addParam(I.Contact.CU_NAME, username)
+						.addParam(I.Contact.NAME, username)
 						.targetClass(Result.class)
 						.execute(new OkHttpUtils2.OnCompleteListener<Result>() {
 							@Override
@@ -1032,9 +1032,9 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 					// 刷新ui
 					if (currentTabIndex == 0)
 						chatHistoryFragment.refresh();
-					if (CommonUtils.getTopActivity(MainActivity.this).equals(GroupsActivity.class.getName())) {
-						GroupsActivity.instance.onResume();
-					}
+//					if (CommonUtils.getTopActivity(MainActivity.this).equals(GroupsActivity.class.getName())) {
+//						GroupsActivity.instance.onResume();
+//					}
 				}
 			});
 
@@ -1061,9 +1061,9 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 						updateUnreadLabel();
 						if (currentTabIndex == 0)
 							chatHistoryFragment.refresh();
-						if (CommonUtils.getTopActivity(MainActivity.this).equals(GroupsActivity.class.getName())) {
-							GroupsActivity.instance.onResume();
-						}
+//						if (CommonUtils.getTopActivity(MainActivity.this).equals(GroupsActivity.class.getName())) {
+//							GroupsActivity.instance.onResume();
+//						}
 					} catch (Exception e) {
 						EMLog.e(TAG, "refresh exception " + e.getMessage());
 					}
@@ -1082,9 +1082,9 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 					updateUnreadLabel();
 					if (currentTabIndex == 0)
 						chatHistoryFragment.refresh();
-					if (CommonUtils.getTopActivity(MainActivity.this).equals(GroupsActivity.class.getName())) {
-						GroupsActivity.instance.onResume();
-					}
+//					if (CommonUtils.getTopActivity(MainActivity.this).equals(GroupsActivity.class.getName())) {
+//						GroupsActivity.instance.onResume();
+//					}
 				}
 			});
 
@@ -1127,9 +1127,9 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 					// 刷新ui
 					if (currentTabIndex == 0)
 						chatHistoryFragment.refresh();
-					if (CommonUtils.getTopActivity(MainActivity.this).equals(GroupsActivity.class.getName())) {
-						GroupsActivity.instance.onResume();
-					}
+//					if (CommonUtils.getTopActivity(MainActivity.this).equals(GroupsActivity.class.getName())) {
+//						GroupsActivity.instance.onResume();
+//					}
 				}
 			});
 		}

@@ -95,7 +95,7 @@ public class SplashActivity extends BaseActivity {
 						FuliCenterApplication.currentUserNick=user.getMUserNick();
 					}
 					new DownloadContactListTask(SplashActivity.this,userName).excute();
-					new DownloadGroupListTask(SplashActivity.this,userName).excute(); // 闪屏界面群组中的
+//					new DownloadGroupListTask(SplashActivity.this,userName).excute(); // 闪屏界面群组中的
 
 					long costTime = System.currentTimeMillis() - start;
 					//等待sleeptime时长
@@ -107,14 +107,14 @@ public class SplashActivity extends BaseActivity {
 						}
 					}
 					//进入主页面
-					startActivity(new Intent(SplashActivity.this, MainActivity.class));
+					startActivity(new Intent(SplashActivity.this, FuliCenterManActivity.class));
 					finish();
 				}else {
 					try {
 						Thread.sleep(sleepTime);
 					} catch (InterruptedException e) {
 					}
-					startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+					startActivity(new Intent(SplashActivity.this, FuliCenterManActivity.class));
 					finish();
 				}
 			}

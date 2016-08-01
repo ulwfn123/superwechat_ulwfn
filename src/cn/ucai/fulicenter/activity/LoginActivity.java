@@ -262,10 +262,9 @@ public class LoginActivity extends BaseActivity {
 
 	//  把用户数据添加到数据库
 	private void seveUserAvatar(UserAvatar user) {
-//		if (user !=null) {
+
 			UserDao dao = new UserDao(LoginActivity.this);
 			dao.saveUserAcatar(user);
-//		}
 	}
 	private void  loginSuccess(UserAvatar user) {
 		// 登陆成功，保存用户名密码
@@ -276,7 +275,7 @@ public class LoginActivity extends BaseActivity {
 		FuliCenterApplication.currentUserNick = user.getMUserNick();
 		Log.e("main", "登录用户名 ===" + user);
 		new DownloadContactListTask(LoginActivity.this,currentUsername).excute();  //
-		new DownloadGroupListTask(LoginActivity.this,currentUsername).excute(); //  群组中的头像下载
+//		new DownloadGroupListTask(LoginActivity.this,currentUsername).excute(); //  群组中的头像下载
 
 		try {
 			// ** 第一次登录或者之前logout后再登录，加载所有本地群和回话
