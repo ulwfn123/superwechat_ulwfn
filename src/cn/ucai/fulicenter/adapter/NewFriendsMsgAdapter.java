@@ -36,7 +36,7 @@ import com.easemob.chat.EMGroupManager;
 
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
-import cn.ucai.fulicenter.bean.GroupAvatar;
+//import cn.ucai.fulicenter.bean.GroupAvatar;
 import cn.ucai.fulicenter.bean.Result;
 import cn.ucai.fulicenter.bean.UserAvatar;
 import cn.ucai.fulicenter.data.OkHttpUtils2;
@@ -187,8 +187,8 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 					if(msg.getGroupId() == null) { //同意好友请求
 						EMChatManager.getInstance().acceptInvitation(msg.getFrom());
 					}else {//同意加群申请
-						EMGroupManager.getInstance().acceptApplication(msg.getFrom(), msg.getGroupId());
-						addMemberToAppGroup(msg.getFrom(), msg.getGroupId());  // 申请  添加群组的成员向服务器添加数据
+//						EMGroupManager.getInstance().acceptApplication(msg.getFrom(), msg.getGroupId());
+//						addMemberToAppGroup(msg.getFrom(), msg.getGroupId());  // 申请  添加群组的成员向服务器添加数据
 					}((Activity) context).runOnUiThread(new Runnable() {
 
 						@Override
@@ -220,29 +220,29 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 		}).start();
 	}
 	// 用户 申请 添加群  , 群组确定后 向数据库添加数据
-	private void addMemberToAppGroup(String username, final String hxid) {
-		final OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
-		utils.setRequestUrl(I.REQUEST_ADD_GROUP_MEMBER)
-				.addParam(I.Member.USER_NAME,username)
-				.addParam(I.Member.GROUP_HX_ID,hxid)
-				.targetClass(String.class)
-				.execute(new OkHttpUtils2.OnCompleteListener<String>() {
-					@Override
-					public void onSuccess(String s) {
-						Log.e(TAG, "  申请加入群组的s = =" + s);
-						Result result = Utils.getResultFromJson(s, GroupAvatar.class);
-						if (result != null && result.isRetMsg()) {
-							new DownloadMemberMapTask(context, hxid).excute();
-							Log.e(TAG, "  申请加入群组的,用户加入群组成功" );
-						}
-					}
-
-					@Override
-					public void onError(String error) {
-						Log.e(TAG, "error = =" + error);
-					}
-				});
-	}
+//	private void addMemberToAppGroup(String username, final String hxid) {
+//		final OkHttpUtils2<String> utils = new OkHttpUtils2<String>();
+//		utils.setRequestUrl(I.REQUEST_ADD_GROUP_MEMBER)
+//				.addParam(I.Member.USER_NAME,username)
+//				.addParam(I.Member.GROUP_HX_ID,hxid)
+//				.targetClass(String.class)
+//				.execute(new OkHttpUtils2.OnCompleteListener<String>() {
+//					@Override
+//					public void onSuccess(String s) {
+//						Log.e(TAG, "  申请加入群组的s = =" + s);
+//						Result result = Utils.getResultFromJson(s, GroupAvatar.class);
+//						if (result != null && result.isRetMsg()) {
+//							new DownloadMemberMapTask(context, hxid).excute();
+//							Log.e(TAG, "  申请加入群组的,用户加入群组成功" );
+//						}
+//					}
+//
+//					@Override
+//					public void onError(String error) {
+//						Log.e(TAG, "error = =" + error);
+//					}
+//				});
+//	}
 
 	private static class ViewHolder {
 		ImageView avator;

@@ -160,10 +160,10 @@ public class ContactlistFragment extends Fragment {
 					User user = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList().get(Constant.NEW_FRIENDS_USERNAME);
 					user.setUnreadMsgCount(0);
 					startActivity(new Intent(getActivity(), NewFriendsMsgActivity.class));
-				} else
+				} /*else
 				if (Constant.GROUP_USERNAME.equals(username)) {
 					// 进入群聊列表页面
-					startActivity(new Intent(getActivity(), GroupsActivity.class));
+//					startActivity(new Intent(getActivity(), GroupsActivity.class));
 				} else
 //				if(Constant.CHAT_ROOM.equals(username)){
 //					//进入聊天室列表页面
@@ -172,7 +172,7 @@ public class ContactlistFragment extends Fragment {
 				if(Constant.CHAT_ROBOT.equals(username)){
 					//进入Robot列表页面
 					startActivity(new Intent(getActivity(), RobotsActivity.class));
-				}else {
+				}*/else {
 					// demo中直接进入聊天页面，实际一般是进入用户详情页
 					startActivity(new Intent(getActivity(), ChatActivity.class).putExtra("userId", adapter.getItem(position).getUsername()));
 				}
@@ -316,7 +316,7 @@ public class ContactlistFragment extends Fragment {
 		final OkHttpUtils2<Result> utils2 = new OkHttpUtils2<Result>();
 		utils2.setRequestUrl(I.REQUEST_DELETE_CONTACT)
 				.addParam(I.Contact.USER_NAME,currentUsetName)
-				.addParam(I.Contact.CU_NAME,tobeDeleteUser.getUsername())
+				.addParam(I.Contact.NAME,tobeDeleteUser.getUsername())
 				.targetClass(Result.class)
 				.execute(new OkHttpUtils2.OnCompleteListener<Result>() {
 					@Override
@@ -450,8 +450,8 @@ public class ContactlistFragment extends Fragment {
 //		// 加入"群聊"和"聊天室"
 //        if(users.get(Constant.CHAT_ROOM) != null)
 //            contactList.add(0, users.get(Constant.CHAT_ROOM));
-        if(users.get(Constant.GROUP_USERNAME) != null)
-            contactList.add(0, users.get(Constant.GROUP_USERNAME));
+//        if(users.get(Constant.GROUP_USERNAME) != null)
+//            contactList.add(0, users.get(Constant.GROUP_USERNAME));
 
 		// 把"申请与通知"添加到首位
 		if(users.get(Constant.NEW_FRIENDS_USERNAME) != null)

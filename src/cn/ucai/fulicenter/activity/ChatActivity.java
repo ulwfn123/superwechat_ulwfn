@@ -159,7 +159,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	public EMGroup group;
 	public EMChatRoom room;
 	public boolean isRobot;
-    UpdateMemberListener mReceiver;
+//    UpdateMemberListener mReceiver;
 	private View recordingContainer;
 	private ImageView micImage;
 	private TextView recordingHint;
@@ -187,7 +187,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	private VoiceRecorder voiceRecorder;
 	private MessageAdapter adapter;
 	private File cameraFile;
-	private GroupListener groupListener;
+//	private GroupListener groupListener;
 	private ImageView iv_emoticons_normal;
 	private ImageView iv_emoticons_checked;
 	private RelativeLayout edittext_layout;
@@ -425,7 +425,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	            forwardMessage(forward_msg_id);
 	        }
 		}
-        settUpdateMemberListener();  // 这里掉用 好友列表群组的监听
+//        settUpdateMemberListener();  // 这里掉用 好友列表群组的监听
     }
 	
 	protected void onConversationInit(){
@@ -521,10 +521,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
         }else{
             ((TextView) findViewById(R.id.name)).setText(toChatUsername);
         }
-        new DownloadMemberMapTask(getApplicationContext(),toChatUsername).excute();//   监听 群组列表
+//        new DownloadMemberMapTask(getApplicationContext(),toChatUsername).excute();//   监听 群组列表
         // 监听当前会话的群聊解散被T事件
-        groupListener = new GroupListener();
-        EMGroupManager.getInstance().addGroupChangeListener(groupListener);
+//        groupListener = new GroupListener();
+//        EMGroupManager.getInstance().addGroupChangeListener(groupListener);
 	}
 	
     protected void onChatRoomViewCreation(){
@@ -1248,13 +1248,13 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			Toast.makeText(getApplicationContext(), R.string.gorup_not_found, Toast.LENGTH_SHORT).show();
 			return;
 		}
-		if(chatType == CHATTYPE_GROUP){
-			startActivityForResult((new Intent(this, GroupDetailsActivity.class).putExtra("groupId", toChatUsername)),
-					REQUEST_CODE_GROUP_DETAIL);
-		}else{
-			startActivityForResult((new Intent(this, ChatRoomDetailsActivity.class).putExtra("roomId", toChatUsername)),
-					REQUEST_CODE_GROUP_DETAIL);
-		}
+//		if(chatType == CHATTYPE_GROUP){
+//			startActivityForResult((new Intent(this, GroupDetailsActivity.class).putExtra("groupId", toChatUsername)),
+//					REQUEST_CODE_GROUP_DETAIL);
+//		}else{
+//			startActivityForResult((new Intent(this, ChatRoomDetailsActivity.class).putExtra("roomId", toChatUsername)),
+//					REQUEST_CODE_GROUP_DETAIL);
+//		}
 	}
 
 	/**
@@ -1381,12 +1381,12 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	protected void onDestroy() {
 		super.onDestroy();
 		activityInstance = null;
-		if(groupListener != null){
-		    EMGroupManager.getInstance().removeGroupChangeListener(groupListener);
-		}
-        if (mReceiver != null) {
-            unregisterReceiver(mReceiver);
-        }
+//		if(groupListener != null){
+//		    EMGroupManager.getInstance().removeGroupChangeListener(groupListener);
+//		}
+//        if (mReceiver != null) {
+//            unregisterReceiver(mReceiver);
+//        }
     }
 
 	@Override
@@ -1573,11 +1573,11 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		return listView;
 	}
 
-    private void settUpdateMemberListener() {
-        mReceiver = new UpdateMemberListener();
-        IntentFilter filter = new IntentFilter("update_member_list");
-        registerReceiver(mReceiver, filter);
-    }
+//    private void settUpdateMemberListener() {
+//        mReceiver = new UpdateMemberListener();
+//        IntentFilter filter = new IntentFilter("update_member_list");
+//        registerReceiver(mReceiver, filter);
+//    }
 
 	/**
 	 * 按住说话listener
@@ -1722,54 +1722,53 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 
 	}
 
-	/**
-	 * 监测群组解散或者被T事件
-	 *
-	 */
-	class GroupListener extends GroupRemoveListener{
-
-		@Override
-		public void onUserRemoved(final String groupId, String groupName) {
-			runOnUiThread(new Runnable() {
-				String st13 = getResources().getString(R.string.you_are_group);
-
-				public void run() {
-					if (toChatUsername.equals(groupId)) {
-						Toast.makeText(ChatActivity.this, st13, Toast.LENGTH_LONG).show();
-						if (GroupDetailsActivity.instance != null)
-							GroupDetailsActivity.instance.finish();
-						finish();
-					}
-				}
-			});
-		}
-
-		@Override
-		public void onGroupDestroy(final String groupId, String groupName) {
-			// 群组解散正好在此页面，提示群组被解散，并finish此页面
-			runOnUiThread(new Runnable() {
-				String st14 = getResources().getString(R.string.the_current_group);
-
-				public void run() {
-					if (toChatUsername.equals(groupId)) {
-						Toast.makeText(ChatActivity.this, st14, Toast.LENGTH_LONG).show();
-						if (GroupDetailsActivity.instance != null)
-							GroupDetailsActivity.instance.finish();
-						finish();
-					}
-				}
-			});
-		}
-
-	}
+//	/**
+//	 * 监测群组解散或者被T事件
+//	 *
+//	 */
+//	class GroupListener extends GroupRemoveListener{
+//
+//		@Override
+//		public void onUserRemoved(final String groupId, String groupName) {
+//			runOnUiThread(new Runnable() {
+//				String st13 = getResources().getString(R.string.you_are_group);
+//
+//				public void run() {
+//					if (toChatUsername.equals(groupId)) {
+//						Toast.makeText(ChatActivity.this, st13, Toast.LENGTH_LONG).show();
+//						if (GroupDetailsActivity.instance != null)
+//							GroupDetailsActivity.instance.finish();
+//						finish();
+//					}
+//				}
+//			});
+//		}
+//
+//		@Override
+//		public void onGroupDestroy(final String groupId, String groupName) {
+//			// 群组解散正好在此页面，提示群组被解散，并finish此页面
+//			runOnUiThread(new Runnable() {
+//				String st14 = getResources().getString(R.string.the_current_group);
+//
+//				public void run() {
+//					if (toChatUsername.equals(groupId)) {
+//						Toast.makeText(ChatActivity.this, st14, Toast.LENGTH_LONG).show();
+//						if (GroupDetailsActivity.instance != null)
+//							GroupDetailsActivity.instance.finish();
+//						finish();
+//					}
+//				}
+//			});
+//		}
+//
+//	}
 
     //  好友列表群组的监听
-    class UpdateMemberListener extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            adapter.notifyDataSetChanged();
-        }
-    }
-    //
+//    class UpdateMemberListener extends BroadcastReceiver {
+//
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            adapter.notifyDataSetChanged();
+//        }
+//    }
 }
