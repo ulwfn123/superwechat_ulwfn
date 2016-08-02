@@ -50,9 +50,38 @@ public class NewGoodFragment extends Fragment {
     }
 
     private void serListener() {
-        setPullDownRefreshListener();
-
+        setPullDownRefreshListener(); //下拉
+        setPullUpRefreshListener(); // 上拉
     }
+    //   上拉刷新
+    private void setPullUpRefreshListener() {
+        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            int lastItemPosition;
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                int a = RecyclerView.SCROLL_STATE_DRAGGING;
+                int b = RecyclerView.SCROLL_STATE_IDLE;
+                int c = RecyclerView.SCROLL_STATE_SETTLING;
+                Log.e(TAG, "newState = " + newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE
+                        && lastItemPosition == mAdapter.getItemCount() - 1) {
+                    pageId += I.PAGE_SIZE_DEFAULT;
+                    initData();
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int f = mGridLayoutManager.findFirstVisibleItemPosition();
+                int l = mGridLayoutManager.findLastVisibleItemPosition();
+                Log.e(TAG, "f=" + f + "停止位置的下标" + l);
+                lastItemPosition = mGridLayoutManager.findLastVisibleItemPosition();
+            }
+        });
+    }
+
     //下拉刷新
     private void setPullDownRefreshListener() {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -64,19 +93,24 @@ public class NewGoodFragment extends Fragment {
             }
         });
     }
-
+    //  获取数据 ，判断数据下标是否超过集合的长度
     private void initData() {
         findNewGoodList(new OkHttpUtils2.OnCompleteListener<NewGoodBean[]>() {
             @Override
             public void onSuccess(NewGoodBean[] result) {
                 Log.e(TAG, "新品的result = " + result);
-                tvHint.setVisibility(View.GONE);
                 mSwipeRefreshLayout.setRefreshing(false);
+                tvHint.setVisibility(View.GONE);
+                mAdapter.setFooterString(getResources().getString(R.string.load_more));
+                mAdapter.setMore(true);
                 if (result != null) {
                     Log.e(TAG, "新品的result长度 = " + result.length);
                     ArrayList<NewGoodBean> goodBeanArrayList = Utils.array2List(result);
-                    Log.e(TAG, "新品的goodBeanArrayList长度 = " + goodBeanArrayList);
                     mAdapter.initData(goodBeanArrayList);
+                    if (goodBeanArrayList.size() < I.PAGE_SIZE_DEFAULT) { // 判断加载最后的下标
+                        mAdapter.setMore(false);
+                        mAdapter.setFooterString(getResources().getString(R.string.no_more));
+                    }
                 }
             }
 
