@@ -2,7 +2,8 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:drawable="@drawable/menu_item_category_selected"
         android:state_pressed="true"/>
-	<item 
+	<item
+
         android:drawable="@drawable/menu_item_category_normal"/>
     
 </selector>
