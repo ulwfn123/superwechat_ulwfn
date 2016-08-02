@@ -23,7 +23,7 @@
 
             <RadioButton
                 android:id="@+id/layout_new_good"
-                style="@style/menu_item_fulicenter"
+                style="@style/menu_item_fulicenter_newgood"
                 android:checked="true"
                 android:drawableTop="@drawable/menu_item_new_good_normal"
                 android:onClick="onChecaedChange"
@@ -32,15 +32,17 @@
 
             <RadioButton
                 android:id="@+id/layout_boutique"
-                style="@style/menu_item_fulicenter"
+                style="@style/menu_item_fulicenter_newgood"
+                android:checked="false"
                 android:drawableTop="@drawable/menu_boutique"
                 android:onClick="onChecaedChange"
-                android:text="精品"
+                android:text="精选"
                 />
 
             <RadioButton
                 android:id="@+id/layout_category"
-                style="@style/menu_item_fulicenter"
+                style="@style/menu_item_fulicenter_newgood"
+                android:checked="false"
                 android:drawableTop="@drawable/menu_category"
                 android:onClick="onChecaedChange"
                 android:text="分类"
@@ -77,7 +79,8 @@
             </RelativeLayout>
             <RadioButton
                 android:id="@+id/layout_personal_center"
-                style="@style/menu_item_fulicenter"
+                style="@style/menu_item_fulicenter_newgood"
+                android:checked="false"
                 android:drawableTop="@drawable/menu_person_center"
                 android:onClick="onChecaedChange"
                 android:text="我"
