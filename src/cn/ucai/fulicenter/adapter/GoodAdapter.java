@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import cn.ucai.fulicenter.I;
@@ -98,7 +100,24 @@ public class GoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mGoodList.clear();
         }
         mGoodList.addAll(list);
+        soryByAddTime();
         notifyDataSetChanged();
+    }
+    // 下拉刷新的数组添加
+    public void addItem(ArrayList<NewGoodBean> list) {
+        mGoodList.addAll(list);
+        soryByAddTime();
+        notifyDataSetChanged();
+    }
+
+    //   新品中的对象的排序方法 ，， 按照时间排序
+    private void soryByAddTime() {
+        Collections.sort(mGoodList, new Comparator<NewGoodBean>() {
+            @Override
+            public int compare(NewGoodBean goodLeft, NewGoodBean goodRight) {
+                return (int) (Long.valueOf(goodRight.getAddTime()) - Long.valueOf(goodLeft.getAddTime()));
+            }
+        });
     }
 
     class GoodViewHolder extends RecyclerView.ViewHolder {

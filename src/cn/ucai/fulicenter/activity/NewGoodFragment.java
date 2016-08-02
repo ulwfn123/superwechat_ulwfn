@@ -36,7 +36,7 @@ public class NewGoodFragment extends Fragment {
     List<NewGoodBean> mGoodList;
     TextView tvHint;
     int pageId = 1;
-
+    int action ;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -71,6 +71,7 @@ public class NewGoodFragment extends Fragment {
                 }
             }
 
+
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -78,6 +79,10 @@ public class NewGoodFragment extends Fragment {
                 int l = mGridLayoutManager.findLastVisibleItemPosition();
                 Log.e(TAG, "f=" + f + "停止位置的下标" + l);
                 lastItemPosition = mGridLayoutManager.findLastVisibleItemPosition();
+                mSwipeRefreshLayout.setEnabled(mGridLayoutManager.findFirstVisibleItemPosition() == 0);
+                if (f == -1  ||  l== - 1) {  //  加载错下标的保护
+                    lastItemPosition = mAdapter.getItemCount() - 1;
+                }
             }
         });
     }
@@ -87,6 +92,7 @@ public class NewGoodFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                action = I.ACTION_PULL_DOWN;
                 tvHint.setVisibility(View.VISIBLE);
                 pageId =1;
                 initData();
@@ -106,11 +112,18 @@ public class NewGoodFragment extends Fragment {
                 if (result != null) {
                     Log.e(TAG, "新品的result长度 = " + result.length);
                     ArrayList<NewGoodBean> goodBeanArrayList = Utils.array2List(result);
-                    mAdapter.initData(goodBeanArrayList);
+                    if (action == I.ACTION_DOWNLOAD || action == I.ACTION_PULL_DOWN) {
+                        mAdapter.initData(goodBeanArrayList);
+                    } else {
+                        mAdapter.addItem(goodBeanArrayList);
+                    }
                     if (goodBeanArrayList.size() < I.PAGE_SIZE_DEFAULT) { // 判断加载最后的下标
                         mAdapter.setMore(false);
                         mAdapter.setFooterString(getResources().getString(R.string.no_more));
                     }
+                } else {
+                    mAdapter.setMore(false);
+                    mAdapter.setFooterString(getResources().getString(R.string.no_more));
                 }
             }
 
