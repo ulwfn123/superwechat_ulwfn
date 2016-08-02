@@ -25,7 +25,7 @@
                 android:id="@+id/layout_new_good"
                 style="@style/menu_item_fulicenter_newgood"
                 android:checked="true"
-                android:drawableTop="@drawable/menu_item_new_good_normal"
+                android:drawableTop="@drawable/menu_new_good"
                 android:onClick="onChecaedChange"
                 android:text="新品"
                 />
@@ -88,12 +88,9 @@
         </RadioGroup>
     </LinearLayout>
     <RelativeLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/main_bottom"
-        android:layout_marginBottom="1dp"
-        >
-
-    </RelativeLayout>
+        android:layout_above="@id/main_bottom" />
 
 </RelativeLayout>
