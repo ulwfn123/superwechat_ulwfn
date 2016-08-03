@@ -250,4 +250,14 @@ public class Utils {
         }
         return  null;
     }
+    // 复制 的Utile 文件
+    public static int px2dp(Context context,int px){
+        int density = (int) context.getResources().getDisplayMetrics().density;
+        return px/density;
+    }
+    // 复制 的Utile 文件
+    public static int dp2px(Context context,int dp){
+        int density = (int) context.getResources().getDisplayMetrics().density;
+        return dp*density;
+    }
 }

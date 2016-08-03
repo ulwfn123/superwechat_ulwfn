@@ -1,6 +1,7 @@
 package cn.ucai.fulicenter.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.activity.GoodDetailsActivity;
 import cn.ucai.fulicenter.bean.NewGoodBean;
 import cn.ucai.fulicenter.raw.FooterViewHolder;
 import cn.ucai.fulicenter.utils.ImageUtils;
@@ -78,6 +80,12 @@ public class GoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ImageUtils.setGoodThumb(mContext,mGoodViewHolder.ivGoodThumb,good.getGoodsThumb() );
             mGoodViewHolder.tvGoodName.setText(good.getGoodsName());
             mGoodViewHolder.tvGoodPrice.setText(good.getPromotePrice());
+            mGoodViewHolder.layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mContext.startActivity(new Intent(mContext, GoodDetailsActivity.class));
+                }
+            });
         }
     }
     //  判断 下标的类型
