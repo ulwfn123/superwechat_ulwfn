@@ -1,4 +1,4 @@
-package cn.ucai.fulicenter.raw;
+package cn.ucai.fulicenter.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;

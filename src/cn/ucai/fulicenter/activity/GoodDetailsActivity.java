@@ -11,12 +11,12 @@ import android.widget.Toast;
 import cn.ucai.fulicenter.D;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
-import cn.ucai.fulicenter.adapter.GoodAdapter;
 import cn.ucai.fulicenter.bean.AlbumsBean;
 import cn.ucai.fulicenter.bean.GoodDetailsBean;
 import cn.ucai.fulicenter.data.OkHttpUtils2;
-import cn.ucai.fulicenter.raw.FlowIndicator;
-import cn.ucai.fulicenter.raw.SlideAutoLoopView;
+import cn.ucai.fulicenter.view.DisplayUtils;
+import cn.ucai.fulicenter.view.FlowIndicator;
+import cn.ucai.fulicenter.view.SlideAutoLoopView;
 
 /**
  * Created by Administrator on 2016/8/3.
@@ -75,9 +75,10 @@ public class GoodDetailsActivity extends BaseActivity {
         tvGoodPriceCurrent.setText(mGoodDetail.getCurrencyPrice());
         tvGoodPriceShop.setText(mGoodDetail.getShopPrice());
         mSlideAutoLoopView.startPlayLoop(mFlowIndicator,getAlbumImageUrl(),getAlbumImageSize());   //  图片轮播的加载
+        Log.e(TAG, "图片下的详细资料" + mGoodDetail.getGoodsBrief().toString());
         wvGoodBrief.loadDataWithBaseURL(null, mGoodDetail.getGoodsBrief(), D.TEXT_HTML, D.UTF_8, null); // 图片 下面的webView文本的加载
     }
-
+    // 轮播的图片
     private int getAlbumImageSize() {
         if (mGoodDetail.getProperties() != null && mGoodDetail.getProperties().length > 0) {
             return mGoodDetail.getProperties()[0].getAlbums().length;
@@ -111,6 +112,7 @@ public class GoodDetailsActivity extends BaseActivity {
      *  属性初始化
       */
     private void initView() {
+        DisplayUtils.initBack(mContext);
         ivShare = (ImageView) findViewById(R.id.iv_good_share);
         ivCollect = (ImageView) findViewById(R.id.iv_good_collect);
         ivCart = (ImageView) findViewById(R.id.iv_good_cart);
