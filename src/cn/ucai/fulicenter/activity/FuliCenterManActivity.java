@@ -23,7 +23,7 @@ public class FuliCenterManActivity extends BaseActivity {
     int index ;
     int currentIndex;
     NewGoodFragment mNewGoodFragment;
-
+    BoutiqueFragment mBoutiqueAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,8 +51,8 @@ public class FuliCenterManActivity extends BaseActivity {
         // 添加显示第一个fragment
         getSupportFragmentManager().beginTransaction().
                 add(R.id.fragment_container, mNewGoodFragment)
-//              .add(R.id.fragment_container, contactListFragment)
-//                .hide(contactListFragment)
+//                .add(R.id.fragment_container, mBoutiqueAdapter)
+//              .hide(contactListFragment)
                 .show(mNewGoodFragment)
                 .commit();
 

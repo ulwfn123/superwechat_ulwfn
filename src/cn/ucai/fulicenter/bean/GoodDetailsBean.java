@@ -4,6 +4,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * Created by Administrator on 2016/7/29.
@@ -42,10 +43,9 @@ public class GoodDetailsBean implements Serializable {
     private String goodsImg;
     private long addTime;
     private String shareUrl;
-    private PropertiesBean propertiesBean;
+    private PropertiesBean[] properties;
     @JsonProperty("isPromote")
     private boolean isPromote;
-
 
     public int getId() {
         return id;
@@ -158,26 +158,26 @@ public class GoodDetailsBean implements Serializable {
     public void setShareUrl(String shareUrl) {
         this.shareUrl = shareUrl;
     }
-    @JsonIgnore
+
+    public PropertiesBean[] getProperties() {
+        return properties;
+    }
+
+    public void setProperties(PropertiesBean[] properties) {
+        this.properties = properties;
+    }
+
     public boolean isPromote() {
         return isPromote;
     }
 
     public void setPromote(boolean promote) {
-        this.isPromote = promote;
-    }
-
-    public PropertiesBean getPropertiesBean() {
-        return propertiesBean;
-    }
-
-    public void setPropertiesBean(PropertiesBean propertiesBean) {
-        this.propertiesBean = propertiesBean;
+        isPromote = promote;
     }
 
     @Override
     public String toString() {
-        return "GoodDetails{" +
+        return "GoodDetailsBean{" +
                 "id=" + id +
                 ", goodsId=" + goodsId +
                 ", catId=" + catId +
@@ -192,8 +192,8 @@ public class GoodDetailsBean implements Serializable {
                 ", goodsImg='" + goodsImg + '\'' +
                 ", addTime=" + addTime +
                 ", shareUrl='" + shareUrl + '\'' +
-                ", propertiesBean=" + propertiesBean +
-                ", promote=" + isPromote +
+                ", properties=" + Arrays.toString(properties) +
+                ", isPromote=" + isPromote +
                 '}';
     }
 }

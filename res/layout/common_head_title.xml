@@ -10,10 +10,9 @@
         android:layout_height="match_parent"
         android:src="@drawable/back"/>
     <TextView
-
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:text="商品详情"
         android:textSize="20dp"/>
 
