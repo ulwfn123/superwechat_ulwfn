@@ -9,7 +9,6 @@ import android.view.View;
 
 import cn.ucai.fulicenter.R;
 
-
 public class FlowIndicator extends View {
 
     int mCount;//指示器中实心圆数量
