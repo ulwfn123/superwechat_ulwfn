@@ -30,6 +30,7 @@ public class CategoryFragment extends Fragment {
     List<CategoryGroupBean> mGroupList;
     List<ArrayList<CategoryChildBean>> mChildList;
     CategoryAdapter mAdapter;
+    int  groupCount;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -52,24 +53,11 @@ public class CategoryFragment extends Fragment {
                     if (grouyList != null) {
                         Log.e(TAG, "大类型grouyList=" + grouyList);
                         mGroupList = grouyList;
+                        int i=0;
                         for (CategoryGroupBean g : grouyList) {
-                            findCategoryChildList(new OkHttpUtils2.OnCompleteListener<CategoryChildBean[]>() {
-                                @Override
-                                public void onSuccess(CategoryChildBean[] result) {
-                                    Log.e(TAG, "小类型result=" + result);
-                                    if (result != null) {
-                                        final ArrayList<CategoryChildBean> childList = Utils.array2List(result);
-                                        Log.e(TAG, "小类型childList=" + childList);
-                                        mChildList.add(childList);
-                                        mAdapter.addAll(mGroupList,mChildList);  // 刷新View
-                                    }
-                                }
-
-                                @Override
-                                public void onError(String error) {
-                                    Log.e(TAG, "小类型error=" + error);
-                                }
-                            },g.getId());
+                            mChildList.add(new ArrayList<CategoryChildBean>());
+                            findCategoryChildList(g.getId(),i);
+                            i++;
                         }
                     }
                 }
@@ -80,17 +68,36 @@ public class CategoryFragment extends Fragment {
                 Log.e(TAG, "大类型error=" + error);
             }
         });
-
     }
     // 下载分类  小类型数据
-    private void findCategoryChildList( OkHttpUtils2.OnCompleteListener<CategoryChildBean[]> listener ,int catid) {
+    private void findCategoryChildList( int catid, final int index) {
         OkHttpUtils2<CategoryChildBean[]> utils = new OkHttpUtils2<CategoryChildBean[]>();
         utils.setRequestUrl(I.REQUEST_FIND_CATEGORY_CHILDREN)
                 .addParam(I.CategoryChild.PARENT_ID,String.valueOf(catid) )
                 .addParam(I.PAGE_ID,String.valueOf(I.PAGE_ID_DEFAULT))
                 .addParam(I.PAGE_SIZE,String.valueOf(I.PAGE_SIZE_DEFAULT))
                 .targetClass(CategoryChildBean[].class)
-                .execute(listener);
+                .execute(new OkHttpUtils2.OnCompleteListener<CategoryChildBean[]>() {
+                    @Override
+                    public void onSuccess(CategoryChildBean[] result) {
+                        Log.e(TAG, "小类型result=" + result);
+                        groupCount++;
+                        if (result != null) {
+                            final ArrayList<CategoryChildBean> childList = Utils.array2List(result);
+                            if (childList != null) {
+                                mChildList.set(index, childList);
+                            }
+                        }
+                        if (groupCount == mGroupList.size()) {
+                            mAdapter.addAll(mGroupList, mChildList);
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Log.e(TAG, "大类型error=" + error);
+                    }
+                });
     }
 
 

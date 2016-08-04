@@ -84,6 +84,7 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
             houder.ivIndicator = (ImageView) view.findViewById(R.id.iv_group_indicator);
             houder.tvGroupName = (TextView) view.findViewById(R.id.tv_group_name);
             houder.ivGroupThumb = (ImageView) view.findViewById(R.id.iv_group_thumb);
+
         } else {
             houder = (GroupViewHolder) view.getTag();
         }
@@ -117,6 +118,7 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
             ImageUtils.setChildCategoryImage(mContext, holder.ivCategoryChildThumb, child.getImageUrl());
             holder.tvCategoryChildName.setText(child.getName());
         }
+        view.setTag(holder);
         return view;
     }
 
