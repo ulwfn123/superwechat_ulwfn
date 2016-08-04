@@ -1,6 +1,8 @@
 package cn.ucai.fulicenter.activity;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
@@ -22,6 +24,7 @@ public class FuliCenterManActivity extends BaseActivity {
     RadioButton[] mrbTabs;
     int index ;
     int currentIndex;
+    Fragment[]  mFragment;
     NewGoodFragment mNewGoodFragment;
     BoutiqueFragment mBoutiqueAdapter;
     @Override
@@ -29,7 +32,23 @@ public class FuliCenterManActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fulicenter_man);
         initView();
+        inigFragment();
+        // 添加显示第一个fragment
+        getSupportFragmentManager().beginTransaction().
+                add(R.id.fragment_container, mNewGoodFragment)
+                .add(R.id.fragment_container, mBoutiqueAdapter)
+                .hide(mBoutiqueAdapter)
+                .show(mNewGoodFragment)
+                .commit();
 
+    }
+
+    private void inigFragment() {
+        mNewGoodFragment = new NewGoodFragment();
+        mBoutiqueAdapter = new BoutiqueFragment();
+        mFragment = new Fragment[5];
+        mFragment[0] = mNewGoodFragment;
+        mFragment[1] = mBoutiqueAdapter;
     }
 
     private void initView() {
@@ -48,13 +67,7 @@ public class FuliCenterManActivity extends BaseActivity {
         mrbTabs[4] = rbPersonalCenter;
 
         mNewGoodFragment = new NewGoodFragment();
-        // 添加显示第一个fragment
-        getSupportFragmentManager().beginTransaction().
-                add(R.id.fragment_container, mNewGoodFragment)
-//                .add(R.id.fragment_container, mBoutiqueAdapter)
-//              .hide(contactListFragment)
-                .show(mNewGoodFragment)
-                .commit();
+
 
 
     }
@@ -78,8 +91,16 @@ public class FuliCenterManActivity extends BaseActivity {
                 break;
         }
         Log.e(TAG, "index = " + index+"  , currentIndex  = " + currentIndex);
+        //  判断 点击下标
         if (index != currentIndex) {
+            FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
+            trx.hide(mFragment[currentIndex]);
+            if (!mFragment[index].isAdded()) {
+                trx.add(R.id.fragment_container, mFragment[index]);
+            }
+            trx.show(mFragment[index]).commit();
             setRadioButtonStatus(index);
+            currentIndex = index;
         }
     }
 

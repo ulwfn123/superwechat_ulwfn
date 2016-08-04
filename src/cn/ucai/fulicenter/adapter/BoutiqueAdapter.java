@@ -16,7 +16,7 @@ import java.util.List;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.bean.BoutiqueBean;
-import cn.ucai.fulicenter.raw.FooterViewHolder;
+import cn.ucai.fulicenter.view.FooterViewHolder;
 import cn.ucai.fulicenter.utils.ImageUtils;
 
 /**
@@ -29,6 +29,8 @@ public class BoutiqueAdapter extends RecyclerView.Adapter<ViewHolder> {
     FooterViewHolder mFooterViewHolder;
     boolean isMore;
     String footerString;
+
+
 
     public BoutiqueAdapter(Context context, List<BoutiqueBean> list) {
         mContext = context;
