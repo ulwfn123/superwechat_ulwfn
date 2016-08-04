@@ -438,7 +438,7 @@ public interface I {
     /**
      * 下载分类商品大类图像的接口
      */
-    String DOWNLOAD_DOWNLOAD_CATEGORY_GROUP_IMAGE_URL = SERVER_ROOT +
+    String REQUEST_DOWNLOAD_CATEGORY_GROUP_IMAGE_URL = SERVER_ROOT +
             "?request=" + REQUEST_DOWNLOAD_CATEGORY_GROUP_IMAGE
             + "&" + D.CategoryGroup.IMAGE_URL + "=";
     /**
@@ -448,7 +448,7 @@ public interface I {
     /**
      * 下载收藏商品图像的接口
      */
-    String DOWNLOAD_GOODS_THUMB_URL = SERVER_ROOT +
+    String REQUEST_GOODS_THUMB_URL = SERVER_ROOT +
             "?request=" + REQUEST_DOWNLOAD_GOODS_THUMB
             + "&" + Collect.GOODS_THUMB + "=";
     /**
@@ -458,7 +458,7 @@ public interface I {
     /**
      * 下载分类商品小类图像的接口
      */
-    String DOWNLOAD_DOWNLOAD_CATEGORY_CHILD_IMAGE_URL = SERVER_ROOT +
+    String REQUEST_DOWNLOAD_CATEGORY_CHILD_IMAGE_URL = SERVER_ROOT +
             "?request=" + REQUEST_DOWNLOAD_CATEGORY_GROUP_IMAGE
             + "&" + D.CategoryChild.IMAGE_URL + "=";
     String REQUEST_UPLOAD_NICK = "upload_nick";

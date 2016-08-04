@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_marginBottom="10dp"
+    android:layout_marginTop="10dp"
+    android:background="@drawable/divid_explist_group">
+    <ImageView
+        android:id="@+id/iv_group_thumb"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:background="#000000"
+        android:scaleType="centerCrop"
+        android:src="@drawable/nopic"/>
+    <TextView
+        android:id="@+id/tv_group_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@id/iv_group_thumb"
+        android:text="饰物"
+        android:textColor="#000"
+        android:textSize="20sp"/>
+    <ImageView
+        android:id="@+id/iv_group_xiaola"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/expand_on"/>
+</RelativeLayout>
