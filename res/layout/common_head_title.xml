@@ -10,6 +10,7 @@
         android:layout_height="match_parent"
         android:src="@drawable/back"/>
     <TextView
+        android:id="@+id/tv_tongyong_biaoti"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
