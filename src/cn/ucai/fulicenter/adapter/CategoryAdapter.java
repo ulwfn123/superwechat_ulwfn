@@ -1,6 +1,7 @@
 package cn.ucai.fulicenter.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -29,19 +30,19 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
                            List<ArrayList<CategoryChildBean>> mChildList) {
         this.mContext = mContext;
         this.mGroupList = new ArrayList<CategoryGroupBean>();
-        mGroupList.addAll(mGroupList);
+        this.mGroupList.addAll(mGroupList);
         this.mChildList = new ArrayList<ArrayList<CategoryChildBean>>();
-        mChildList.addAll(mChildList);
+        this.mChildList.addAll(mChildList);
     }
 
     @Override
     public int getGroupCount() {
-        return 0;
+        return mGroupList!=null?mGroupList.size():0;
     }
 
     @Override
     public int getChildrenCount(int i) {
-        return 0;
+        return mChildList.get(i).size();
     }
 
     @Override
@@ -72,37 +73,49 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
     public boolean hasStableIds() {
         return false;
     }
-    // 下载分类  的 大类型数据
+    // 分类  的 大类型数据
     @Override
     public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
         GroupViewHolder houder = null;
         if (view == null) {
             view = View.inflate(mContext, R.layout.item_category_group, null);
             houder = new GroupViewHolder();
-            CategoryGroupBean group = getGroup(i);
-            ImageUtils.setGroupCategoryImage(mContext, houder.ivGroupThumb, group.getImageUrl());
-            houder.tvGroupName.setText(group.getName());
-            houder.ivIndicator.setImageResource(R.drawable.expand_off);
-            view.setTag(houder);
+            // 属性初始化
+            houder.ivIndicator = (ImageView) view.findViewById(R.id.iv_group_indicator);
+            houder.tvGroupName = (TextView) view.findViewById(R.id.tv_group_name);
+            houder.ivGroupThumb = (ImageView) view.findViewById(R.id.iv_group_thumb);
         } else {
             houder = (GroupViewHolder) view.getTag();
         }
+        CategoryGroupBean group = getGroup(i);
+        ImageUtils.setGroupCategoryImage(mContext, houder.ivGroupThumb, group.getImageUrl());
+        Log.i("main", "CategoryAdapter赋值的"+group.getName());
+        houder.tvGroupName.setText(group.getName());
+        if (b) {
+            houder.ivIndicator.setImageResource(R.drawable.expand_off);
+        } else {
+            houder.ivIndicator.setImageResource(R.drawable.expand_on);
+        }
+        view.setTag(houder);
         return view;
     }
-    // 下载 分类  的小类型数据
+    // 分类  的小类型数据
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean b, View view, ViewGroup viewGroup) {
         ChildViewHolder holder = null;
         if (view == null) {
             view = View.inflate(mContext, R.layout.item_cateogry_child, null);
             holder = new ChildViewHolder();
-            final CategoryChildBean child = getChild(groupPosition, childPosition);
-            if (child != null) {
-                ImageUtils.setChildCategoryImage(mContext, holder.ivCategoryChildThumb, child.getImageUrl());
-                holder.tvCategoryChildName.setText(child.getName());
-            }
+            holder.layoutCategoryChild = (RelativeLayout) view.findViewById(R.id.layout_category_child);
+            holder.ivCategoryChildThumb = (ImageView) view.findViewById(R.id.iv_category_child_thumb);
+            holder.tvCategoryChildName = (TextView) view.findViewById(R.id.tv_category_child_name);
         } else {
             holder = (ChildViewHolder) view.getTag();
+        }
+        final CategoryChildBean child = getChild(groupPosition, childPosition);
+        if (child != null) {
+            ImageUtils.setChildCategoryImage(mContext, holder.ivCategoryChildThumb, child.getImageUrl());
+            holder.tvCategoryChildName.setText(child.getName());
         }
         return view;
     }
@@ -110,6 +123,14 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int i, int i1) {
         return false;
+    }
+
+    public void addAll(List<CategoryGroupBean> mGroupList, List<ArrayList<CategoryChildBean>> mChildList) {
+        this.mGroupList.clear();
+        this.mGroupList.addAll(mGroupList);
+        this.mChildList.clear();
+        this.mChildList.addAll(mChildList);
+        notifyDataSetChanged();
     }
 
     class GroupViewHolder {

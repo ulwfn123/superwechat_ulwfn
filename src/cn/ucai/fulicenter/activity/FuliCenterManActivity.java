@@ -27,6 +27,7 @@ public class FuliCenterManActivity extends BaseActivity {
     Fragment[]  mFragment;
     NewGoodFragment mNewGoodFragment;
     BoutiqueFragment mBoutiqueAdapter;
+    CategoryFragment mCategoryFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,8 @@ public class FuliCenterManActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction().
                 add(R.id.fragment_container, mNewGoodFragment)
                 .add(R.id.fragment_container, mBoutiqueAdapter)
-                .hide(mBoutiqueAdapter)
+                .add(R.id.fragment_container, mCategoryFragment)
+                .hide(mBoutiqueAdapter).hide(mCategoryFragment)
                 .show(mNewGoodFragment)
                 .commit();
 
@@ -47,9 +49,11 @@ public class FuliCenterManActivity extends BaseActivity {
     private void inigFragment() {
         mNewGoodFragment = new NewGoodFragment();
         mBoutiqueAdapter = new BoutiqueFragment();
+        mCategoryFragment = new CategoryFragment();
         mFragment = new Fragment[5];
         mFragment[0] = mNewGoodFragment;
         mFragment[1] = mBoutiqueAdapter;
+        mFragment[2] = mCategoryFragment;
     }
 
     private void initView() {

@@ -25,7 +25,7 @@
         android:textColor="#000"
         android:textSize="20sp"/>
     <ImageView
-        android:id="@+id/iv_group_xiaola"
+        android:id="@+id/iv_group_indicator"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
