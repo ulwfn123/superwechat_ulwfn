@@ -30,7 +30,7 @@ public class BoutiqueAdapter extends RecyclerView.Adapter<ViewHolder> {
     Context mContext;
     List<BoutiqueBean> mBoutiqueList;
     BoutiqueViewHolder mBoutupueViewHolder;
-    FooterViewHolder mFooterViewHolder;
+//    FooterViewHolder mFooterViewHolder;
     boolean isMore;
     String footerString;
 
@@ -93,24 +93,25 @@ public class BoutiqueAdapter extends RecyclerView.Adapter<ViewHolder> {
                 }
             });
         }
-        if (holder instanceof FooterViewHolder) {
-            mFooterViewHolder = (FooterViewHolder) holder;
-            mFooterViewHolder.tvFooter.setText(footerString);
-        }
+//        if (holder instanceof FooterViewHolder) {
+//            mFooterViewHolder = (FooterViewHolder) holder;
+//            mFooterViewHolder.tvFooter.setText(footerString);
+//        }
     }
     //  判断 下标的类型
     @Override
     public int getItemViewType(int position) {
-        if (position == getItemCount() - 1) {
-            return I.TYPE_FOOTER;
-        } else {
+//        if (position == getItemCount() - 1) {
+//            return I.TYPE_FOOTER;
+//        } else {
             return I.TYPE_ITEM;
-        }
+//        }
     }
 
     @Override
     public int getItemCount() {
-        return mBoutiqueList !=null? mBoutiqueList.size()+1:1;
+//        return mBoutiqueList !=null? mBoutiqueList.size()+1:1;
+        return mBoutiqueList !=null? mBoutiqueList.size():0;
     }
     //判断 如果数组中不为空 ，则先清空，在添加
     public void initData(ArrayList<BoutiqueBean> list) {

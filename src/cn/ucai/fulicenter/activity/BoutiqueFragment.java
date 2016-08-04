@@ -154,7 +154,6 @@ public class BoutiqueFragment extends Fragment {
         );
         mLinearLayoutManager = new LinearLayoutManager(mContext);
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL); //  设置线性布局的排列方式
-//        mLinearLayoutManager = new GridLayoutManager(mContext, I.COLUM_NUM);
         mRecyclerView = (RecyclerView) layout.findViewById(R.id.rv_boutique);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -162,6 +161,5 @@ public class BoutiqueFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         tvHint = (TextView) layout.findViewById(R.id.tv_refresh_hint);  // 图片加载
     }
-
 
 }

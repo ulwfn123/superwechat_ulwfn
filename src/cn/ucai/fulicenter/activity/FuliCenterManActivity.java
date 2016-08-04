@@ -27,6 +27,7 @@ public class FuliCenterManActivity extends BaseActivity {
     Fragment[]  mFragment;
     NewGoodFragment mNewGoodFragment;
     BoutiqueFragment mBoutiqueAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

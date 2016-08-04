@@ -53,7 +53,7 @@ public class BoutiqueChildActivity extends BaseActivity {
     }
 
     private void serListener() {
-        setPullDownRefreshListener(); //下拉
+//        setPullDownRefreshListener(); //下拉
         setPullUpRefreshListener(); // 上拉
     }
     //   上拉刷新
@@ -161,7 +161,7 @@ public class BoutiqueChildActivity extends BaseActivity {
                 R.color.google_red,R.color.google_green
         );
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_boutique_child);
-        mGridLayoutManager = new GridLayoutManager(mContext,1);  //  数据的初始化，括号后的表示每行表示的view个数
+        mGridLayoutManager = new GridLayoutManager(mContext,2);  //  数据的初始化，括号后的表示每行表示的view个数
         mGridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL); //  设置线性布局的排列方式
         mRecyclerView.setLayoutManager(mGridLayoutManager);
         mAdapter = new GoodAdapter(mContext, mGoodList);
