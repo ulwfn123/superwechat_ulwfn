@@ -66,12 +66,12 @@ public class RegisterActivity extends BaseActivity {
 	}
 	//登录和注册的监听
 	private void setLitener() {
-		findViewById(R.id.btn_login).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				finish();
-			}
-		});
+//		findViewById(R.id.btn_login).setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View view) {
+//				finish();
+//			}
+//		});
 		findViewById(R.id.btn_register).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {

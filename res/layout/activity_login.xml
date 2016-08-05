@@ -4,19 +4,8 @@
     android:layout_height="match_parent"
     android:background="#eff2f6"
     android:orientation="vertical" >
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_weight="1" >
-        <TextView
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="超级微信"
-            android:drawableLeft="@drawable/mobile"
-            android:textColor="#000"/>
-    </RelativeLayout>
+
+    <include layout="@layout/common_head_title_white" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -92,29 +81,12 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="30dp"
-            android:orientation="horizontal" >
-
+            android:orientation="vertical" >
             <Button
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
-                android:layout_weight="1"
-                android:background="@drawable/button_register_bg"
-                android:gravity="center"
-                android:onClick="register"
-                android:paddingBottom="7dp"
-                android:paddingTop="7dp"
-                android:text="注册"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
-                android:layout_weight="1"
                 android:background="@drawable/button_login_bg"
                 android:gravity="center"
                 android:onClick="login"
@@ -122,6 +94,20 @@
                 android:paddingTop="7dp"
                 android:text="登录"
                 android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@null"
+                android:onClick="register"
+                android:paddingBottom="7dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:paddingTop="7dp"
+                android:text="注册"
+                android:textColor="@android:color/black"
                 android:textSize="18sp" />
         </LinearLayout>
     </RelativeLayout>
