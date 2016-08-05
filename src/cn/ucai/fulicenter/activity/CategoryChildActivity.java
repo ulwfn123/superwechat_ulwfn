@@ -1,5 +1,6 @@
 package cn.ucai.fulicenter.activity;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,10 +14,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.ucai.fulicenter.D;
+import cn.ucai.fulicenter.view.CatChildFilterButton;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.adapter.GoodAdapter;
+import cn.ucai.fulicenter.bean.CategoryChildBean;
 import cn.ucai.fulicenter.bean.NewGoodBean;
 import cn.ucai.fulicenter.data.OkHttpUtils2;
 import cn.ucai.fulicenter.utils.Utils;
@@ -37,7 +39,10 @@ public class CategoryChildActivity extends BaseActivity {
     Button btnSortPrice,btnSortAddTime;
     boolean mSortPriceAsc;
     boolean mSoetAddTimeAsc;
+    ArrayList<CategoryChildBean> childList;
+    CatChildFilterButton mCatChildFilterButton;
     int  sortBy;
+    String name;
 
     int pageId = 0;
     int action =I.ACTION_DOWNLOAD ;
@@ -53,14 +58,16 @@ public class CategoryChildActivity extends BaseActivity {
         initData();
         initView();
         serListener();
-        SortStatusChangdListener listener = new SortStatusChangdListener();  // 实例化监听
-        btnSortPrice.setOnClickListener(listener);
-        btnSortAddTime.setOnClickListener(listener);
+
     }
 
     private void serListener() {
         setPullDownRefreshListener(); //下拉
         setPullUpRefreshListener(); // 上拉
+        SortStatusChangdListener listener = new SortStatusChangdListener();  // 实例化监听
+        btnSortPrice.setOnClickListener(listener);   // 价格的监听
+        btnSortAddTime.setOnClickListener(listener);// 时间的监听
+        mCatChildFilterButton.setOnCatFilterClickListener(name,childList);
     }
     //   上拉刷新
     private void setPullUpRefreshListener() {
@@ -110,7 +117,8 @@ public class CategoryChildActivity extends BaseActivity {
     }
     //  获取数据 ，判断数据下标是否超过集合的长度
     private void initData() {
-        catId= getIntent().getIntExtra(I.NewAndBoutiqueGood.CAT_ID, 0);
+        catId= getIntent().getIntExtra(I.CategoryChild.CAT_ID, 0);
+        childList = (ArrayList<CategoryChildBean>) getIntent().getSerializableExtra("childList");
         Log.e(TAG, "catid = " + catId);
         if (catId<0)finish();
         findBoutqueChildList(new OkHttpUtils2.OnCompleteListener<NewGoodBean[]>() {
@@ -161,6 +169,7 @@ public class CategoryChildActivity extends BaseActivity {
     private void initView() {
 //       String name=  getIntent().getStringExtra(D.Boutique.KEY_NAME); // 修改 返回按键后的题目
         DisplayUtils.initBack(mContext);
+        name = getIntent().getStringExtra(I.CategoryGroup.NAME);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.srl_category_child);
         mSwipeRefreshLayout.setColorSchemeColors(
                 R.color.google_blue,R.color.google_yellow,
@@ -175,29 +184,38 @@ public class CategoryChildActivity extends BaseActivity {
         tvHint = (TextView)findViewById(R.id.tv_refresh_hint);  // 图片加载
         btnSortPrice = (Button) findViewById(R.id.btn_sort_price);  // 实列化 价格时间 按键
         btnSortAddTime = (Button) findViewById(R.id.btn_sort_addtime);
-
+        mCatChildFilterButton = (CatChildFilterButton) findViewById(R.id.btnCatChildFilter);
     }
 
     class SortStatusChangdListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
+            Drawable drawable;
             switch (view.getId()) {
                 case R.id.btn_sort_price:
                     if (mSortPriceAsc) {
                         sortBy = I.SORT_BY_PRICE_ASC;
+                        drawable = getResources().getDrawable(R.drawable.arrow_order_up);  //修改 分类“价格”后面的 向上箭头
                     } else {
                         sortBy = I.SORT_BY_PRICE_DESC;
+                        drawable = getResources().getDrawable(R.drawable.arrow_order_down);
                     }
                     mSortPriceAsc = !mSortPriceAsc;
+                    drawable.setBounds(0,0,drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight());
+                    btnSortPrice.setCompoundDrawablesWithIntrinsicBounds(null,null,drawable,null);
                     break;
                 case R.id.btn_sort_addtime:
                     if (mSoetAddTimeAsc) {
                         sortBy = I.SORT_BY_ADDTIME_ASC;
+                        drawable = getResources().getDrawable(R.drawable.arrow_order_up); //修改 分类“价格”后面的 向上箭头
                     } else {
                         sortBy = I.SORT_BY_ADDTIME_DESC;
+                        drawable = getResources().getDrawable(R.drawable.arrow_order_down);
                     }
                     mSoetAddTimeAsc = !mSoetAddTimeAsc;
+                    drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+                    btnSortAddTime.setCompoundDrawablesWithIntrinsicBounds(null,null,drawable,null);
                     break;
             }
             mAdapter.setSortBy(sortBy);
