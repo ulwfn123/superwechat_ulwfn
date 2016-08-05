@@ -61,7 +61,7 @@ public class ImageUtils {
     }
     //下载分类  小类型数据
     public static void setChildCategoryImage(Context context, ImageView imageView, String thmub) {
-        String url = I.REQUEST_DOWNLOAD_CATEGORY_CHILD_IMAGE + thmub;
+        String url = I.DOWNLOAD_BOUTIQUE_IMG_URL + thmub;
         Picasso.with(context).load(url).placeholder(R.drawable.nopic).into(imageView);
     }
 

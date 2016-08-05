@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -33,6 +34,11 @@ public class CategoryChildActivity extends BaseActivity {
     GoodAdapter mAdapter;
     List<NewGoodBean> mGoodList;
     TextView tvHint;
+    Button btnSortPrice,btnSortAddTime;
+    boolean mSortPriceAsc;
+    boolean mSoetAddTimeAsc;
+    int  sortBy;
+
     int pageId = 0;
     int action =I.ACTION_DOWNLOAD ;
     int  catId = 0;
@@ -43,13 +49,17 @@ public class CategoryChildActivity extends BaseActivity {
         mContext = this;
         setContentView(R.layout.activity_category_child);
         mGoodList = new ArrayList<NewGoodBean>();
+        sortBy = I.SORT_BY_ADDTIME_DESC;  // 设置为时间 降序
         initData();
         initView();
         serListener();
+        SortStatusChangdListener listener = new SortStatusChangdListener();  // 实例化监听
+        btnSortPrice.setOnClickListener(listener);
+        btnSortAddTime.setOnClickListener(listener);
     }
 
     private void serListener() {
-//        setPullDownRefreshListener(); //下拉
+        setPullDownRefreshListener(); //下拉
         setPullUpRefreshListener(); // 上拉
     }
     //   上拉刷新
@@ -140,7 +150,7 @@ public class CategoryChildActivity extends BaseActivity {
     // 服务端请求下载新品首页商品信息
     private void findBoutqueChildList(OkHttpUtils2.OnCompleteListener<NewGoodBean[]> listener) {
         OkHttpUtils2<NewGoodBean[]> utils = new OkHttpUtils2<NewGoodBean[]>();
-        utils.setRequestUrl(I.REQUEST_FIND_NEW_BOUTIQUE_GOODS)
+        utils.setRequestUrl(I.REQUEST_FIND_GOODS_DETAILS)
                 .addParam(I.NewAndBoutiqueGood.CAT_ID,String.valueOf(catId))
                 .addParam(I.PAGE_ID,String.valueOf(pageId))
                 .addParam(I.PAGE_SIZE,String.valueOf(I.PAGE_SIZE_DEFAULT))
@@ -150,7 +160,7 @@ public class CategoryChildActivity extends BaseActivity {
 
     private void initView() {
 //       String name=  getIntent().getStringExtra(D.Boutique.KEY_NAME); // 修改 返回按键后的题目
-//        DisplayUtils.initbackWithTitle(mContext, name);
+        DisplayUtils.initBack(mContext);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.srl_category_child);
         mSwipeRefreshLayout.setColorSchemeColors(
                 R.color.google_blue,R.color.google_yellow,
@@ -163,6 +173,34 @@ public class CategoryChildActivity extends BaseActivity {
         mAdapter = new GoodAdapter(mContext, mGoodList);
         mRecyclerView.setAdapter(mAdapter);
         tvHint = (TextView)findViewById(R.id.tv_refresh_hint);  // 图片加载
+        btnSortPrice = (Button) findViewById(R.id.btn_sort_price);  // 实列化 价格时间 按键
+        btnSortAddTime = (Button) findViewById(R.id.btn_sort_addtime);
 
+    }
+
+    class SortStatusChangdListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.btn_sort_price:
+                    if (mSortPriceAsc) {
+                        sortBy = I.SORT_BY_PRICE_ASC;
+                    } else {
+                        sortBy = I.SORT_BY_PRICE_DESC;
+                    }
+                    mSortPriceAsc = !mSortPriceAsc;
+                    break;
+                case R.id.btn_sort_addtime:
+                    if (mSoetAddTimeAsc) {
+                        sortBy = I.SORT_BY_ADDTIME_ASC;
+                    } else {
+                        sortBy = I.SORT_BY_ADDTIME_DESC;
+                    }
+                    mSoetAddTimeAsc = !mSoetAddTimeAsc;
+                    break;
+            }
+            mAdapter.setSortBy(sortBy);
+        }
     }
 }

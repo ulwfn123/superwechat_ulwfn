@@ -36,12 +36,20 @@ public class GoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     FooterViewHolder mFooterViewHolder;
     boolean isMore;
     String footerString;
+    int sortBy;
 
     public GoodAdapter(Context context, List<NewGoodBean> list) {
         mContext = context;
         mGoodList = new ArrayList<NewGoodBean>();
         mGoodList.addAll(list);
+        sortBy = I.SORT_BY_ADDTIME_DESC;
 
+    }
+
+    public void setSortBy(int sortBy) {
+        this.sortBy = sortBy;
+        soryBy();
+        notifyDataSetChanged();
     }
 
     public String getFooterString() {
@@ -82,7 +90,8 @@ public class GoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             final NewGoodBean good = mGoodList.get(position);
             ImageUtils.setGoodThumb(mContext,mGoodViewHolder.ivGoodThumb,good.getGoodsThumb() );
             mGoodViewHolder.tvGoodName.setText(good.getGoodsName());
-            mGoodViewHolder.tvGoodPrice.setText(good.getPromotePrice());
+            mGoodViewHolder.tvGoodPrice.setText(good.getRankPrice());
+            Log.e(TAG, "good        =123112" + good.toString());
             mGoodViewHolder.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -117,22 +126,46 @@ public class GoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mGoodList.clear();
         }
         mGoodList.addAll(list);
-        soryByAddTime();
+        soryBy();
         notifyDataSetChanged();
     }
     // 下拉刷新的数组添加
     public void addItem(ArrayList<NewGoodBean> list) {
         mGoodList.addAll(list);
-        soryByAddTime();
+        soryBy();
         notifyDataSetChanged();
     }
 
     //   新品中的对象的排序方法 ，， 按照时间排序
-    private void soryByAddTime() {
+    private void soryBy() {
         Collections.sort(mGoodList, new Comparator<NewGoodBean>() {
+
             @Override
             public int compare(NewGoodBean goodLeft, NewGoodBean goodRight) {
-                return (int) (Long.valueOf(goodRight.getAddTime()) - Long.valueOf(goodLeft.getAddTime()));
+                int result  = 0;
+                switch (sortBy) {
+                    case I.SORT_BY_PRICE_DESC:
+                        result = converPrice(goodLeft.getCurrencyPrice()) - converPrice(goodRight.getCurrencyPrice());
+//                        result = (int) (Long.valueOf(goodRight.getAddTime()) - Long.valueOf(goodLeft.getAddTime()));
+                        break;
+                    case I.SORT_BY_PRICE_ASC:
+                        result = converPrice(goodRight.getCurrencyPrice()) - converPrice(goodLeft.getCurrencyPrice());
+//                        result = (int) (Long.valueOf(goodLeft.getAddTime()) - Long.valueOf(goodRight.getAddTime()));
+                        break;
+                    case I.SORT_BY_ADDTIME_ASC:
+                        result = (int) (Long.valueOf(goodLeft.getAddTime()) - Long.valueOf(goodRight.getAddTime()));
+//                        result = converPrice(goodRight.getCurrencyPrice()) - converPrice(goodLeft.getCurrencyPrice());
+                        break;
+                    case I.SORT_BY_ADDTIME_DESC:
+                        result = (int) (Long.valueOf(goodRight.getAddTime()) - Long.valueOf(goodLeft.getAddTime()));
+//                        result = converPrice(goodLeft.getCurrencyPrice()) - converPrice(goodRight.getCurrencyPrice());
+                        break;
+                }
+                return result;
+            }
+            private int converPrice(String price) {
+                final String prioe = price.substring(price.indexOf("￥")+1);
+                return Integer.valueOf(prioe);
             }
         });
     }

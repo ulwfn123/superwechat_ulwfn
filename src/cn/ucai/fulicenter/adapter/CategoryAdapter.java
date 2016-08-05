@@ -119,6 +119,7 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
         final CategoryChildBean child = getChild(groupPosition, childPosition);
         if (child != null) {
             ImageUtils.setChildCategoryImage(mContext, holder.ivCategoryChildThumb, child.getImageUrl());
+//            ImageUtils.setGoodThumb(mContext, holder.ivCategoryChildThumb, child.getImageUrl());
             holder.tvCategoryChildName.setText(child.getName());
             holder.layoutCategoryChild.setOnClickListener(new View.OnClickListener() {
                 @Override
