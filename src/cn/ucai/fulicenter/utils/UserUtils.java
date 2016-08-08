@@ -154,28 +154,13 @@ public class UserUtils {
 			Picasso.with(context).load(R.drawable.default_avatar).into(imageView);
 		}
 	}
-//    //  设置 群组 成员头像的
-//    public static void setAppGroupAvatar(Context context, String hxid, ImageView imageView){
-//        String path = "";
-//        if(path != null && hxid != null){
-//            path = getGroupAvatarPath(hxid);
-//            Picasso.with(context).load(path).placeholder(R.drawable.group_icon).into(imageView);
-//        }else{
-//            Picasso.with(context).load(R.drawable.group_icon).into(imageView);
-//        }
-//    }
-
-
-	//这是http://10.0.2.2:8888/SuperWeChatServer/Server?request=download_avatar&name_or_hxid=aaaa&avatarType=user_avatar方法
 	//  设置  用户 好友头像
     public static String getUserAvatarPath(String username) {
 		StringBuilder path = new StringBuilder(I.SERVER_ROOT);
 		path.append(I.QUESTION).append(I.KEY_REQUEST)
 				.append(I.EQU).append(I.REQUEST_DOWNLOAD_AVATAR)
 				.append(I.AND)
-				.append(I.NAME_OR_HXID).append(I.EQU).append(username)
-				.append(I.AND)
-				.append(I.AVATAR_TYPE).append(I.EQU).append(I.AVATAR_TYPE_USER_PATH);
+				.append(I.AVATAR_TYPE).append(I.EQU).append(username);
 		return path.toString();
 	}
 

@@ -690,14 +690,14 @@ public interface I {
     public static class User {
         public static final String ID = "id";
         public static final String UID = "uid";
-        public static final String USER_NAME = "userName";
-
-        public static final String NICK = "nick";
         public static final String AVATAR = "avatar";
         public static final String HEADER = "header";
-        public static final String PASSWORD = "password";
         public static final String UN_READ_MSG_COUNT = "unreadMsgCount";
         public static final String GROUPS = "groups";
+        public static String TABLE_NAME = "t_superwechat_user";
+        public static String USER_NAME = "m_user_name";                    //用户账号
+        public static String PASSWORD = "m_user_password";                //用户密码
+        public static String NICK = "m_user_nick";                    //用户
 
     }
 
