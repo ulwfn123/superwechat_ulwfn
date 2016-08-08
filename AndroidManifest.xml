@@ -88,6 +88,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide">
         </activity>
+        <!-- Collect detail -->
+        <activity
+            android:name="cn.ucai.fulicenter.activity.CollectActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide">
+        </activity>
 
         <!-- Boutique 精选二级detail -->
         <activity
@@ -123,53 +129,7 @@
             android:theme="@style/horizontal_slide"
             android:windowSoftInputMode="stateVisible" >
         </activity>
-        <!--&lt;!&ndash; 群组详情 &ndash;&gt;-->
-        <!--<activity-->
-            <!--android:name="cn.ucai.fulicenter.activity.GroupDetailsActivity"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:theme="@style/horizontal_slide" >-->
-        <!--</activity>-->
-        <!--&lt;!&ndash; 群组列表 &ndash;&gt;-->
-        <!--<activity-->
-            <!--android:name="cn.ucai.fulicenter.activity.GroupsActivity"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:theme="@style/horizontal_slide"-->
-            <!--android:windowSoftInputMode="adjustPan" >-->
-        <!--</activity>-->
-        <!---->
-        <!--<activity-->
-            <!--android:name="cn.ucai.fulicenter.activity.ChatRoomActivity"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:theme="@style/horizontal_slide"-->
-            <!--android:windowSoftInputMode="adjustPan" >-->
-        <!--</activity>-->
-        <!--&lt;!&ndash; 聊天室详情 &ndash;&gt;-->
-        <!--<activity-->
-            <!--android:name="cn.ucai.fulicenter.activity.ChatRoomDetailsActivity"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:theme="@style/horizontal_slide" >-->
-        <!--</activity>-->
-        <!---->
-        <!--&lt;!&ndash; 新建群组 &ndash;&gt;-->
-        <!--<activity-->
-            <!--android:name="cn.ucai.fulicenter.activity.NewGroupActivity"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:theme="@style/horizontal_slide"-->
-            <!--android:windowSoftInputMode="adjustPan" >-->
-        <!--</activity>-->
-        <!--&lt;!&ndash; 退出群组提示框 &ndash;&gt;-->
-        <!--<activity-->
-            <!--android:name="cn.ucai.fulicenter.activity.ExitGroupDialog"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:theme="@style/MyDialogStyleBottom" >-->
-        <!--</activity>-->
-        <!-- 群组选人 -->
-        <!--<activity-->
-            <!--android:name="cn.ucai.fulicenter.activity.GroupPickContactsActivity"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:theme="@style/horizontal_slide"-->
-            <!--android:windowSoftInputMode="adjustPan" >-->
-        <!--</activity>-->
+
         <!-- 地图 -->
         <activity
             android:name="cn.ucai.fulicenter.activity.BaiduMapActivity"

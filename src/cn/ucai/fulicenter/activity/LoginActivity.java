@@ -53,7 +53,6 @@ import cn.ucai.fulicenter.data.OkHttpUtils2;
 import cn.ucai.fulicenter.db.UserDao;
 import cn.ucai.fulicenter.domain.User;
 import cn.ucai.fulicenter.task.DownloadContactListTask;
-import cn.ucai.fulicenter.task.DownloadGroupListTask;
 import cn.ucai.fulicenter.utils.CommonUtils;
 import cn.ucai.fulicenter.utils.UserUtils;
 import cn.ucai.fulicenter.utils.Utils;
@@ -213,7 +212,7 @@ public class LoginActivity extends BaseActivity {
 						if (result != null && result.isRetMsg()) {
 							UserAvatar user = (UserAvatar) result.getRetData();
 							if (user != null) {
-								downloadUserAvatar();  //  用户的 个人资料 头像上传
+								downloadUserAvatarFromAppServer();  //  用户的 个人资料 头像上传
 								seveUserAvatar(user);//  把用户数据添加到新建的表
 								loginSuccess(user);
 							}
@@ -236,9 +235,9 @@ public class LoginActivity extends BaseActivity {
 				});
 	}
 	//  用户的 个人资料 头像上传
-	private void downloadUserAvatar() {
+	private void downloadUserAvatarFromAppServer() {
 		final OkHttpUtils2<Message> utils = new OkHttpUtils2<Message>();
-		utils.url(UserUtils.getUserAvatarPath(currentUsername))
+		utils.url(UserUtils.getUserAvatarPath(FuliCenterApplication.getInstance().getUserName()))
 				.targetClass(Message.class)
 				.doInBackground(new Callback() {
 					@Override
@@ -281,6 +280,7 @@ public class LoginActivity extends BaseActivity {
 		FuliCenterApplication.getInstance().setUser(user);
 		FuliCenterApplication.currentUserNick = user.getMUserNick();
 		Log.e("main", "登录用户名 ===" + user);
+		new DownloadContactListTask(LoginActivity.this,currentUsername).excute();  //
 		new DownloadContactListTask(LoginActivity.this,currentUsername).excute();  //
 
 		try {

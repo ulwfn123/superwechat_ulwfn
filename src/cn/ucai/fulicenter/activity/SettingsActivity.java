@@ -120,7 +120,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_conversation_settings);
-		DisplayUtils.initbackWithTitle(SettingsActivity.this,getResources().getString(R.string.set));
+//		DisplayUtils.initbackWithTitle(SettingsActivity.this,getResources().getString(R.string.set));
         rl_switch_notification = (RelativeLayout) findViewById(R.id.rl_switch_notification);
 		rl_switch_sound = (RelativeLayout) findViewById(R.id.rl_switch_sound);
 		rl_switch_vibrate = (RelativeLayout) findViewById(R.id.rl_switch_vibrate);

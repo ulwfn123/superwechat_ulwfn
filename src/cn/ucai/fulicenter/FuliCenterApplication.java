@@ -38,23 +38,26 @@ public class FuliCenterApplication extends Application {
 	private static FuliCenterApplication instance;
 	// login user name
 	public final String PREF_USERNAME = "username";
-    // 当前登录用户的 群组集合
-//    public List<GroupAvatar> groupList = new ArrayList<GroupAvatar>();
-//     添加 群组中 群聊 人员的 昵称属性
-//    public Map<String, HashMap<String, MemberUserAvatar>> memberMap = new HashMap<String, HashMap<String, MemberUserAvatar>>();
 	//  为下载全局当前用户好 定义属性
 	private UserAvatar user;
 	//全局的当前 登录用户的好友集合
 	private List<UserAvatar> userlist = new ArrayList<UserAvatar>();
 	//获取昵称的  定义属性
 	private Map<String, UserAvatar> userMap = new HashMap<String, UserAvatar>();
-	//获取当前登录用户的 群组的集合
-//	private Map<String, GroupAvatar> GroupMap = new HashMap<String, GroupAvatar>();
-//    private List<GroupAvatar> GroupDeleteList = new ArrayList<GroupAvatar>();
+	// 当前登录用户的收藏商品的 数量
+	private int collectCount;
 
-	public static FuliCenterApplication getInstance() {
+    public static FuliCenterApplication getInstance() {
 		return instance;
 	}
+
+    public int getCollectCount() {
+        return collectCount;
+    }
+
+    public void setCollectCount(int collectCount) {
+        this.collectCount = collectCount;
+    }
 
 	@Override
 	public void onCreate() {
@@ -152,43 +155,5 @@ public class FuliCenterApplication extends Application {
 		this.userMap = userMap;
 	}
 
-//    public List<GroupAvatar> getGroupList() {
-//        return groupList;
-//    }
 
-//    public List<GroupAvatar> getGroupDeleteList() {
-//        return GroupDeleteList;
-//    }
-//
-//    public void setGroupDeleteList(List<GroupAvatar> groupDeleteList) {
-//        GroupDeleteList = groupDeleteList;
-//    }
-
-//    public void setGroupList(List<GroupAvatar> groupList) {
-//        this.groupList = groupList;
-//    }
-
-//    public Map<String, HashMap<String, MemberUserAvatar>> getMemberMap() {
-//        return memberMap;
-//    }    //  删除群组人员或群组的全局变量
-
-//    public void setMemberMap(Map<String, HashMap<String, MemberUserAvatar>> memberMap) {
-//        this.memberMap = memberMap;
-//    }
-//
-//	public Map<String, GroupAvatar> getGroupMap() {
-//		return GroupMap;
-//	}
-//
-//	public void setGroupMap(Map<String, GroupAvatar> groupMap) {
-//		GroupMap = groupMap;
-//	}
-//
-//	public List<GroupAvatar> getGroupDeleteList() {
-//		return GroupDeleteList;
-//	}
-//
-//	public void setGroupDeleteList(List<GroupAvatar> groupDeleteList) {
-//		GroupDeleteList = groupDeleteList;
-//	}
 }
