@@ -82,6 +82,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide">
         </activity>
+        <!-- good detail -->
+        <activity
+            android:name="cn.ucai.fulicenter.activity.SettingsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide">
+        </activity>
+
         <!-- Boutique 精选二级detail -->
         <activity
             android:name="cn.ucai.fulicenter.activity.BoutiqueChildActivity"
