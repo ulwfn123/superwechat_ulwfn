@@ -16,12 +16,7 @@ package cn.ucai.fulicenter.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,6 +34,7 @@ import cn.ucai.fulicenter.DemoHXSDKModel;
 import cn.ucai.fulicenter.FuliCenterApplication;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.applib.controller.HXSDKHelper;
+import cn.ucai.fulicenter.view.DisplayUtils;
 
 /**
  * 设置界面
@@ -46,7 +42,7 @@ import cn.ucai.fulicenter.applib.controller.HXSDKHelper;
  * @author Administrator
  * 
  */
-public class SettingsActivity extends BaseActivity implements OnClickListener {
+public class SettingsActivity extends BaseActivity implements View.OnClickListener {
 
 	DemoHXSDKModel model;
 	/**
@@ -123,7 +119,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.fragment_personal_center);
+		setContentView(R.layout.fragment_conversation_settings);
+		DisplayUtils.initbackWithTitle(SettingsActivity.this,getResources().getString(R.string.set));
         rl_switch_notification = (RelativeLayout) findViewById(R.id.rl_switch_notification);
 		rl_switch_sound = (RelativeLayout) findViewById(R.id.rl_switch_sound);
 		rl_switch_vibrate = (RelativeLayout) findViewById(R.id.rl_switch_vibrate);
@@ -144,9 +141,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
 		
 		
 		logoutBtn = (Button) findViewById(R.id.btn_logout);
-		if(!TextUtils.isEmpty(EMChatManager.getInstance().getCurrentUser())){
-			logoutBtn.setText(getString(R.string.button_logout) + "(" + EMChatManager.getInstance().getCurrentUser() + ")");
-		}
+//		if(!TextUtils.isEmpty(EMChatManager.getInstance().getCurrentUser())){
+//			logoutBtn.setText(getString(R.string.button_logout) + "(" + EMChatManager.getInstance().getCurrentUser() + ")");
+//		}
 
 		textview1 = (TextView) findViewById(R.id.textview1);
 		textview2 = (TextView) findViewById(R.id.textview2);

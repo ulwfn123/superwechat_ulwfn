@@ -1,5 +1,6 @@
 package cn.ucai.fulicenter.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -8,12 +9,14 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import cn.ucai.fulicenter.DemoHXSDKHelper;
 import cn.ucai.fulicenter.R;
 
 /**
  * Created by Administrator on 2016/8/1.
  */
 public class FuliCenterManActivity extends BaseActivity {
+    public static final int ACTION_LOGIN =100;
     private static final String TAG = FuliCenterManActivity.class.getSimpleName();
     RadioButton rbNewGood;
     RadioButton rbBoutique;
@@ -98,11 +101,20 @@ public class FuliCenterManActivity extends BaseActivity {
                 index = 3;
                 break;
             case R.id.layout_personal_center:
-                index = 4;
+                if (DemoHXSDKHelper.getInstance().isLogined()) {
+                    index = 4;
+                } else {
+                    gotoLogin();//
+                }
                 break;
         }
         Log.e(TAG, "index = " + index+"  , currentIndex  = " + currentIndex);
         //  判断 点击下标
+        setmFragment();
+    }
+
+    private void setmFragment() {
+        Log.e(TAG, "index1231321 = " + index+"  , currentIndex123123  = " + currentIndex);
         if (index != currentIndex) {
             FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
             trx.hide(mFragment[currentIndex]);
@@ -114,6 +126,10 @@ public class FuliCenterManActivity extends BaseActivity {
             currentIndex = index;
         }
     }
+    // 跳转Activity
+    private void gotoLogin() {
+        startActivityForResult(new Intent(this, LoginActivity.class),ACTION_LOGIN);
+    }
 
 
     public void setRadioButtonStatus(int index) {
@@ -124,5 +140,33 @@ public class FuliCenterManActivity extends BaseActivity {
               mrbTabs[i].setChecked(false);
           }
       }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.e(TAG, "onActivityResultA");
+        if (requestCode == ACTION_LOGIN) {
+            if (DemoHXSDKHelper.getInstance().isLogined()) {
+
+            } else {
+                setRadioButtonStatus(currentIndex);
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG, "onRseume");
+        if (DemoHXSDKHelper.getInstance().isLogined()) {
+
+        } else {
+            index = currentIndex;
+            if (index == 4) {
+                index=0;
+            }
+            setmFragment();
+        }
     }
 }

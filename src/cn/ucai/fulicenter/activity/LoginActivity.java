@@ -120,6 +120,7 @@ public class LoginActivity extends BaseActivity {
 	public void login(View view) {
 		if (!CommonUtils.isNetWorkConnected(this)) {  //检查网络
 			Toast.makeText(this, R.string.network_isnot_available, Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "error=555555555555555" );
 			return;
 		}
 		currentUsername = usernameEditText.getText().toString().trim();
@@ -154,8 +155,10 @@ public class LoginActivity extends BaseActivity {
 			@Override
 			public void onSuccess() {
 				if (!progressShow) {
+                    Log.i(TAG, "error=3333333333");
 					return;
 				}
+                Log.i(TAG, "error=22222222222222222222" );
 				loginAppSever();
 //				// 更新当前用户的nickname 此方法的作用是在ios离线推送时能够显示用户nick
 //				boolean updatenick = EMChatManager.getInstance().updateCurrentUserNick(
@@ -185,7 +188,9 @@ public class LoginActivity extends BaseActivity {
 				}
 				runOnUiThread(new Runnable() {
 					public void run() {
-						pd.dismiss();
+						Log.e(TAG, "error111111111111111111=");
+                        Log.i("main", "1111");
+                        pd.dismiss();
 						Toast.makeText(getApplicationContext(), getString(R.string.Login_failed) + message,
 								Toast.LENGTH_SHORT).show();
 					}
@@ -221,11 +226,13 @@ public class LoginActivity extends BaseActivity {
 
 					@Override
 					public void onError(String error) {
-						Log.i(TAG, "error=" + error.toString());
-						pd.dismiss();
-						Toast.makeText(getApplicationContext(),
-								R.string.Login_failed, Toast.LENGTH_LONG).show();
-					}
+                        Log.i(TAG, "error=" + error.toString());
+                        pd.dismiss();
+                        Log.i("main", "2222");
+                        Toast.makeText(getApplicationContext(),
+                                R.string.Login_failed, Toast.LENGTH_LONG).show();
+                    }
+
 				});
 	}
 	//  用户的 个人资料 头像上传
@@ -275,7 +282,6 @@ public class LoginActivity extends BaseActivity {
 		FuliCenterApplication.currentUserNick = user.getMUserNick();
 		Log.e("main", "登录用户名 ===" + user);
 		new DownloadContactListTask(LoginActivity.this,currentUsername).excute();  //
-//		new DownloadGroupListTask(LoginActivity.this,currentUsername).excute(); //  群组中的头像下载
 
 		try {
 			// ** 第一次登录或者之前logout后再登录，加载所有本地群和回话
