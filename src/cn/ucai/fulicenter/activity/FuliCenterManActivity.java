@@ -1,6 +1,9 @@
 package cn.ucai.fulicenter.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -11,6 +14,7 @@ import android.widget.TextView;
 
 import cn.ucai.fulicenter.DemoHXSDKHelper;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.utils.Utils;
 
 /**
  * Created by Administrator on 2016/8/1.
@@ -33,12 +37,14 @@ public class FuliCenterManActivity extends BaseActivity {
     CategoryFragment mCategoryFragment;
     PersonalCenterFragment mPersonalCenterFragment;
 
+    updateCartNumReceiver mReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fulicenter_man);
         initView();
         inigFragment();
+        setListener();
         // 添加显示第一个fragment
         getSupportFragmentManager().beginTransaction().
                 add(R.id.fragment_container, mNewGoodFragment)
@@ -50,6 +56,10 @@ public class FuliCenterManActivity extends BaseActivity {
                 .show(mNewGoodFragment)
                 .commit();
 
+    }
+
+    private void setListener() {
+        setUpdateCartCountListener();  //更新购物车的角标
     }
 
     private void inigFragment() {
@@ -162,5 +172,41 @@ public class FuliCenterManActivity extends BaseActivity {
         }
         setmFragment();
         setRadioButtonStatus(currentIndex);
+    }
+
+    // 创建广播
+    private void setUpdateCartCountListener() {
+        mReceiver = new updateCartNumReceiver();
+        IntentFilter filter = new IntentFilter("update_cart_list");
+        registerReceiver(mReceiver, filter);
+    }
+
+    //  购物车的角标显示
+    private void updateCartNum() {
+        int count = Utils.sumCartCount();
+        if (!DemoHXSDKHelper.getInstance().isLogined() || count==0) {
+            tvCartHint.setVisibility(View.GONE);
+            tvCartHint.setText(String.valueOf(0));
+        }
+        tvCartHint.setText(String.valueOf(count));
+        tvCartHint.setVisibility(View.VISIBLE);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mReceiver != null) {
+            unregisterReceiver(mReceiver);
+
+        }
+    }
+
+    class updateCartNumReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateCartNum();
+        }
     }
 }

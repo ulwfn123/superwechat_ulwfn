@@ -343,8 +343,9 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
 						pd.dismiss();
 						FuliCenterApplication.getInstance().setUser(null);
 						FuliCenterApplication.getInstance().getUserMap().clear();
-						FuliCenterApplication.getInstance().getUserlist().clear();     //添加 用户 头像
-//						FuliCenterApplication.getInstance().getGroupList().clear();   //  添加群组成员 头像
+						FuliCenterApplication.getInstance().getUserlist().clear();     //
+						FuliCenterApplication.getInstance().getCartList().clear();     //清空 购物车
+						FuliCenterApplication.getInstance().setCollectCount(0);     // 清空收藏
 
 						// 重新显示登陆页面
 						finish();

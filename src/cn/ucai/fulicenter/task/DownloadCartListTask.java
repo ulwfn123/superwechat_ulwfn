@@ -3,6 +3,7 @@ package cn.ucai.fulicenter.task;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,6 @@ public class DownloadCartListTask {
     private final static String TAG = DownloadCartListTask.class.getSimpleName();
     String username;
     Context mContext;
-
     public DownloadCartListTask(Context context, String username) {
         mContext = context;
         this.username = username;
