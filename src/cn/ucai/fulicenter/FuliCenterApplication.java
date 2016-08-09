@@ -25,6 +25,7 @@ import java.util.Map;
 
 //import cn.ucai.fulicenter.bean.GroupAvatar;
 //import cn.ucai.fulicenter.bean.MemberUserAvatar;
+import cn.ucai.fulicenter.bean.CartBean;
 import cn.ucai.fulicenter.bean.UserAvatar;
 
 public class FuliCenterApplication extends Application {
@@ -46,8 +47,10 @@ public class FuliCenterApplication extends Application {
 	private Map<String, UserAvatar> userMap = new HashMap<String, UserAvatar>();
 	// 当前登录用户的收藏商品的 数量
 	private int collectCount;
+	// 全局的 当前登录用户的 购物车集合
+	private List<CartBean> cartList = new ArrayList<CartBean>();
 
-    public static FuliCenterApplication getInstance() {
+	public static FuliCenterApplication getInstance() {
 		return instance;
 	}
 
@@ -129,6 +132,14 @@ public class FuliCenterApplication extends Application {
 	public void logout(final boolean isGCM, final EMCallBack emCallBack) {
 		// 先调用sdk logout，在清理app中自己的数据
 		hxSDKHelper.logout(isGCM, emCallBack);
+	}
+
+	public List<CartBean> getCartList() {
+		return cartList;
+	}
+
+	public void setCartList(List<CartBean> cartList) {
+		this.cartList = cartList;
 	}
 
 	public UserAvatar getUser() {
