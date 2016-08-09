@@ -249,6 +249,35 @@ public class GoodDetailsActivity extends BaseActivity {
         oks.show(this);
     }
 
+    private void gooColect() {
+        if (DemoHXSDKHelper.getInstance().isLogined()) {
+            OkHttpUtils2<MessageBean> utils = new OkHttpUtils2<MessageBean>();
+            utils.setRequestUrl(I.REQUEST_DELETE_COLLECT)
+                    .addParam(I.Collect.USER_NAME,FuliCenterApplication.getInstance().getUserName() )
+                    .addParam(I.Collect.GOODS_ID, String.valueOf(mGoodDetail.getGoodsId()))
+                    .targetClass(MessageBean.class)
+                    .execute(new OkHttpUtils2.OnCompleteListener<MessageBean>() {
+                        @Override
+                        public void onSuccess(MessageBean result) {
+                            Log.e(TAG, "result=111111111111111111" + result);
+                            if (result != null && result.isSuccess()) {
+                                new DownloadCollectCountTask(mContext, FuliCenterApplication.getInstance().getUserName());
+                                sendStickyBroadcast(new Intent("update_collect_list"));
+                            } else {
+                                Log.e(TAG, "delete fail ");
+                            }
+                            undateCollectStatus();
+                            Toast.makeText(mContext, result.getMsg(), Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onError(String error) {
+                            Log.e(TAG, "error=" + error);
+                        }
+                    });
+        }
+    }
+
     class MyOnClickListener implements View.OnClickListener {
 
         @Override
@@ -260,7 +289,36 @@ public class GoodDetailsActivity extends BaseActivity {
                         final String userName = FuliCenterApplication.getInstance().getUserName();
                         deleteCollectStatus(userName, mGoodDetail.getGoodsId());
                     } else {
+                        //添加收藏
+                        OkHttpUtils2<MessageBean> utils = new OkHttpUtils2<MessageBean>();
+                        utils.setRequestUrl(I.REQUEST_ADD_COLLECT)
+                                .addParam(I.Collect.USER_NAME,FuliCenterApplication.getInstance().getUserName())
+                                .addParam(I.Collect.GOODS_ID,String.valueOf(mGoodDetail.getGoodsId()))
+                                .addParam(I.Collect.ADD_TIME,mGoodDetail.getAddTime()+"")
+                                .addParam(I.Collect.GOODS_ENGLISH_NAME,mGoodDetail.getGoodsEnglishName())
+                                .addParam(I.Collect.GOODS_IMG,mGoodDetail.getGoodsImg())
+                                .addParam(I.Collect.GOODS_THUMB,mGoodDetail.getGoodsThumb())
+                                .addParam(I.Collect.GOODS_NAME,mGoodDetail.getGoodsName())
+                                .targetClass(MessageBean.class)
+                                .execute(new OkHttpUtils2.OnCompleteListener<MessageBean>() {
+                                    @Override
+                                    public void onSuccess(MessageBean result) {
+                                        Log.e(TAG, "result=111111111111111111" + result);
+                                        if (result != null && result.isSuccess()) {
+                                            new DownloadCollectCountTask(mContext, FuliCenterApplication.getInstance().getUserName());
+                                            sendStickyBroadcast(new Intent("update_collect_list"));
+                                        } else {
+                                            Log.e(TAG, "delete fail ");
+                                        }
+                                        undateCollectStatus();
+                                        Toast.makeText(mContext, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                    }
 
+                                    @Override
+                                    public void onError(String error) {
+                                        Log.e(TAG, "error=" + error);
+                                    }
+                                });
                     }
                     break;
                 case R.id.iv_good_share:
@@ -268,6 +326,5 @@ public class GoodDetailsActivity extends BaseActivity {
             }
         }
     }
-
 
 }

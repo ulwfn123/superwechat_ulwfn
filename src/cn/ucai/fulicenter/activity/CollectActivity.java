@@ -3,6 +3,7 @@ package cn.ucai.fulicenter.activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -39,6 +40,7 @@ public class CollectActivity extends BaseActivity {
     int pageId = 0;
     int action =I.ACTION_DOWNLOAD ;
     int  catId = 0;
+    UdateCollectListReciver mReceiver;
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -52,9 +54,11 @@ public class CollectActivity extends BaseActivity {
     }
 
     private void serListener() {
-//        setPullDownRefreshListener(); //下拉
+        setPullDownRefreshListener(); //下拉
         setPullUpRefreshListener(); // 上拉
+        setUpdateCollectiListListener();
     }
+
     //   上拉刷新
     private void setPullUpRefreshListener() {
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -101,6 +105,7 @@ public class CollectActivity extends BaseActivity {
             }
         });
     }
+
     //  获取数据 ，判断数据下标是否超过集合的长度
     private void initData() {
         String userName = FuliCenterApplication.getInstance().getUserName();
@@ -140,6 +145,7 @@ public class CollectActivity extends BaseActivity {
             }
         });
     }
+
     // 服务端请求下载新品首页商品信息
     private void findCollectList(OkHttpUtils2.OnCompleteListener<CollectBean[]> listener) {
         OkHttpUtils2<CollectBean[]> utils = new OkHttpUtils2<CollectBean[]>();
@@ -168,13 +174,28 @@ public class CollectActivity extends BaseActivity {
         tvHint = (TextView)findViewById(R.id.tv_refresh_hint);  // 图片加载
 
     }
+
+    private void setUpdateCollectiListListener() {
+        mReceiver = new UdateCollectListReciver();
+        IntentFilter filter = new IntentFilter("update_collect_list");
+        registerReceiver(mReceiver, filter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mReceiver != null) {
+            unregisterReceiver(mReceiver);
+        }
+    }
+
     // 创建  广播接收器
     class UdateCollectListReciver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            initData();
 
         }
     }
-
 }
