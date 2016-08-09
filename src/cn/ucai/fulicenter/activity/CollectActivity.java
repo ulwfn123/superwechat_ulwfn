@@ -1,5 +1,8 @@
 package cn.ucai.fulicenter.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -49,7 +52,7 @@ public class CollectActivity extends BaseActivity {
     }
 
     private void serListener() {
-        setPullDownRefreshListener(); //下拉
+//        setPullDownRefreshListener(); //下拉
         setPullUpRefreshListener(); // 上拉
     }
     //   上拉刷新
@@ -150,7 +153,7 @@ public class CollectActivity extends BaseActivity {
 
     private void initView() {
 
-        DisplayUtils.initbackWithTitle(mContext, "收藏的宝贝");
+//        DisplayUtils.initbackWithTitle(mContext, "收藏的宝贝");
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.srl_collect);
         mSwipeRefreshLayout.setColorSchemeColors(
                 R.color.google_blue,R.color.google_yellow,
@@ -164,5 +167,13 @@ public class CollectActivity extends BaseActivity {
         mRecyclerView.setAdapter(mAdapter);
         tvHint = (TextView)findViewById(R.id.tv_refresh_hint);  // 图片加载
 
+    }
+    // 创建  广播接收器
+    class UdateCollectListReciver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+        }
     }
 }

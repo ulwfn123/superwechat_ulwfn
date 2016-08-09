@@ -1,7 +1,11 @@
 package cn.ucai.fulicenter.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
@@ -9,11 +13,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import cn.ucai.fulicenter.D;
+import cn.ucai.fulicenter.DemoHXSDKHelper;
+import cn.ucai.fulicenter.FuliCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.bean.AlbumsBean;
 import cn.ucai.fulicenter.bean.GoodDetailsBean;
+import cn.ucai.fulicenter.bean.MessageBean;
 import cn.ucai.fulicenter.data.OkHttpUtils2;
+import cn.ucai.fulicenter.db.DemoDBManager;
+import cn.ucai.fulicenter.task.DownloadCollectCountTask;
 import cn.ucai.fulicenter.view.DisplayUtils;
 import cn.ucai.fulicenter.view.FlowIndicator;
 import cn.ucai.fulicenter.view.SlideAutoLoopView;
@@ -32,6 +41,7 @@ public class GoodDetailsActivity extends BaseActivity {
     WebView wvGoodBrief;
     GoodDetailsBean mGoodDetail;
     int mGooId;
+    boolean isCollect;
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -40,6 +50,13 @@ public class GoodDetailsActivity extends BaseActivity {
         mContext = this;
         initView();
         initData();
+        setListemer();
+
+    }
+
+    private void setListemer() {
+        MyOnClickListener listener = new MyOnClickListener();
+        ivCollect.setOnClickListener(listener);
 
     }
 
@@ -128,5 +145,95 @@ public class GoodDetailsActivity extends BaseActivity {
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         settings.setBuiltInZoomControls(true);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initCollecStatus();
+    }
+    // 查询 是否已收藏
+    private void initCollecStatus() {
+        final String userName = FuliCenterApplication.getInstance().getUserName();
+        if (DemoHXSDKHelper.getInstance().isLogined()) {  //判断是否为登录状态
+            OkHttpUtils2<MessageBean> utils = new OkHttpUtils2<MessageBean>();
+            utils.setRequestUrl(I.REQUEST_IS_COLLECT)
+                    .addParam(I.Collect.USER_NAME, userName)
+                    .addParam(I.Collect.GOODS_ID, mGooId + "")
+                    .targetClass(MessageBean.class)
+                    .execute(new OkHttpUtils2.OnCompleteListener<MessageBean>() {
+                        @Override
+                        public void onSuccess(MessageBean result) {
+                            Log.e(TAG, "result=" + result);
+                            if (result != null && result.isSuccess()) {
+                                isCollect = true;
+                            } else {
+                                isCollect = false;
+                            }
+                            undateCollectStatus();
+                        }
+                        @Override
+                        public void onError(String error) {
+                            Log.e(TAG, "error=" + error);
+                            ivCollect.setImageResource(R.drawable.bg_collect_in);
+                        }
+                    });
+        }
+    }
+
+    //判断商品是否 以收藏是否boolear
+    private void  undateCollectStatus() {
+        if (isCollect) {
+            ivCollect.setImageResource(R.drawable.bg_collect_out);
+        } else {
+            ivCollect.setImageResource(R.drawable.bg_collect_in);
+        }
+    }
+
+    // 点击   取消收藏d的 方法
+    private void deleteCollectStatus(String user, int getGoodsId) {
+         //  判断是否是登录状态
+            Log.e(TAG, "121111111111111111+" +mGooId + "删除的名称" + FuliCenterApplication.getInstance().getUserName());
+            OkHttpUtils2<MessageBean> utils = new OkHttpUtils2<MessageBean>();
+            utils.setRequestUrl(I.REQUEST_DELETE_COLLECT)
+                    .addParam(I.Collect.USER_NAME, user)
+                    .addParam(I.Collect.GOODS_ID, String.valueOf(getGoodsId))
+                    .targetClass(MessageBean.class)
+                    .execute(new OkHttpUtils2.OnCompleteListener<MessageBean>() {
+                        @Override
+                        public void onSuccess(MessageBean result) {
+                            Log.e(TAG, "result=111111111111111111" + result);
+                            if (result != null && result.isSuccess()) {
+                                new DownloadCollectCountTask(mContext, FuliCenterApplication.getInstance().getUserName());
+                            } else {
+                                Log.e(TAG, "delete fail ");
+                            }
+                            Toast.makeText(mContext, result.getMsg(), Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onError(String error) {
+                            Log.e(TAG, "error=" + error);
+                        }
+                    });
+    }
+
+    class MyOnClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.iv_good_collect:
+                    if (isCollect) {
+                        // 删除收藏
+                        final String userName = FuliCenterApplication.getInstance().getUserName();
+                        deleteCollectStatus(userName, mGoodDetail.getGoodsId());
+                    } else {
+
+                    }
+                    break;
+            }
+        }
+    }
+
 
 }
