@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ import java.util.List;
 
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.bean.CartBean;
+import cn.ucai.fulicenter.task.UpdateCartTask;
 import cn.ucai.fulicenter.utils.ImageUtils;
 
 /**
@@ -66,6 +68,13 @@ public class CartAdapter extends RecyclerView.Adapter<ViewHolder> {
                 mCarViewHolder.tvName.setText(cart.getUserName());
                 mCarViewHolder.tvjiage.setText(cart.getGoods().getCurrencyPrice());
             }
+            mCarViewHolder.mCartBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    cart.setChecked(b);
+                    new UpdateCartTask(mContext,cart).excute();
+                }
+            });
             mCarViewHolder.ivadd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -132,13 +141,13 @@ public class CartAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
-//    class UpCartShangPing implements View.OnClickListener {
-//
-//        @Override
-//        public void onClick(View view) {
-//
-//        }
-//    }
+    class UpCartShangPing implements View.OnClickListener {
+
+        @Override
+        public void onClick(View view) {
+
+        }
+    }
 
 
 

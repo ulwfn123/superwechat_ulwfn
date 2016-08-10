@@ -346,7 +346,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
 						FuliCenterApplication.getInstance().getUserlist().clear();     //
 						FuliCenterApplication.getInstance().getCartList().clear();     //清空 购物车
 						FuliCenterApplication.getInstance().setCollectCount(0);     // 清空收藏
-
+						sendStickyBroadcast(new Intent("update_user")); // 退出登录 ，发送广播，
 						// 重新显示登陆页面
 						finish();
 						startActivity(new Intent(SettingsActivity.this, LoginActivity.class));

@@ -134,12 +134,12 @@ public class CartFragment extends Fragment {
             }
             tvnothing.setVisibility(View.GONE);
             mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-            sunPrice();
         } else {
             mAdapter.setMore(false);
             tvnothing.setVisibility(View.VISIBLE);
             mSwipeRefreshLayout.setVisibility(View.GONE);
         }
+        sunPrice(); // 计算 购物车的商品总价
     }
 
     //   属性初始化
@@ -187,6 +187,7 @@ public class CartFragment extends Fragment {
     private void setUpdateCartListerner() {
         mReceiver = new UpdateCartRecriver();
         IntentFilter filter = new IntentFilter("update_cart_list");
+        filter.addAction("update_user");
         mContext.registerReceiver(mReceiver,filter);
     }
 

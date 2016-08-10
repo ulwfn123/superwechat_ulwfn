@@ -21,6 +21,7 @@ import cn.ucai.fulicenter.utils.Utils;
  */
 public class FuliCenterManActivity extends BaseActivity {
     public static final int ACTION_LOGIN =100;
+    public static final int ACTION_LOGIN_CART =200;
     private static final String TAG = FuliCenterManActivity.class.getSimpleName();
     RadioButton rbNewGood;
     RadioButton rbBoutique;
@@ -95,9 +96,6 @@ public class FuliCenterManActivity extends BaseActivity {
         mrbTabs[4] = rbPersonalCenter;
 
         mNewGoodFragment = new NewGoodFragment();
-
-
-
     }
 
     public void onChecaedChange(View view) {
@@ -112,13 +110,17 @@ public class FuliCenterManActivity extends BaseActivity {
                 index = 2;
                 break;
             case R.id.layout_cart:
-                index = 3;
+                if (DemoHXSDKHelper.getInstance().isLogined()) {
+                    index = 3;
+                } else {
+                    gotoLogin(ACTION_LOGIN_CART);
+                }
                 break;
             case R.id.layout_personal_center:
                 if (DemoHXSDKHelper.getInstance().isLogined()) {
                     index = 4;
                 } else {
-                    gotoLogin();//
+                    gotoLogin(ACTION_LOGIN);
                 }
                 break;
         }
@@ -140,9 +142,9 @@ public class FuliCenterManActivity extends BaseActivity {
             currentIndex = index;
         }
     }
-    // 跳转Activity
-    private void gotoLogin() {
-        startActivityForResult(new Intent(this, LoginActivity.class),ACTION_LOGIN);
+    // 跳转到登录Activity
+    private void gotoLogin(int action) {
+        startActivityForResult(new Intent(this, LoginActivity.class),action);
     }
 
 
@@ -160,9 +162,12 @@ public class FuliCenterManActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.e(TAG, "onActivityResultA");
-        if (requestCode == ACTION_LOGIN) {
-            if (DemoHXSDKHelper.getInstance().isLogined()) {
+        if (DemoHXSDKHelper.getInstance().isLogined()) {
+            if (requestCode == ACTION_LOGIN) {
                 index = 4;
+            }
+            if (requestCode == ACTION_LOGIN_CART) {
+                index =3;
             }
         }
     }
@@ -182,18 +187,21 @@ public class FuliCenterManActivity extends BaseActivity {
     private void setUpdateCartCountListener() {
         mReceiver = new updateCartNumReceiver();
         IntentFilter filter = new IntentFilter("update_cart_list");
+        filter.addAction("update_user");
         registerReceiver(mReceiver, filter);
     }
 
     //  购物车的角标显示
     private void updateCartNum() {
         int count = Utils.sumCartCount();
-        if (!DemoHXSDKHelper.getInstance().isLogined() || count==0) {
+        Log.e(TAG, "111111111111222222222222222");
+        if (!DemoHXSDKHelper.getInstance().isLogined() || count == 0) {
             tvCartHint.setVisibility(View.GONE);
             tvCartHint.setText(String.valueOf(0));
+        } else {
+            tvCartHint.setText(String.valueOf(count));
+            tvCartHint.setVisibility(View.VISIBLE);
         }
-        tvCartHint.setText(String.valueOf(count));
-        tvCartHint.setVisibility(View.VISIBLE);
 
     }
 
