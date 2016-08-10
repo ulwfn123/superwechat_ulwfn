@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     <RelativeLayout
+
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/white">
@@ -13,7 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
-            android:text="总价格：$888.88"
+            android:text="总价格：￥888.88"
             android:textColor="@color/main_orange"
             android:textSize="18sp"/>
         <TextView
@@ -21,9 +22,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/tv_cart_frag_pc"
-            android:layout_below="@+id/tv_cart_frag_pc"
+            android:layout_below="@id/tv_cart_frag_pc"
             android:layout_marginTop="5dp"
-            android:text="节省：$300"
+            android:text="节省：￥300"
             android:textColor="@color/main_orange"
             android:textSize="18sp"/>
         <TextView
@@ -56,4 +57,13 @@
             </android.support.v7.widget.RecyclerView>
         </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
+    <TextView
+        android:id="@+id/tv_nothing"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="什么都么有"
+        android:textColor="@color/orange"
+        android:textSize="18dp"/>
 </LinearLayout>

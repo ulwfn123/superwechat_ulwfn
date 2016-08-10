@@ -1,5 +1,9 @@
 package cn.ucai.fulicenter.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,6 +26,7 @@ import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.adapter.CartAdapter;
 import cn.ucai.fulicenter.bean.BoutiqueBean;
 import cn.ucai.fulicenter.bean.CartBean;
+import cn.ucai.fulicenter.bean.GoodDetailsBean;
 import cn.ucai.fulicenter.data.OkHttpUtils2;
 import cn.ucai.fulicenter.utils.Utils;
 
@@ -40,6 +45,8 @@ public class CartFragment extends Fragment {
     TextView tvHint;
 
     TextView tvSumPrice,tvSavePrice,tvSuy;
+    TextView tvnothing;
+    UpdateCartRecriver mReceiver;
 
     int pageId = 1;
     int action =I.ACTION_DOWNLOAD;
@@ -59,6 +66,8 @@ public class CartFragment extends Fragment {
     private void serListener() {
         setPullDownRefreshListener(); //下拉
         setPullUpRefreshListener(); // 上拉
+        setUpdateCartListerner();
+
     }
     //   上拉刷新
     private void setPullUpRefreshListener() {
@@ -123,8 +132,11 @@ public class CartFragment extends Fragment {
             if (mCarList.size() < I.PAGE_SIZE_DEFAULT) {
                 mAdapter.setMore(false);
             }
+            tvnothing.setVisibility(View.GONE);
+            sunPrice();
         } else {
             mAdapter.setMore(false);
+            tvnothing.setVisibility(View.VISIBLE);
         }
     }
 
@@ -146,6 +158,53 @@ public class CartFragment extends Fragment {
         tvSumPrice = (TextView) layout.findViewById(R.id.tv_cart_frag_pc);
         tvSavePrice = (TextView) layout.findViewById(R.id.tv_cart_frag_jueyue);
         tvSuy = (TextView) layout.findViewById(R.id.tv_cart_frag_buy);
+        tvnothing = (TextView) layout.findViewById(R.id.tv_nothing);
+        tvnothing.setVisibility(View.VISIBLE);
     }
 
+    private void sunPrice() {
+        if (mCarList != null && mCarList.size() > 0) {
+            int sumPrice = 0;
+            int rankPrice = 0;
+            for (CartBean cart : mCarList) {
+                final GoodDetailsBean good = cart.getGoods();
+                if (good != null && cart.isChecked()) {
+                    sumPrice += convertPrice(good.getCurrencyPrice())*cart.getCount();
+                    rankPrice += convertPrice(good.getRankPrice())*cart.getCount();
+                }
+            }
+            tvSumPrice.setText("合计：￥" + sumPrice);
+            tvSavePrice.setText("节省：￥" + (sumPrice - rankPrice));
+        } else {
+            tvSumPrice.setText("合计：￥00.00");
+            tvSavePrice.setText("节省：￥00.00");
+        }
+    }
+
+    private void setUpdateCartListerner() {
+        mReceiver = new UpdateCartRecriver();
+        IntentFilter filter = new IntentFilter("update_cart-list");
+        mContext.registerReceiver(mReceiver,filter);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mReceiver != null) {
+            mContext.unregisterReceiver(mReceiver);
+        }
+    }
+
+    private int convertPrice(String price) {
+        price = price.substring(price.indexOf("￥") + 1);
+        return Integer.valueOf(price);
+    }
+
+    class UpdateCartRecriver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            initData();
+        }
+    }
 }

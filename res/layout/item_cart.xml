@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_cart"
     android:layout_width="match_parent"
-    android:layout_height="45dp"
+    android:layout_height="70dp"
     android:background="@color/white">
     <CheckBox
         android:id="@+id/cb_cart_selected"
@@ -15,17 +15,19 @@
         android:id="@+id/iv_cart_good_avatar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/cb_cart_selected"
         android:src="@drawable/default_avatar"/>
     <TextView
         android:id="@+id/tv_cart_good_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/iv_cart_good_avatar"
         android:lines="1"
         android:paddingRight="60dp"
-        android:text="商品名称商品名称商品名称"/>
+        android:text="商品名称商品名称商品名称"
+        android:textSize="15dp"/>
     <ImageView
         android:id="@+id/iv_cart_add"
         android:layout_width="wrap_content"
