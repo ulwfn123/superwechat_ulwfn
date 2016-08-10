@@ -36,6 +36,7 @@ public class FuliCenterManActivity extends BaseActivity {
     BoutiqueFragment mBoutiqueAdapter;
     CategoryFragment mCategoryFragment;
     PersonalCenterFragment mPersonalCenterFragment;
+    CartFragment mCartFragment;
 
     updateCartNumReceiver mReceiver;
     @Override
@@ -67,10 +68,13 @@ public class FuliCenterManActivity extends BaseActivity {
         mBoutiqueAdapter = new BoutiqueFragment();
         mCategoryFragment = new CategoryFragment();
         mPersonalCenterFragment = new PersonalCenterFragment();
+        mCartFragment = new CartFragment();
+
         mFragment = new Fragment[5];
         mFragment[0] = mNewGoodFragment;
         mFragment[1] = mBoutiqueAdapter;
         mFragment[2] = mCategoryFragment;
+        mFragment[3] = mCartFragment;
         mFragment[4] = mPersonalCenterFragment;
 
     }
@@ -81,8 +85,8 @@ public class FuliCenterManActivity extends BaseActivity {
         rbCategory = (RadioButton) findViewById(R.id.layout_category);
         rbCart = (RadioButton) findViewById(R.id.layout_cart);
         rbPersonalCenter = (RadioButton) findViewById(R.id.layout_personal_center);
-
         tvCartHint = (TextView) findViewById(R.id.tvCarHint);
+
         mrbTabs = new RadioButton[5];
         mrbTabs[0] = rbNewGood;
         mrbTabs[1] = rbBoutique;

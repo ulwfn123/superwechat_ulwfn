@@ -48,7 +48,7 @@ public class FuliCenterApplication extends Application {
 	// 当前登录用户的收藏商品的 数量
 	private int collectCount;
 	// 全局的 当前登录用户的 购物车集合
-	private List<CartBean> cartList = new ArrayList<CartBean>();
+	private ArrayList<CartBean> cartList = new ArrayList<CartBean>();
 
 	public static FuliCenterApplication getInstance() {
 		return instance;
@@ -138,7 +138,7 @@ public class FuliCenterApplication extends Application {
 		return cartList;
 	}
 
-	public void setCartList(List<CartBean> cartList) {
+	public void setCartList(ArrayList<CartBean> cartList) {
 		this.cartList = cartList;
 	}
 
