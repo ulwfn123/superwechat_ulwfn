@@ -1,7 +1,6 @@
 package cn.ucai.fulicenter.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
@@ -9,21 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.ucai.fulicenter.D;
-import cn.ucai.fulicenter.FuliCenterApplication;
-import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
-import cn.ucai.fulicenter.activity.BoutiqueChildActivity;
-import cn.ucai.fulicenter.bean.BoutiqueBean;
 import cn.ucai.fulicenter.bean.CartBean;
 import cn.ucai.fulicenter.utils.ImageUtils;
-import cn.ucai.fulicenter.view.FooterViewHolder;
 
 /**
  * Created by Administrator on 2016/8/1.
@@ -54,7 +46,12 @@ public class CartAdapter extends RecyclerView.Adapter<ViewHolder> {
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         ViewHolder holder = new CarViewHolder(inflater.inflate(R.layout.item_cart, parent, false));
+//        setListener();
         return holder;
+    }
+
+    private void setListener() {
+
     }
 
     @Override
@@ -63,10 +60,26 @@ public class CartAdapter extends RecyclerView.Adapter<ViewHolder> {
             mCarViewHolder = (CarViewHolder) holder;
             final CartBean cart = mCareList.get(position);
             mCarViewHolder.mCartBox.setChecked(cart.isChecked());
-            ImageUtils.setGoodThumb(mContext, mCarViewHolder.ivCartThumb,cart.getGoods().getGoodsThumb());
-            mCarViewHolder.tvShuliang.setText("("+cart.getCount()+")");
-            mCarViewHolder.tvName.setText(cart.getUserName());
-            mCarViewHolder.tvjiage.setText(cart.getGoods().getCurrencyPrice());
+            if (cart.getGoods()!= null) {
+                ImageUtils.setGoodThumb(mContext, mCarViewHolder.ivCartThumb,cart.getGoods().getGoodsThumb());
+                mCarViewHolder.tvShuliang.setText("("+cart.getCount()+")");
+                mCarViewHolder.tvName.setText(cart.getUserName());
+                mCarViewHolder.tvjiage.setText(cart.getGoods().getCurrencyPrice());
+            }
+            mCarViewHolder.ivadd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mCarViewHolder.tvShuliang.setText(String.valueOf(cart.getCount()+1));
+                    mCareList.add(cart);
+                }
+            });
+            mCarViewHolder.ivdelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mCarViewHolder.tvShuliang.setText(String.valueOf(cart.getCount()-1));
+                    mCareList.remove(cart);
+                }
+            });
         }
     }
 
@@ -118,4 +131,15 @@ public class CartAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         }
     }
+
+//    class UpCartShangPing implements View.OnClickListener {
+//
+//        @Override
+//        public void onClick(View view) {
+//
+//        }
+//    }
+
+
+
 }

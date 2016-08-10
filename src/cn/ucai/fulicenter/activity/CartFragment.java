@@ -133,10 +133,12 @@ public class CartFragment extends Fragment {
                 mAdapter.setMore(false);
             }
             tvnothing.setVisibility(View.GONE);
+            mSwipeRefreshLayout.setVisibility(View.VISIBLE);
             sunPrice();
         } else {
             mAdapter.setMore(false);
             tvnothing.setVisibility(View.VISIBLE);
+            mSwipeRefreshLayout.setVisibility(View.GONE);
         }
     }
 
@@ -155,6 +157,7 @@ public class CartFragment extends Fragment {
         mAdapter = new CartAdapter(mContext, mCarList);
         mRecyclerView.setAdapter(mAdapter);
         tvHint = (TextView) layout.findViewById(R.id.tv_refresh_hint);  // 图片加载
+
         tvSumPrice = (TextView) layout.findViewById(R.id.tv_cart_frag_pc);
         tvSavePrice = (TextView) layout.findViewById(R.id.tv_cart_frag_jueyue);
         tvSuy = (TextView) layout.findViewById(R.id.tv_cart_frag_buy);
@@ -183,8 +186,13 @@ public class CartFragment extends Fragment {
 
     private void setUpdateCartListerner() {
         mReceiver = new UpdateCartRecriver();
-        IntentFilter filter = new IntentFilter("update_cart-list");
+        IntentFilter filter = new IntentFilter("update_cart_list");
         mContext.registerReceiver(mReceiver,filter);
+    }
+
+    private int convertPrice(String price) {
+        price = price.substring(price.indexOf("￥") + 1);
+        return Integer.valueOf(price);
     }
 
     @Override
@@ -195,11 +203,6 @@ public class CartFragment extends Fragment {
         }
     }
 
-    private int convertPrice(String price) {
-        price = price.substring(price.indexOf("￥") + 1);
-        return Integer.valueOf(price);
-    }
-
     class UpdateCartRecriver extends BroadcastReceiver {
 
         @Override
@@ -207,4 +210,5 @@ public class CartFragment extends Fragment {
             initData();
         }
     }
+
 }

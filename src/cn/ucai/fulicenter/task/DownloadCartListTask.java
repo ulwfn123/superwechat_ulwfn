@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class DownloadCartListTask {
     public DownloadCartListTask(String username) {
         this.username = username;
     }
-    // 使用用户名 下载用户好友信息
+    //  下载 购物车商品信息
     public void excute() {
         OkHttpUtils2<CartBean[]> utils = new OkHttpUtils2<CartBean[]>();
         utils.setRequestUrl(I.REQUEST_FIND_CARTS)
@@ -60,11 +61,11 @@ public class DownloadCartListTask {
                                                 @Override
                                                 public void onSuccess(GoodDetailsBean result) {
                                                     cart.setGoods(result);
+                                                    mContext.sendStickyBroadcast(new Intent("update_cart_list"));
                                                 }
-
                                                 @Override
                                                 public void onError(String error) {
-
+                                                    Log.i("main", "下载购物车数据失败");
                                                 }
                                             });
                                     cartList.add(cart);
