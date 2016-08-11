@@ -36,6 +36,7 @@ public class UpdateCartTask {
                 updateCart(new OkHttpUtils2.OnCompleteListener<MessageBean>() {
                     @Override
                     public void onSuccess(MessageBean result) {
+                        Log.e(TAG, "更新购物车信息成功");
                         if (result != null && result.isSuccess()) {
                             cartList.set(cartList.indexOf(mCart), mCart);
                             mContext.sendStickyBroadcast(new Intent("update_cart_list")); //发送广播
@@ -43,16 +44,43 @@ public class UpdateCartTask {
                     }
                     @Override
                     public void onError(String error) {
-
+                        Log.e(TAG, "更新购物车信息失败");
                     }
                 });
             } else {
                 //删除购物车数据
-
+                deleteCart(new OkHttpUtils2.OnCompleteListener<MessageBean>() {
+                    @Override
+                    public void onSuccess(MessageBean result) {
+                        Log.e(TAG, "删除购物车信息成功");
+                        if (result != null && result.isSuccess()) {
+                            cartList.remove(cartList.indexOf(mCart));
+                            mContext.sendStickyBroadcast(new Intent("update_cart_list"));
+                        }
+                    }
+                    @Override
+                    public void onError(String error) {
+                        Log.e(TAG, "删除购物车信息失败"+error);
+                    }
+                });
             }
         } else {
             //新增购物车数据
-
+            addCart(new OkHttpUtils2.OnCompleteListener<MessageBean>() {
+                @Override
+                public void onSuccess(MessageBean result) {
+                    Log.e(TAG, "添加购物车信息成功");
+                    if (result != null && result.isSuccess()) {
+                        mCart.setId(Integer.valueOf(result.getMsg()));
+                        cartList.add(mCart);
+                        mContext.sendStickyBroadcast(new Intent("update_cart_list"));
+                    }
+                }
+                @Override
+                public void onError(String error) {
+                    Log.e(TAG, "添加购物车信息失败"+error);
+                }
+            });
         }
     }
     // 更新购物车 信息
@@ -63,16 +91,28 @@ public class UpdateCartTask {
                 .addParam(I.Cart.COUNT,String.valueOf(mCart.getCount()))
                 .addParam(I.Cart.IS_CHECKED,String.valueOf(mCart.isChecked()))
                 .targetClass(MessageBean.class)
-                .execute(new OkHttpUtils2.OnCompleteListener<MessageBean>() {
-                    @Override
-                    public void onSuccess(MessageBean result) {
-
-                    }
-
-                    @Override
-                    public void onError(String error) {
-
-                    }
-                });
+                .execute(listener);
+    }
+    // 删除购物车数据
+    private void deleteCart(OkHttpUtils2.OnCompleteListener<MessageBean> listener) {
+        OkHttpUtils2<MessageBean> utils = new OkHttpUtils2<MessageBean>();
+        utils.setRequestUrl(I.REQUEST_DELETE_CART)
+                .addParam(I.Cart.ID, mCart.getId() + "")
+                .addParam(I.Cart.COUNT, String.valueOf(mCart.getCount()))
+                .addParam(I.Cart.IS_CHECKED, String.valueOf(mCart.isChecked()))
+                .targetClass(MessageBean.class)
+                .execute(listener);
+    }
+    // 添加购物车数据
+    private void addCart(OkHttpUtils2.OnCompleteListener<MessageBean> listener) {
+        OkHttpUtils2<MessageBean> utils = new OkHttpUtils2<MessageBean>();
+        utils.setRequestUrl(I.REQUEST_ADD_CART)
+                .addParam(I.Cart.ID, mCart.getId() + "")
+                .addParam(I.Cart.GOODS_ID, String.valueOf(mCart.getGoods().getGoodsId()))
+                .addParam(I.Cart.COUNT, String.valueOf(mCart.getCount()))
+                .addParam(I.Cart.IS_CHECKED, String.valueOf(mCart.isChecked()))
+                .addParam(I.Cart.USER_NAME,FuliCenterApplication.getInstance().getUserName())
+                .targetClass(MessageBean.class)
+                .execute(listener);
     }
 }

@@ -20,6 +20,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.ucai.fulicenter.DemoHXSDKHelper;
 import cn.ucai.fulicenter.FuliCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
@@ -67,7 +68,7 @@ public class CartFragment extends Fragment {
         setPullDownRefreshListener(); //下拉
         setPullUpRefreshListener(); // 上拉
         setUpdateCartListerner();
-
+        setBuyListener();  //购买按键监听
     }
     //   上拉刷新
     private void setPullUpRefreshListener() {
@@ -163,6 +164,18 @@ public class CartFragment extends Fragment {
         tvSuy = (TextView) layout.findViewById(R.id.tv_cart_frag_buy);
         tvnothing = (TextView) layout.findViewById(R.id.tv_nothing);
         tvnothing.setVisibility(View.VISIBLE);
+
+    }
+    // 购买按钮 的监听
+    private void setBuyListener() {
+        if (DemoHXSDKHelper.getInstance().isLogined()) {
+            tvSuy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(mContext,BuyActivity.class));
+                }
+            });
+        }
     }
 
     private void sunPrice() {
@@ -190,6 +203,7 @@ public class CartFragment extends Fragment {
         filter.addAction("update_user");
         mContext.registerReceiver(mReceiver,filter);
     }
+
 
     private int convertPrice(String price) {
         price = price.substring(price.indexOf("￥") + 1);

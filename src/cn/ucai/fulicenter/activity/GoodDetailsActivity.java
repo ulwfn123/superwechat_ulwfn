@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import cn.ucai.fulicenter.D;
@@ -20,11 +22,13 @@ import cn.ucai.fulicenter.FuliCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.bean.AlbumsBean;
+import cn.ucai.fulicenter.bean.CartBean;
 import cn.ucai.fulicenter.bean.GoodDetailsBean;
 import cn.ucai.fulicenter.bean.MessageBean;
 import cn.ucai.fulicenter.data.OkHttpUtils2;
 import cn.ucai.fulicenter.db.DemoDBManager;
 import cn.ucai.fulicenter.task.DownloadCollectCountTask;
+import cn.ucai.fulicenter.task.UpdateCartTask;
 import cn.ucai.fulicenter.view.DisplayUtils;
 import cn.ucai.fulicenter.view.FlowIndicator;
 import cn.ucai.fulicenter.view.SlideAutoLoopView;
@@ -250,11 +254,21 @@ public class GoodDetailsActivity extends BaseActivity {
     }
 
     private void gooColect() {
-        if (DemoHXSDKHelper.getInstance().isLogined()) {
+        if (isCollect) {
+            // 删除收藏
+            final String userName = FuliCenterApplication.getInstance().getUserName();
+            deleteCollectStatus(userName, mGoodDetail.getGoodsId());
+        } else {
+            //添加收藏
             OkHttpUtils2<MessageBean> utils = new OkHttpUtils2<MessageBean>();
-            utils.setRequestUrl(I.REQUEST_DELETE_COLLECT)
-                    .addParam(I.Collect.USER_NAME,FuliCenterApplication.getInstance().getUserName() )
-                    .addParam(I.Collect.GOODS_ID, String.valueOf(mGoodDetail.getGoodsId()))
+            utils.setRequestUrl(I.REQUEST_ADD_COLLECT)
+                    .addParam(I.Collect.USER_NAME,FuliCenterApplication.getInstance().getUserName())
+                    .addParam(I.Collect.GOODS_ID,String.valueOf(mGoodDetail.getGoodsId()))
+                    .addParam(I.Collect.ADD_TIME,mGoodDetail.getAddTime()+"")
+                    .addParam(I.Collect.GOODS_ENGLISH_NAME,mGoodDetail.getGoodsEnglishName())
+                    .addParam(I.Collect.GOODS_IMG,mGoodDetail.getGoodsImg())
+                    .addParam(I.Collect.GOODS_THUMB,mGoodDetail.getGoodsThumb())
+                    .addParam(I.Collect.GOODS_NAME,mGoodDetail.getGoodsName())
                     .targetClass(MessageBean.class)
                     .execute(new OkHttpUtils2.OnCompleteListener<MessageBean>() {
                         @Override
@@ -276,6 +290,58 @@ public class GoodDetailsActivity extends BaseActivity {
                         }
                     });
         }
+//        if (DemoHXSDKHelper.getInstance().isLogined()) {
+//            OkHttpUtils2<MessageBean> utils = new OkHttpUtils2<MessageBean>();
+//            utils.setRequestUrl(I.REQUEST_DELETE_COLLECT)
+//                    .addParam(I.Collect.USER_NAME,FuliCenterApplication.getInstance().getUserName() )
+//                    .addParam(I.Collect.GOODS_ID, String.valueOf(mGoodDetail.getGoodsId()))
+//                    .targetClass(MessageBean.class)
+//                    .execute(new OkHttpUtils2.OnCompleteListener<MessageBean>() {
+//                        @Override
+//                        public void onSuccess(MessageBean result) {
+//                            Log.e(TAG, "result=111111111111111111" + result);
+//                            if (result != null && result.isSuccess()) {
+//                                new DownloadCollectCountTask(mContext, FuliCenterApplication.getInstance().getUserName());
+//                                sendStickyBroadcast(new Intent("update_collect_list"));
+//                            } else {
+//                                Log.e(TAG, "delete fail ");
+//                            }
+//                            undateCollectStatus();
+//                            Toast.makeText(mContext, result.getMsg(), Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                        @Override
+//                        public void onError(String error) {
+//                            Log.e(TAG, "error=" + error);
+//                        }
+//                    });
+//        }
+    }
+
+    private void addCart() {
+        Log.e(TAG, "选择物品添加到购物车 ");
+        final List<CartBean> cartList = FuliCenterApplication.getInstance().getCartList();
+        CartBean cart = new CartBean();
+        boolean isExits = false;
+        //  遍历 判断 购物车中是否有这件商品
+        for (CartBean cartBean : cartList) {
+            if (cartBean.getGoodsId() == mGooId) {
+                cart.setId(cartBean.getId());
+                cart.setGoodsId(mGooId);
+                cart.setChecked(cartBean.isChecked());
+                cart.setCount(cartBean.getCount() + 1);
+                cart.setUserName(cartBean.getUserName());
+                isExits = true;
+            }
+        }
+        Log.e(TAG, "添加物品到购物车 ");
+        if (!isExits) {
+            cart.setChecked(true);
+            cart.setCount(1);
+            cart.setGoods(mGoodDetail);
+            cart.setUserName(FuliCenterApplication.getInstance().getUserName());
+        }
+        new UpdateCartTask(mContext,cart).excute();  //更新购物车信息
     }
 
     class MyOnClickListener implements View.OnClickListener {
@@ -284,45 +350,50 @@ public class GoodDetailsActivity extends BaseActivity {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.iv_good_collect:
-                    if (isCollect) {
-                        // 删除收藏
-                        final String userName = FuliCenterApplication.getInstance().getUserName();
-                        deleteCollectStatus(userName, mGoodDetail.getGoodsId());
-                    } else {
-                        //添加收藏
-                        OkHttpUtils2<MessageBean> utils = new OkHttpUtils2<MessageBean>();
-                        utils.setRequestUrl(I.REQUEST_ADD_COLLECT)
-                                .addParam(I.Collect.USER_NAME,FuliCenterApplication.getInstance().getUserName())
-                                .addParam(I.Collect.GOODS_ID,String.valueOf(mGoodDetail.getGoodsId()))
-                                .addParam(I.Collect.ADD_TIME,mGoodDetail.getAddTime()+"")
-                                .addParam(I.Collect.GOODS_ENGLISH_NAME,mGoodDetail.getGoodsEnglishName())
-                                .addParam(I.Collect.GOODS_IMG,mGoodDetail.getGoodsImg())
-                                .addParam(I.Collect.GOODS_THUMB,mGoodDetail.getGoodsThumb())
-                                .addParam(I.Collect.GOODS_NAME,mGoodDetail.getGoodsName())
-                                .targetClass(MessageBean.class)
-                                .execute(new OkHttpUtils2.OnCompleteListener<MessageBean>() {
-                                    @Override
-                                    public void onSuccess(MessageBean result) {
-                                        Log.e(TAG, "result=111111111111111111" + result);
-                                        if (result != null && result.isSuccess()) {
-                                            new DownloadCollectCountTask(mContext, FuliCenterApplication.getInstance().getUserName());
-                                            sendStickyBroadcast(new Intent("update_collect_list"));
-                                        } else {
-                                            Log.e(TAG, "delete fail ");
-                                        }
-                                        undateCollectStatus();
-                                        Toast.makeText(mContext, result.getMsg(), Toast.LENGTH_SHORT).show();
-                                    }
-
-                                    @Override
-                                    public void onError(String error) {
-                                        Log.e(TAG, "error=" + error);
-                                    }
-                                });
-                    }
+                    gooColect();
+//                    if (isCollect) {
+//                        // 删除收藏
+//                        final String userName = FuliCenterApplication.getInstance().getUserName();
+//                        deleteCollectStatus(userName, mGoodDetail.getGoodsId());
+//                    } else {
+//                        //添加收藏
+//                        OkHttpUtils2<MessageBean> utils = new OkHttpUtils2<MessageBean>();
+//                        utils.setRequestUrl(I.REQUEST_ADD_COLLECT)
+//                                .addParam(I.Collect.USER_NAME,FuliCenterApplication.getInstance().getUserName())
+//                                .addParam(I.Collect.GOODS_ID,String.valueOf(mGoodDetail.getGoodsId()))
+//                                .addParam(I.Collect.ADD_TIME,mGoodDetail.getAddTime()+"")
+//                                .addParam(I.Collect.GOODS_ENGLISH_NAME,mGoodDetail.getGoodsEnglishName())
+//                                .addParam(I.Collect.GOODS_IMG,mGoodDetail.getGoodsImg())
+//                                .addParam(I.Collect.GOODS_THUMB,mGoodDetail.getGoodsThumb())
+//                                .addParam(I.Collect.GOODS_NAME,mGoodDetail.getGoodsName())
+//                                .targetClass(MessageBean.class)
+//                                .execute(new OkHttpUtils2.OnCompleteListener<MessageBean>() {
+//                                    @Override
+//                                    public void onSuccess(MessageBean result) {
+//                                        Log.e(TAG, "result=111111111111111111" + result);
+//                                        if (result != null && result.isSuccess()) {
+//                                            new DownloadCollectCountTask(mContext, FuliCenterApplication.getInstance().getUserName());
+//                                            sendStickyBroadcast(new Intent("update_collect_list"));
+//                                        } else {
+//                                            Log.e(TAG, "delete fail ");
+//                                        }
+//                                        undateCollectStatus();
+//                                        Toast.makeText(mContext, result.getMsg(), Toast.LENGTH_SHORT).show();
+//                                    }
+//
+//                                    @Override
+//                                    public void onError(String error) {
+//                                        Log.e(TAG, "error=" + error);
+//                                    }
+//                                });
+//                    }
                     break;
                 case R.id.iv_good_share:
                     showShare();
+                    break;
+                case R.id.iv_good_cart:
+                    addCart();
+                    break;
             }
         }
     }

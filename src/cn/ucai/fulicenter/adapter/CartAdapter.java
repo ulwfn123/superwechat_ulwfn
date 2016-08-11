@@ -48,7 +48,7 @@ public class CartAdapter extends RecyclerView.Adapter<ViewHolder> {
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         ViewHolder holder = new CarViewHolder(inflater.inflate(R.layout.item_cart, parent, false));
-//        setListener();
+        setListener();
         return holder;
     }
 
@@ -75,20 +75,9 @@ public class CartAdapter extends RecyclerView.Adapter<ViewHolder> {
                     new UpdateCartTask(mContext,cart).excute();
                 }
             });
-            mCarViewHolder.ivadd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mCarViewHolder.tvShuliang.setText(String.valueOf(cart.getCount()+1));
-                    mCareList.add(cart);
-                }
-            });
-            mCarViewHolder.ivdelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mCarViewHolder.tvShuliang.setText(String.valueOf(cart.getCount()-1));
-                    mCareList.remove(cart);
-                }
-            });
+//            ChangeCountListener listener = new ChangeCountListener(cart); // 初始化监听类
+            mCarViewHolder.ivadd.setOnClickListener(new ChangeCountListener(cart,1));   // 添加 购物车商品
+            mCarViewHolder.ivdelete.setOnClickListener(new ChangeCountListener(cart,-1)); // 减少购物车商品
         }
     }
 
@@ -141,11 +130,17 @@ public class CartAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
-    class UpCartShangPing implements View.OnClickListener {
-
+    class ChangeCountListener implements View.OnClickListener {
+        CartBean cartBean;
+        int mcount;
+        public ChangeCountListener(CartBean cart,int count) {
+            this.cartBean = cart;
+            this.mcount = count;
+        }
         @Override
         public void onClick(View view) {
-
+            this.cartBean.setCount(cartBean.getCount()+mcount);
+            new UpdateCartTask(mContext,cartBean).excute();
         }
     }
 
