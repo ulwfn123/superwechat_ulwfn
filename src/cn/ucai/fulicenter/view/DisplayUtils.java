@@ -21,6 +21,10 @@ public class DisplayUtils {
 
     public static void initbackWithTitle(final Activity activity, final String title) {
         initBack(activity);
-        ((TextView)activity.findViewById(R.id.tv_tongyong_biaoti)).setText(title); // 修改 返回按键后的题目
+        ((TextView)activity.findViewById(R.id.tv_common_title)).setText(title); // 修改 返回按键后的题目
+    }
+    public static void initBouWithTitle(final Activity activity, final String title) {
+        initBack(activity);
+        ((TextView)activity.findViewById(R.id.tv_tongyong_biaoti)).setText(title); // 标题为土色
     }
 }

@@ -154,7 +154,7 @@ public class BoutiqueChildActivity extends BaseActivity {
 
     private void initView() {
        String name=  getIntent().getStringExtra(D.Boutique.KEY_NAME); // 修改 返回按键后的题目
-        DisplayUtils.initbackWithTitle(mContext, name);
+        DisplayUtils.initBouWithTitle(mContext, name);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.srl_boutique_child);
         mSwipeRefreshLayout.setColorSchemeColors(
                 R.color.google_blue,R.color.google_yellow,
