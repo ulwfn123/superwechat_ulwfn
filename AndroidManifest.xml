@@ -105,6 +105,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide">
         </activity>
+        <!-- CartBuy detail -->
+        <activity
+            android:name="cn.ucai.fulicenter.activity.BuyActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide">
+        </activity>
 
         <!-- Boutique 精选二级detail -->
         <activity
